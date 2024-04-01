@@ -151,7 +151,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://m-zakeri.github.io/Compilers/lectures/16_ambiguous_whit_SLR/</loc>
+         <loc>https://m-zakeri.github.io/Compilers/lectures/16_ambiguous_SLRs/</loc>
          <lastmod>2024-04-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -167,11 +167,6 @@
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/19-CYK_parsing_algorithm/</loc>
-         <lastmod>2024-04-01</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://m-zakeri.github.io/Compilers/lectures/lexical_analysis/</loc>
          <lastmod>2024-04-01</lastmod>
          <changefreq>daily</changefreq>
     </url>
