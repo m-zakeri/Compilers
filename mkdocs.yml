@@ -139,7 +139,7 @@ nav:
         - Source code instrumentation: projects/core_source_code_instrumentation_development.md
         - MiniJava compiler development: projects/mini_java_compiler_development.md
 
-    - Issue Tracker: 'https://github.com/m-zakeri/Compiler/issues'
+    - Issue Tracker: 'https://github.com/m-zakeri/Compilers/issues'
 
 
 # for hiding the navigation and toc (used in top of .md file)
