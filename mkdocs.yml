@@ -93,6 +93,7 @@ nav:
     - Home: index.md
     - Announcements: announcements.md
     - Lectures:
+        - Table of Contents: lectures/README.md
         - Unit 0 Introduction: lectures/00_Introduction.md
         - Unit 1 Compiler basics: lectures/01_Compiler-Basic.md
         - Unit 2 Bootstrapping: lectures/02_Bootstrapping.md
@@ -108,6 +109,11 @@ nav:
         - Unit 12 LR(0) parsing: lectures/12_LR0_parsing.md
         - Unit 13 SLR parsing: lectures/13_SLR_parsing.md
         - Unit 14 LR(1) parsing: lectures/14_LR1_parsing.md
+        - Unit 15 LALR(1) parsing: lectures/15_LALR1_parsing.md
+        - Unit 16 Ambiguous SLR grammars: lectures/16_ambiguous_SLRs.md
+        - Unit 17 Error recovery in LR parsing: lectures/17_error_recovery_in_LR_parsing.md
+        - Unit 18 Bottom-up parser generators: lectures/18_Bottom-up-Parser-Generators.md
+        - Unit 19 Parsing with CYK algorithm: lectures/19_CYK_parsing_algorithm.md
     - ANTLR tutorials:
         - Basic: antlr_tutorials/antlr_basics.md
         - Advanced: antlr_tutorials/antlr_advanced.md
@@ -133,7 +139,7 @@ nav:
         - Source code instrumentation: projects/core_source_code_instrumentation_development.md
         - MiniJava compiler development: projects/mini_java_compiler_development.md
 
-    - Issue Tracker: 'https://github.com/m-zakeri/IUSTCompiler/issues'
+    - Issue Tracker: 'https://github.com/m-zakeri/Compiler/issues'
 
 
 # for hiding the navigation and toc (used in top of .md file)

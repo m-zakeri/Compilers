@@ -4,7 +4,7 @@
 
 <img src="../pictures/compiler-readme.jpg" height="300" width="1200" />
 
-Welcome to the repository for the Compiler Design Course Pamphlets! 🎉
+Welcome to our online pamphlets for the Compiler Design Course! 🎉
 
 This repository contains a collection of pamphlets that I've created to help others understand some of the fundamental concepts in compiler design. I've taken the time to edit and rewrite these pamphlets in a more friendly and engaging way, making them easier to understand and more approachable to beginners. 📝
 
@@ -42,7 +42,7 @@ This repository contains a collection of pamphlets that I've created to help oth
 
 15. [Bottom-up LALR1 Parsing](./15_LALR1_parsing.md)
 
-16. [Bottom-up ambiguous whit SLR](./16_ambiguous_whit_SLR.md)
+16. [Bottom-up ambiguous whit SLR](./16_ambiguous_SLRs)
 
 17. [Error recovery in LR Parsing](./17_error_recovery_in_LR_parsing.md)
 
