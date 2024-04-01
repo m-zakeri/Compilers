@@ -119,6 +119,7 @@ nav:
         - Assignment statement 3: language_applications/assignment_statement3main.md
         - Assignment statement 4: language_applications/assignment_statement4main.md
     - Assignments:
+        - Index: semesters/index.md
         - Writing assignments: semesters/writing_assignments.md
         - Programming assignments: semesters/programming_assignment.md
     - Projects:
