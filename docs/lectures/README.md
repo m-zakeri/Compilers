@@ -48,7 +48,7 @@ This repository contains a collection of pamphlets that I've created to help oth
 
 18. [Bottom-up Parser Generators](./18_Bottom-up-Parser-Generators.md)
 
-19. [CYK Parsing Algorithm](./19-CYK_parsing_algorithm.md)
+19. [CYK Parsing Algorithm](./19_CYK_parsing_algorithm)
 
 
 Embark on this educational journey, where you will not only gain theoretical knowledge but also acquire practical skills in building and understanding compilers. Let's explore the intricate world of compiler design together.
