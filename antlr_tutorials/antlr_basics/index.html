@@ -1705,7 +1705,8 @@ Finally, I found that there is no comprehensive tutorial on using ANTLR with the
 <p>The ANTLR tool is a small “.jar” file that must be run from the command line to generate the parser codes. The ANTLR tool jar file can be downloaded from <a href="https://www.antlr.org/download/antlr-4.10.1-complete.jar">here</a>. </p>
 <h2 id="generating-parser">Generating parser</h2>
 <p>As mentioned, to generate a parser for a programming language, the grammar specification described with ANTLR meta-grammar is required. ANTLR grammar files are named with the “.g4” suffix. </p>
-<p>We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: <a href="[https://github.com/antlr/grammars-v4">https://github.com/antlr/grammars-v4</a>. 
+<p>We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: 
+<a href="[https://github.com/antlr/grammars-v4">https://github.com/antlr/grammars-v4</a>. 
 Once the ANTLR tool and required grammar files are prepared, we can generate the parser for that with the following command:</p>
 <pre><code class="language-commandline">
 &gt; java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -o . JavaLexer.g4
