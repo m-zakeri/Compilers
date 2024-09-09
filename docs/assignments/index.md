@@ -1,4 +1,5 @@
 # Assignments
 
-Writing and programming assignments
+Visit [writing](writing_assignments.md) and [programming](programming_assignment.md) assignments.
+
 

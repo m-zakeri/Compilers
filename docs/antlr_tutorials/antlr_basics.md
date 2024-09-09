@@ -19,7 +19,8 @@ The ANTLR tool is a small “.jar” file that must be run from the command line
 ## Generating parser
 As mentioned, to generate a parser for a programming language, the grammar specification described with ANTLR meta-grammar is required. ANTLR grammar files are named with the “.g4” suffix. 
 
-We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: [https://github.com/antlr/grammars-v4]([https://github.com/antlr/grammars-v4). 
+We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: 
+[https://github.com/antlr/grammars-v4]([https://github.com/antlr/grammars-v4). 
 Once the ANTLR tool and required grammar files are prepared, we can generate the parser for that with the following command:
 
 ```commandline
