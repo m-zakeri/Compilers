@@ -2,217 +2,227 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://m-zakeri.github.io/Compilers/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/announcements/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/antlr_tutorials/antlr_advanced/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/antlr_tutorials/antlr_basics/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/antlr_tutorials/antlr_slides/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/assignments/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/assignments/programming_assignment/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/assignments/writing_assignments/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://m-zakeri.github.io/Compilers/calendar/fall2024_aut/</loc>
+         <lastmod>2024-09-09</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://m-zakeri.github.io/Compilers/calendar/fall2024_sharifu/</loc>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/language_applications/assignment_statement1main/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/language_applications/assignment_statement2main/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/language_applications/assignment_statement3main/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/language_applications/assignment_statement4main/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/language_applications/main/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/00_Introduction/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/01_Compiler-Basic/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/02_Bootstrapping/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/03_Regular-Expressions-and-Lexical-Analysis/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/04_Manual_Construction_of_Lexers/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/05_Automatic_construction_of_Lexers/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/06_Syntax-Analysis/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/07_Types-of-Grammar/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/08_Ambiguity-Problems-and-Eliminating-the-Ambiguity/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/09_Top-down/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/10_Bottom-up_I/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/11_Bottom-up_II/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/12_LR0_parsing/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/13_SLR_parsing/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/14_LR1_parsing/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/15_LALR1_parsing/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/16_ambiguous_SLRs/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/17_error_recovery_in_LR_parsing/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/18_Bottom-up-Parser-Generators/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/lectures/19_CYK_parsing_algorithm/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_clean_code_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_code_smell_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_refactoring_to_design_patterns_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_refactorings_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_software_metrics_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_source_code_instrumentation_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/core_symbol_table_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://m-zakeri.github.io/Compilers/projects/mini_java_compiler_development/</loc>
-         <lastmod>2024-04-01</lastmod>
+         <lastmod>2024-09-09</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
