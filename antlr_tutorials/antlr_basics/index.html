@@ -1706,16 +1706,16 @@ Finally, I found that there is no comprehensive tutorial on using ANTLR with the
 <h2 id="generating-parser">Generating parser</h2>
 <p>As mentioned, to generate a parser for a programming language, the grammar specification described with ANTLR meta-grammar is required. ANTLR grammar files are named with the “.g4” suffix. </p>
 <p>We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: 
-<a href="[https://github.com/antlr/grammars-v4">https://github.com/antlr/grammars-v4</a>. 
+<a href="https://github.com/antlr/grammars-v4">https://github.com/antlr/grammars-v4</a>. 
 Once the ANTLR tool and required grammar files are prepared, we can generate the parser for that with the following command:</p>
-<pre><code class="language-commandline">
-&gt; java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -o . JavaLexer.g4
+<pre><code class="language-bash">
+$ java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -o . JavaLexer.g4
 
-&gt; java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -visitor -listener -o . JavaLabeledParser.g4
+$ java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -visitor -listener -o . JavaLabeledParser.g4
 
 </code></pre>
 <p>The first command generates the lexer from the <code>JavaLexer.g4</code> description file and the second command generates the parser from the <code>JavaLabeledParser.g4</code> description file. It is worth noting that the lexer and parser can be written in one file. In such a case, a <em>single command</em> generates all required codes in one step.</p>
-<p>The grammar files used in the above command are also available in <a href="../../grammars">grammars directory</a> of the CodART repository.
+<p>The grammar files used in the above command are also available in <a href="https://github.com/m-zakeri/Compilers/tree/master/grammars">grammars directory</a> of the CodART repository.
 You may see that I have made some modifications to the Parser rules. </p>
 <p>In the above commands, the <code>antlr-4.9.3-complete.jar</code> is the ANTLR tool that requires Java to be executed. <code>-Dlanguage</code> denotes the destination language that the ANTLR parser (and lexer) source code is generated in which. In our case, we set it to Python3. </p>
 <p>After executing the ANTLR parser generation commands, eight files, including parser source code and other required information, are generated. Figure 1 shows the generated files. The “.py” contains lexer and parser source code that can parse any Java input file. The <code>-visitor -listener</code> switches in the second command result in generating two separate source files, <code>JavaLabledParserListener.py</code> and <code>JavaLabledParserVistor.py</code>, which provide interfaces to implement the required codes for a specific language application. Our application is source code refactoring which uses the listener mechanism to implement necessary actions transforming the program to the refactored version. 
@@ -1820,9 +1820,17 @@ def main(args):
 <p>In this tutorial, we described the basic concepts regarding using the ANTLR tool to generate and walk phase three and implement custom program analysis applications with the help of the ANTLR listener mechanism. The most important point is that we used the real-world programming languages grammars to show the parsing and analyzing process. The discussed topics form the underlying concepts of our approach for automated refactoring used in CodART.
 Check out the <a href="../antlr_advanced/">ANTLR advanced tutorial</a> to find out how we can use ANTLR for reliable and efficient program transformation.</p>
 <h2 id="references">References</h2>
-<p>Parr T ANTLR (ANother Tool for Language Recognition). https://www.antlr.org. Accessed 10 Jan 2022a</p>
-<p>Parr T IntelliJ Idea Plugin for ANTLR v4. https://github.com/antlr/intellij-plugin-v4. Accessed 10 Jan 2022b</p>
-<p>Parr T, Fisher K (2011) LL(*): the foundation of the ANTLR parser generator. Proc 32nd ACM SIGPLAN Conf Program Lang Des Implement 425–436. https://doi.org/http://doi.acm.org/10.1145/1993498.1993548</p>
+<ul>
+<li>
+<p>[1] Parr T ANTLR (ANother Tool for Language Recognition). https://www.antlr.org. Accessed 10 Jan 2022a</p>
+</li>
+<li>
+<p>[2] Parr T IntelliJ Idea Plugin for ANTLR v4. https://github.com/antlr/intellij-plugin-v4. Accessed 10 Jan 2022b</p>
+</li>
+<li>
+<p>[3] Parr T, Fisher K (2011) LL(*): the foundation of the ANTLR parser generator. Proc 32nd ACM SIGPLAN Conf Program Lang Des Implement 425–436. https://doi.org/http://doi.acm.org/10.1145/1993498.1993548</p>
+</li>
+</ul>
 
 
 
