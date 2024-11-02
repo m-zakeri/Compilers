@@ -20,20 +20,20 @@ The ANTLR tool is a small “.jar” file that must be run from the command line
 As mentioned, to generate a parser for a programming language, the grammar specification described with ANTLR meta-grammar is required. ANTLR grammar files are named with the “.g4” suffix. 
 
 We obtain the grammar of Java 8 to build our parser for the Java programming language. The grammar can be downloaded from ANTLR 4 grammar repository on GitHub: 
-[https://github.com/antlr/grammars-v4]([https://github.com/antlr/grammars-v4). 
+[https://github.com/antlr/grammars-v4](https://github.com/antlr/grammars-v4). 
 Once the ANTLR tool and required grammar files are prepared, we can generate the parser for that with the following command:
 
-```commandline
+```bash
 
-> java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -o . JavaLexer.g4
+$ java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -o . JavaLexer.g4
 
-> java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -visitor -listener -o . JavaLabeledParser.g4
+$ java -Xmx500M -cp antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Python3 -visitor -listener -o . JavaLabeledParser.g4
 
 ```
 
 The first command generates the lexer from the `JavaLexer.g4` description file and the second command generates the parser from the `JavaLabeledParser.g4` description file. It is worth noting that the lexer and parser can be written in one file. In such a case, a _single command_ generates all required codes in one step.
 
-The grammar files used in the above command are also available in [grammars directory](../../grammars) of the CodART repository.
+The grammar files used in the above command are also available in [grammars directory](https://github.com/m-zakeri/Compilers/tree/master/grammars) of the CodART repository.
 You may see that I have made some modifications to the Parser rules. 
 
 In the above commands, the `antlr-4.9.3-complete.jar` is the ANTLR tool that requires Java to be executed. `-Dlanguage` denotes the destination language that the ANTLR parser (and lexer) source code is generated in which. In our case, we set it to Python3. 
@@ -182,8 +182,8 @@ Check out the [ANTLR advanced tutorial](antlr_advanced.md) to find out how we ca
 
 ## References
 
-Parr T ANTLR (ANother Tool for Language Recognition). https://www.antlr.org. Accessed 10 Jan 2022a
+- [1] Parr T ANTLR (ANother Tool for Language Recognition). https://www.antlr.org. Accessed 10 Jan 2022a
 
-Parr T IntelliJ Idea Plugin for ANTLR v4. https://github.com/antlr/intellij-plugin-v4. Accessed 10 Jan 2022b
+- [2] Parr T IntelliJ Idea Plugin for ANTLR v4. https://github.com/antlr/intellij-plugin-v4. Accessed 10 Jan 2022b
 
-Parr T, Fisher K (2011) LL(*): the foundation of the ANTLR parser generator. Proc 32nd ACM SIGPLAN Conf Program Lang Des Implement 425–436. https://doi.org/http://doi.acm.org/10.1145/1993498.1993548
+- [3] Parr T, Fisher K (2011) LL(*): the foundation of the ANTLR parser generator. Proc 32nd ACM SIGPLAN Conf Program Lang Des Implement 425–436. https://doi.org/http://doi.acm.org/10.1145/1993498.1993548
