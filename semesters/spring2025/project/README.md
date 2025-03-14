@@ -735,9 +735,8 @@ int main() {
         void *lr = &&main_after_test; // Simulate Link Register
         push_to_stack(lr);
         goto test;
-    }
 
-    main_after_test: {
+        main_after_test:
         int result = (int) (intptr_t) pop_from_stack();
         printf("Result: %d\n", result);
         return 0;
