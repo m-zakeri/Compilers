@@ -94,7 +94,7 @@ def main(args):
     # Step 5: Create parse tree
     parse_tree = parser.start()
 
-    # print(parse_tree)
+    print(parse_tree.toStringTree())
     # quit()
 
     # Step 6: Create an instance of AssignmentStListener
@@ -105,7 +105,7 @@ def main(args):
     print(f'Number of "+" operators: {my_listener.get_count()}')
 
     # print(parse_tree.getText())
-    quit()
+    # quit()
 
 
 

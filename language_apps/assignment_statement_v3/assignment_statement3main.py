@@ -68,11 +68,12 @@ def main(args):
     # Step 5: Create parse tree
     parse_tree = parser.start()
     # Step 6: Create an instance of AssignmentStListener
-    my_listener = MyListener()
-    walker = ParseTreeWalker()
-    walker.walk(t=parse_tree, listener=my_listener)
+    # my_listener = MyListener()
+    # walker = ParseTreeWalker()
+    # walker.walk(t=parse_tree, listener=my_listener)
 
     quit()
+
     lexer.reset()
     token = lexer.nextToken()
     while token.type != Token.EOF:

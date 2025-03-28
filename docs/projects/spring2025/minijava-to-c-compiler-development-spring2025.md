@@ -864,8 +864,9 @@ By enforcing these constraints, you can ensure the correctness and robustness of
 | 6    | Testing and validation of generated code         |
 | 7    | Finalize documentation and prepare presentation  |
 
+
 ## Teamwork
-Read more at [Teamwork Policy](./team_work.md) page.
+Read more at [Teamwork Policy](team_work_policy){target="_blank"} page.
 
 ## Conclusion
 

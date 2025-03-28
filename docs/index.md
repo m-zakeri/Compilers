@@ -4,8 +4,6 @@ By: **[Morteza Zakeri](https://member.acm.org/~mzakeri-nasrabadi)**†
 
 † Ph.D., Computer Science, ACM Member (`mzakeri-nasrabadi[at]acm.org`).
 
-Semester: **Fall 2023**
-
 
 ![Dragon](./figs/compiler_logo2.png)
 

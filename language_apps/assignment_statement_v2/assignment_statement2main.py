@@ -46,7 +46,7 @@ __author__ = 'Morteza Zakeri'
 import queue
 import subprocess
 
-import pygraphviz
+# import pygraphviz
 import random
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -283,7 +283,7 @@ def main(args):
     # Step 6: Create an instance of AssignmentStListener
     code_generator_listener = ThreeAddressCodeGeneratorListener()
     # code_generator_listener = ThreeAddressCodeGenerator2Listener()
-    # ast_generator = ASTListener()
+    ast_generator = ASTListener()
 
     # Step 7(a): Walk parse tree with a customized listener (Automatically)
     walker = ParseTreeWalker()

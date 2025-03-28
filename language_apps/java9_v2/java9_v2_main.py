@@ -64,7 +64,7 @@ def main(args):
 
     # Step 6: Create an instance of JavaListener based on the specific application, `--app`
     if args.app == 1:
-        my_listener = EncapsulateFieldRefactoringListener(common_token_stream=token_stream, field_identifier='g')
+        my_listener = EncapsulateFieldRefactoringListener(common_token_stream=token_stream, field_identifier='f')
     elif args.app == 2:
         my_listener = DesignMetrics()
     elif args.app == 3:

@@ -11,13 +11,13 @@ theme:
   palette:
     - scheme: default
       primary: purple
-      accent: purple
+      accent: red
       toggle:
         icon: material/toggle-switch-off-outline
         name: Dark mode
     - scheme: slate
       primary: purple
-      accent: purple
+      accent: red
       toggle:
         icon: material/toggle-switch
         name: Light mode
@@ -32,21 +32,15 @@ theme:
     - navigation.instant.progress
     - navigation.instant.preview
     - navigation.tracking
-
     - navigation.tabs
     # - navigation.tabs.sticky
-
     # - navigation.sections
     # - navigation.expand
-
     - navigation.path
     # - navigation.prune
-
     # - navigation.indexes
-
     # - toc.follow
     - toc.integrate   # good feature :)
-
     - navigation.top  # Add "back to top" button
 
   # setup the search -----------------------------------------
@@ -88,6 +82,41 @@ plugins:
 extra_css:
   - stylex.css
 
+
+markdown_extensions:
+  - abbr
+  - admonition # support for admonitions ---> use this in markdown like this : !!! note "Note" or ??? warning "Warning"
+  - pymdownx.details # support for admonitions with collapse
+  - attr_list
+  - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - footnotes
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  #- pymdownx.blocks.caption
+
+  - toc:
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
 
 nav:
     - Home: index.md
@@ -138,7 +167,7 @@ nav:
         - Clean code: projects/core_clean_code_development.md
         - Source code instrumentation: projects/core_source_code_instrumentation_development.md
         - MiniJava compiler development: projects/mini_java_compiler_development.md
-
+    - Calendar: calendar/index.md
     - Issue Tracker: 'https://github.com/m-zakeri/Compilers/issues'
 
 

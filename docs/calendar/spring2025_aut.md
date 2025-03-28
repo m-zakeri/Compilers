@@ -1,4 +1,3 @@
-
 # Course schedule
 
 
