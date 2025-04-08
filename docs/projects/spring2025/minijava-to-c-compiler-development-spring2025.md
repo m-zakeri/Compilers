@@ -73,7 +73,8 @@ Welcome to the Compiler Course Project! In this project, you will develop a comp
 - [Teamwork](#teamwork)
 - [Conclusion](#conclusion)
 
- 
+
+
 ## Overview of Compiler Components
 
 A compiler comprises four main parts:
@@ -866,7 +867,7 @@ By enforcing these constraints, you can ensure the correctness and robustness of
 
 
 ## Teamwork
-Read more at [Teamwork Policy](team_work_policy){target="_blank"} page.
+Read more at [Teamwork Policy](team_work_policy.md){target="_blank"} page.
 
 ## Conclusion
 

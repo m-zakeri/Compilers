@@ -67,6 +67,11 @@ theme:
 
 
 plugins:
+  - blog:
+      blog_dir: blog
+      authors_profiles: true
+      authors_profiles_name: Authors
+
   - search
   - tags
   - mkdocstrings:

@@ -7,11 +7,12 @@ Visit [writing](writing_assignments.md) and [programming](programming_assignment
 
 ### Midterms
 
-[Tehran University - Fall 2023](../assets/exams/midterm_fall2023_FFENG.pdf){target="_blank" .md-button .md-button--primary }
+* [:octicons-download-24:](../assets/exams/midterm_fall2023_FFENG.pdf){target="_blank"  } Tehran University - Fall 2023
 
-[Amirkabir University - Fall 2024](../assets/exams/midterm_fall2024_AUT.pdf){target="_blank" .md-button .md-button--primary }
+* [:octicons-download-24:](../assets/exams/midterm_fall2024_AUT.pdf){target="_blank"  } Amirkabir University - Fall 2024
 
 
 ### Final
-[Tehran University - Fall 2023](#){target="_blank" .md-button .md-button--primary }
+* [:octicons-download-24:](#){target="_blank" } Tehran University - Fall 2023
 
+* [:octicons-download-24:](#){target="_blank" } Amirkabir University - Fall 2024
