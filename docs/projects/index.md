@@ -22,4 +22,4 @@ I have designed and planned several practical projects that explore the applicat
 
 ## Top student solutions
 
-* **MiniJava to C (Aghajari)** [[www](student-solutions/minijava-to-c/Aghajari/README.md){ target="_blank" }]
+* **MiniJava to C Compiler (Aghajari)** [[www](../blog/posts/minijava-to-c-aghajari.md){ target="_blank" }]
