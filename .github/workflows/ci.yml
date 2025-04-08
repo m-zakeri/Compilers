@@ -26,4 +26,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements.txt
+      - run: pip install mkdocs-material mkdocs-material-extensions --upgrade
+      - run: pip install pillow cairosvg --upgrade
       - run: mkdocs gh-deploy --force
