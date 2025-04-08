@@ -73,6 +73,7 @@ plugins:
       authors_profiles_name: Authors
 
   - search
+  - meta
   - tags
   - mkdocstrings:
       default_handler: python

@@ -14,13 +14,16 @@ links:
 
 
 
-# MiniJava-C-Compiler
+# The MiniJava to C Compiler
 
 The MiniJava-C Compiler is a project designed to compile MiniJava code into C. MiniJava is a simplified version of Java that includes essential object-oriented features, making it ideal for educational purposes and lightweight application development. This compiler parses MiniJava code, performs semantic checks, and generates equivalent C code for execution.
 
 **Note:** This project was developed for **educational purposes** as part of the **Compiler Design** course at **Amirkabir University of Technology (AUT)**.
 
-**CheckOut Main Repository:** [MiniJava to C Compiler](https://github.com/Aghajari/MiniJava-C-Compiler){target="_blank" .md-button .md-button--primary }
+<!-- more -->
+
+
+**CheckOut Main Repository:** [MiniJava to C Compiler](https://github.com/Aghajari/MiniJava-C-Compiler){target="_blank" .md-button }
 
 ## Compiler Phases
 1. Lexer:
