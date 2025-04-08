@@ -1,8 +1,8 @@
 """
-Main script for grammar AssignmentStatement1 (version 1)
+The main script for grammar AssignmentStatement1 (version 1)
 
 ## author
-Morteza Zakeri, (http://webpages.iust.ac.ir/morteza_zakeri/)
+Morteza Zakeri, [https://m-zakeri.github.io](https://m-zakeri.github.io)
 
 ## date
 20201029
@@ -38,6 +38,9 @@ import argparse
 
 
 class MyListener(AssignmentStatement1Listener):
+    """
+    A simple listener class
+    """
 
     def __init__(self):
         self._count = 0
@@ -53,12 +56,12 @@ class MyListener(AssignmentStatement1Listener):
         # self._count += 1
         pass
 
-    def enterExpr(self, ctx:AssignmentStatement1Parser.ExprContext):
+    def enterExpr(self, ctx: AssignmentStatement1Parser.ExprContext):
         if ctx.getChildCount() == 3:
             if ctx.getChild(1).getText() == '+':
                 self._count += 1
 
-    def enterTerm(self, ctx:AssignmentStatement1Parser.TermContext):
+    def enterTerm(self, ctx: AssignmentStatement1Parser.TermContext):
         pass
 
     def exitNumber(self, ctx: AssignmentStatement1Parser.NumberContext):
@@ -67,12 +70,14 @@ class MyListener(AssignmentStatement1Listener):
 
 def main(args):
     """
-    Create lexer and parser
+    The main driver to create and use the lexer and parser
 
     Args:
 
-        args (str):
-        return (None):
+        args (namespace):
+
+    return (None):
+
     """
     # Step 1: Load input source into stream
     stream = FileStream(args.file, encoding='utf8')
@@ -88,8 +93,8 @@ def main(args):
     parser = AssignmentStatement1Parser(token_stream)
     # parser._interp.predictionMode = PredictionMode.SLL
 
-    #x = DescriptiveErrorListener()
-    #parser.addErrorListener()
+    # x = DescriptiveErrorListener()
+    # parser.addErrorListener()
 
     # Step 5: Create parse tree
     parse_tree = parser.start()
@@ -107,8 +112,6 @@ def main(args):
     # print(parse_tree.getText())
     # quit()
 
-
-
     # return
     lexer.reset()
     token = lexer.nextToken()
@@ -118,9 +121,9 @@ def main(args):
 
 
 if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument(
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument(
         '-f', '--file',
         help='Input source', default=r'input.txt')
-    args_ = argparser.parse_args()
+    args_ = arg_parser.parse_args()
     main(args_)
