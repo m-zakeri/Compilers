@@ -1,18 +1,22 @@
 # Compiler Design Course
 
-By: **[Morteza Zakeri](https://member.acm.org/~mzakeri-nasrabadi)**†
+By: [**Morteza Zakeri**](https://dl.acm.org/profile/99660089625){ target="_blank" }†
 
 † Ph.D., Computer Science, ACM Member (`mzakeri-nasrabadi[at]acm.org`).
 
 
-![Dragon](./figs/compiler_logo2.png)
+![Compiler is Dragon](./figs/compiler_logo2.png){ width="250"  align=right loading=lazy}
 
-**Abstract—** My compiler course is now more practical than ever. This repository contains several code snippets that I developed to teach the ANTLR compiler generator at Iran University of Science and Technology (UST). Grammars have been written in ANTRL v4 format. For each grammar, the source code of Lexer and Parser is available in Python 3.x. 
+**Abstract—** My compiler course is now more practical than ever. This repository contains several code snippets that I developed to teach the ANTLR compiler generator at Iran University of Science and Technology (UST). 
+Grammars have been written in [ANTLR4](https://www.antlr.org/){ target="_blank" } format. For each grammar, the source code of Lexer and Parser is available in Python 3.x. 
 The repository is assumed to be updated regularly. It would be appreciated if you use this repository by forking it. For any question please contact me `mzakeri-nasrabadi[at]acm.org`.
+
+### Quick Access
+[Sample exams](assignments/index.md){target="_blank" .md-button .md-button--primary }
 
 
 ## Introduction
-The course is intended to teach the students the basic techniques that underlie the practice of Compiler Construction. The course will introduce the theory and tools that can be standardly employed to perform syntax-directed translation of a high-level programming language into executable code.
+The course is intended to teach the students the basic techniques that underlie the practice of Compiler Construction. The course will introduce the theory and tools that can be employed to perform syntax-directed translation of a high-level programming language into executable code.
 
 These techniques can also be employed in broader areas of application, whenever we need a syntax-directed analysis of symbolic expressions and languages and their translation into a lower-level description. They have multiple uses for man-machine interaction, including verification and program analysis.
 

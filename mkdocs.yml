@@ -3,7 +3,7 @@ site_url: https://m-zakeri.github.io/Compilers
 repo_url: https://github.com/m-zakeri/Compilers
 site_description: Compiler design (Dragon) course materials and codes
 site_author: Morteza Zakeri
-copyright: © 2020-2024 Zakeri
+copyright:  2020-2025 &copy; all rights reserved. Morteza Zakeri, Intelligent Software Engineering Laboratory at Tehran Polytechnic.
 
 
 theme:
@@ -26,33 +26,34 @@ theme:
     logo: material/library
     repo: fontawesome/brands/github
 
+
   features:
+    - content.tooltips
+
+    # Navigation features -----------------------------------------
+    - navigation.indexes
     - navigation.instant
-    - navigation.instant.prefetch
     - navigation.instant.progress
     - navigation.instant.preview
     - navigation.tracking
     - navigation.tabs
-    # - navigation.tabs.sticky
-    # - navigation.sections
-    # - navigation.expand
+    - navigation.tabs.sticky
+    - navigation.top # Add "back to top" button
     - navigation.path
-    # - navigation.prune
-    # - navigation.indexes
-    # - toc.follow
-    - toc.integrate   # good feature :)
-    - navigation.top  # Add "back to top" button
+    - toc.follow
+    - toc.integrate # good feature :)
 
-  # setup the search -----------------------------------------
+    # setup the search -----------------------------------------
     - search.suggest # search suggest completion
     - search.highlight # search highlight
     - search.share # deep linking
 
-  # setup header ---------------------------------------------
+    # setup header ---------------------------------------------
     - header.autohide # autohide header
-    # - announce.dismiss
+    - announce.dismiss
+    - content.footnote.tooltips
 
-  # setup footer ---------------------------------------------
+    # setup footer ---------------------------------------------
     - navigation.footer # footer navigation
 
   font:
