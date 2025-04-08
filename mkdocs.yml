@@ -13,14 +13,15 @@ theme:
       primary: purple
       accent: red
       toggle:
-        icon: material/toggle-switch-off-outline
-        name: Dark mode
+        icon: material/brightness-7
+        name: Switch to dark mode
+
     - scheme: slate
       primary: purple
       accent: red
       toggle:
-        icon: material/toggle-switch
-        name: Light mode
+        icon: material/brightness-4
+        name: Switch to light mode
 
   icon:
     logo: material/library
@@ -60,11 +61,6 @@ theme:
     text: Roboto # You can use any font from Google Fonts
     code: Roboto Mono
 
-  extra:
-    social:
-      - icon: fontawesome/brands/linkedin
-        link: https://www.linkedin.com/in/mortazazakeri/
-
 
 plugins:
   - blog:
@@ -85,6 +81,8 @@ plugins:
           selection:
             members: True
 
+  - social:
+      enabled: !ENV [ CI, false ]
 
 extra_css:
   - stylex.css
@@ -178,6 +176,13 @@ nav:
     - Blog:
         - blog/index.md
     - Issue Tracker: 'https://github.com/m-zakeri/Compilers/issues'
+
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/mortazazakeri
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/mztel
 
 
 # for hiding the navigation and toc (used in top of .md file)
