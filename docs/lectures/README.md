@@ -50,6 +50,15 @@ This repository contains a collection of pamphlets that I've created to help oth
 
 19. [CYK Parsing Algorithm](19_CYK_parsing_algorithm.md)
 
+20. [Lecture 6: Translation Methods](lecture06.md)
+
+21. [Lecture 7: Semantic Analysis](lecture07.md)
+
+22. [Lecture 8: Intermediate-Code Generation](lecture08.md)
+
+23. [Lecture 9: Machine-Independent Optimizations](lecture09.md)
+
+24. [Lecture 10: Run-time Environments and Code Generation](lecture10.md)
 
 Embark on this educational journey, where you will not only gain theoretical knowledge but also acquire practical skills in building and understanding compilers. Let's explore the intricate world of compiler design together.
 
