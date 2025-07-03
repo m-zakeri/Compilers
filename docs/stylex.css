@@ -4,3 +4,11 @@
   margin-right: auto;
   width: 50%;
 }
+
+.md-sidebar {
+  margin-right: 1cm;
+}
+
+.md-main, .md-content {
+  margin-left: 1cm;
+}
