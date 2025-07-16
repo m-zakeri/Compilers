@@ -1,8 +1,8 @@
 # <center> Compiler Basic
 
-
+<p align="center">
 <img src="../pictures/compiler.jpg" width="300" class="center"/>
-
+</p>
 
 ## Compiler Formalization
 
@@ -22,6 +22,7 @@ Syntax defines which strings of symbols are valid expressions in the language.
 
 #### Example (C++):
 ```cpp
+int @; // Invalid statement
 int z = 0;  // Valid statement
 std::cout << "z+1=" << z++ << std::endl;  // Valid statement
 ```
