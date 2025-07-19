@@ -4,12 +4,38 @@
 <img src="../pictures/compiler.jpg" width="300" class="center"/>
 </p>
 
-## Compiler Formalization
+## Compiler big picture
+### goals 
+**1- Correctness:** generate correct machine codes  
+**2- Effectiveness:** optimized machine codes  
+**3- Efficiency:** reasonable translation time (< 𝑂($n^3$))
+
+Correctness is crucial. It gets hard to debug a code with a broken compiler.
+
+**Verified compilers:**  
+∙ Some compilers have been proven to generate correct code! (X.
+Leroy, Formal Certification of a Compiler Back End, POPL ’06)  
+∙ Requires formal methods.
+## formalization
 
 In compiler design, it's essential to precisely describe the input (source code) and output (machine code) of a compiler.
 
 **Input:** Source code (programming language)  
-**Output:** Assembly (machine) code
+**Output:** Assembly (machine) code  
+Let's see how a programming language is described:  
+∙ Tow essential ingredients of a language:  
+**1- Syntax:** which strings of symbols are valid expressions in the
+language?  
+∙ Example (Java syntax): Uses a semicolon (";") to separate two
+statements  
+**2- Semantics:** what do valid expressions actually mean, or how do
+they behave?     
+∙ Example (Java semantics): What should be printed?   
+```java
+int z = 0;
+System.out.println("z+1=" + z++);
+```
+
 
 ## Describing Programming Language Syntax
 
