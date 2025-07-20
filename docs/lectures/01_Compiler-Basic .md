@@ -235,13 +235,26 @@ Common error-recovery strategies for parser error handling:
 - **Bootstrap Compiler:** Temporary compiler used for compiling a more permanent or better-optimized compiler.
 - **Compiler-compiler:** Produces a compiler (or part of one) in a generic and reusable way (e.g., `ANTLR`, `FLEX`, `YACC`, `BISON`).
 
-
-
-#### **reminder Interpreter**
-
+## Compiler alternatives
+### **Interpreter**
 An interpreter is another computer program like compiler that executes instructions written in a programming language immediately statement by statement.
+### **Interpreter vs compiler**
+**Interpreter:**  
+1. Program execution is a part of
+interpretation process.
+2. No compile time but more runtime.
+3. Optimizations are not as robust as
+compilers.
+4. Python, Ruby    
 
-
+**Compiler:** 
+1. Program execution is separate
+from the compilation.
+2. Compiler time but faster execution
+3. Robust optimization (sees the
+entire code upfront).
+4. C, C++
+> **Note:** Some language implementations provide both: Java, C#.
 ## Just-In-Time (JIT) Compilation
 
 ### Definition
