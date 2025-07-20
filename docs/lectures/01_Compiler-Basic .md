@@ -255,6 +255,9 @@ from the compilation.
 entire code upfront).
 4. C, C++
 > **Note:** Some language implementations provide both: Java, C#.
+## Ahead-of-time (AOT) Compilation
+A traditional compiler where
+translation occurs in a separate step from execution.
 ## Just-In-Time (JIT) Compilation
 
 ### Definition
@@ -307,12 +310,6 @@ During runtime, as the program is executed, the JIT compiler analyzes the interm
 
 
 # <center> Bootstrapping
-
-
-<img src="../pictures/compiler.jpg" width="300" class="center"/>
-
-
-
 **Definition:**
 Bootstrapping is a technique where a simple program initiates a more complex system of programs. In the context of compilers, it often involves the process of writing a compiler for a programming language using another compiler written in the same language. This self-compiling process allows for the creation of more sophisticated compilers.
 
@@ -373,7 +370,22 @@ The goal of full bootstrapping is to implement a compiler for language `X` on a 
 
 This comprehensive process demonstrates the self-sustaining nature of bootstrapping, where each step builds upon the capabilities of the previous one, ultimately leading to the creation of a compiler for a more complex language.
 
+### Half Bootstrapping:
+Half bootstrapping in compiler design refers to a process where a new compiler for a language is created by leveraging an existing compiler for the same language on a different machine. This differs from full bootstrapping, which involves building a compiler from scratch without any prior compiler for that language. Half bootstrapping is also known as cross-compilation.  
+∙ It is easier than the full bootstrapping.  
+∙ To build the bootstrapped compiler, we need a cross compiler
+which could be run on the machine N to produce the compiler
+for the machine M.
+#### **example**:
+. We have a compiler for language A in machine M but we want to develope one compiler for machine N. We have:
 
+<img src="pictures/hbp-s1.jpg" width="500" class="center"/>
+
+**step 1:** implement A -> N compiler in A.
+<img src="pictures/hbp-s2.jpg" width="500" class="center"/>
+
+**step 2:** compiler on M.
+<img src="pictures/hbp-s3.jpg" width="500" class="center"/>
 
 ### Simple Bootstrapping:
 
