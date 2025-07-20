@@ -87,10 +87,6 @@ Compiling a program involves several steps, and it's crucial to understand the p
    - Compiler uses different program Intermediate Representations.
    - These IRs facilitate necessary program manipulations (analysis, optimization, code generation).
 
-## Compiler Phases
-
-
-<img src="../pictures/compiler-phses.JPG" width="800" class="center"/>
 
 #### Example Compilation Steps in C++:
 
@@ -100,7 +96,12 @@ if (b==0) a=b;
 
 <img src="pictures/compilation-steps-test.jpg" width="800" class="center"/>
 
-### Compiler Architecture:
+## Compiler Architecture:
+### Compiler Phases
+
+<img src="../pictures/compiler-phses.JPG" width="800" class="center"/>
+
+<img src="pictures/compiler-architecture.png" width="800" class="center"/>
 
 - **Parser:** Responsible for analyzing the syntactic structure of the source code and generating a parse tree or abstract syntax tree (AST).
 
@@ -124,15 +125,66 @@ if (b==0) a=b;
 
 ### Steps in System Context:
 
+<img src="pictures/compiler-in-context.png" width="800" class="center"/>
 
 - **Preprocessing:** Expanding macros and collecting program sources.
 - **Compilation:** Parsing the preprocessed source code and generating an intermediate representation.
 - **Linking:** Joining together object files and resolving external references.
 - **Loading:** Mapping virtual addresses to physical address space.
 
+### Unresolved references:
+<img src="pictures/unresolved-references-example.png" width="800" class="center"/>
+This image illustrates how unresolved references (like function calls to external symbols) are handled during compilation and linking in a typical system:                  
 
+**source code**  
+The function abs(int) is declared, not defined — it’s assumed to be defined elsewhere, perhaps in another file or library.
 
+This introduces an unresolved reference during compilation.
 
+**assembly code**   
+The compiler translates abs(x) into a call _abs instruction.
+
+Since _abs is not defined in this file, the call is marked as an external symbol.
+
+The call instruction uses a relative address, which can't be resolved yet — it depends on where _abs will be located.
+
+**object code**   
+The E8 opcode is the CALL instruction in x86-64, which takes a 4-byte relative offset.
+
+The offset (00 00 00 00) is a placeholder — the actual address is unknown during object code generation.
+
+The linker will fill in the correct offset when _abs is resolved.
+
+> **Note:** The compiler emits a relocation entry for _abs in the object file. The linker later:
+
+> 1. Finds the address of _abs in the linked modules or libraries.
+
+> 2. Calculates the relative offset.
+
+> 3. Fills in the 4-byte placeholder in the call instruction.
+
+### Output of the linker:
+<img src="pictures/linker-output.png" width="800" class="center"/>
+ The linker at the end merges all the object codes form all the source codes into one unit as the final program to be loaded into memory.
+
+### Memory layout of programs:
+<img src="pictures/program-memory-layout.png" width="800" class="center"/>
+
+The memory layout of a program is typically divided into distinct segments:
+
+Text/Code Segment: Contains compiled machine code (instructions).
+
+Initialized Data Segment: Stores global and static variables with defined initial values.
+
+BSS (Uninitialized Data Segment): Holds global and static variables without initial values.
+
+Heap: Used for dynamically allocated memory (malloc, new). Grows upward.
+
+Stack: Stores function call frames, local variables, and return addresses. Grows downward.
+
+Command Line Arguments: Placed at the top of memory.
+
+The Static Memory Layout (code, data, BSS) is fixed at compile/link time, while the Dynamic Memory Layout (heap and stack) changes at runtime.
 ## Compile Passes
 
 **Definition:**
