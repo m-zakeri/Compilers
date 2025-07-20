@@ -1,6 +1,8 @@
-# <center> Formal Languages and Lexical Analysis  
+# <center> Lexical Analysis  
 
-<!-- <img src="../pictures/compiler.jpg" width="300" class="center"/> -->
+<p align="center">
+<img src="../pictures/compiler.jpg" width="300" class="center"/>
+</p>
 
 
 
@@ -30,6 +32,8 @@
 - Words (strings): Sequences of elements from the alphabet Σ.
 - Example: If $ Σ = \{𝑎, 𝑏\} $, then $ Σ* = \{\epsilon, 𝑎, 𝑏, 𝑎𝑎, 𝑎𝑏, 𝑏𝑎, 𝑏𝑏, 𝑎𝑎𝑎, 𝑎𝑎𝑏, 𝑎𝑏𝑎, ...\} $
 - Example of an infinite language over $Σ: 𝐿1 = \{𝑎𝑏, 𝑎𝑏𝑎𝑏, 𝑎𝑏𝑎𝑏𝑎𝑏, ...\} = \{{(𝑎𝑏)}^𝑛 | 𝑛 ≥ 1\} $
+#### Basic operations on formal languages
+# <center><img src="pictures/basic-operations-on-languages.png" width="500"/>
 
 ### Formal Languages Description Notations
 
@@ -38,8 +42,8 @@
 3. **Automata:**
 
 
-<!-- # <center><img src="pictures/regular-expresion.JPG" width="500"/>
-<img src="../pictures/regular-expresion.JPG" width="500" class="center"/> -->
+<!-- <!-- # <center><img src="pictures/regular-expresion.JPG" width="500"/> -->
+# <center><img src="../pictures/regular-expresion.JPG" width="500" class="center"/> 
 
 
 4. **Regular Expressions (Regex):** Used only for regular languages.
