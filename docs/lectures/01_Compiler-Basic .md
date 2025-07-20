@@ -98,7 +98,7 @@ Compiling a program involves several steps, and it's crucial to understand the p
 if (b==0) a=b;
 ```
 
-<img src="pictures/compilation-steps-test.png" width="800" class="center"/>
+<img src="pictures/compilation-steps-test.jpg" width="800" class="center"/>
 
 ### Compiler Architecture:
 
