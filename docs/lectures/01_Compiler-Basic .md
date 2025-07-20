@@ -43,63 +43,62 @@ Programming languages have two crucial components: syntax and semantics.
 
 ### Syntax
 
-Syntax defines which strings of symbols are valid expressions in the language.
-
-
+Syntax defines which strings of symbols are valid expressions in the language. 
 #### Example (C++):
 ```cpp
 int @; // Invalid statement
 int z = 0;  // Valid statement
 std::cout << "z+1=" << z++ << std::endl;  // Valid statement
 ```
+There are multiple ways to define a syntax such as listing all valid programs but this way leads to so many long valid programs and is not practical, natrual languages are easy to underestand but they are nformal, imprecise, vague, tedious, and repetitive. The best chois right now is using formal languages (and automata):  
+***∙ Branch of CS that formalizes the properties of “languages”
+over strings and their syntax.***   
+**∙ Pros:** Well-documenting what programs a compiler should
+accept or reject.   
+**∙ Pros:** Developing compiler phases (lexer, parser, code
+generation) formally and automatically.
 
+You can see an example below using a BNF grammar:
+```ebnf
+<Statement>       ::= <AssignmentSt>
+                   | <ForST>
+                   | '{' <StatementList> '}'
+                   | ε
+
+<AssignmentSt>    ::= <Id> '=' <Expr>
+
+<ForST>           ::= 'for' <Id> '=' <Expr> 'to' <Expr> <DoPart>
+
+<DoPart>          ::= 'do' <Statement>
+
+<StatementList>   ::= <Statement> ';' <StatementList>
+                   | <Statement>
+```
 
 ### Semantics
 
-Semantics defines the meaning or behavior of valid expressions.
-
-### Describing Syntax using BNF Grammar
-
-Backus-Naur Form (BNF) is a formal notation used to describe the syntax of programming languages.
-
-#### Example BNF Grammar:
-
-```bnf
-<Statement> ::= <AssignmentSt> | <ForST> | '{' <StatementList> '}' | 𝜖
-<AssignmentSt> ::= <Id> '=' <Exper>
-<ForST> ::= 'for' <Id> '=' <Expr> 'to' <Expr> <DoPart>
-<DoPart> ::= 'do' <Statement>
-<StatementList> ::= <Statement> ';' <StatementList> | <Statement>
-```
+Semantics defines the meaning or behavior of valid expressions. We will discuss this aspect in the next chapters.
 
 ## Compilation Steps
 
 Compiling a program involves several steps, and it's crucial to understand the process.
 
-1. **Intermediate Representations (IRs):**
+ **Intermediate Representations (IRs):**
    - Compiler uses different program Intermediate Representations.
    - These IRs facilitate necessary program manipulations (analysis, optimization, code generation).
-
-#### Example Compilation Steps in C++:
-
-```cpp
-#include <iostream>
-
-int main() {
-    int z = 0;
-    std::cout << "z+1=" << z++ << std::endl;
-    return 0;
-}
-```
-
-
 
 ## Compiler Phases
 
 
 <img src="../pictures/compiler-phses.JPG" width="800" class="center"/>
 
+#### Example Compilation Steps in C++:
 
+```cpp
+if (b==0) a=b;
+```
+
+<img src="pictures/compilation-steps-test.png" width="800" class="center"/>
 
 ### Compiler Architecture:
 
