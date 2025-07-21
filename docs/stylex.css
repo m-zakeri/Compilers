@@ -4,3 +4,91 @@
   margin-right: auto;
   width: 50%;
 }
+
+.md-sidebar {
+  margin-right: 1cm;
+}
+
+.md-main, .md-content {
+  margin-left: 1cm;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sidebar motion & micro-interactions                               */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Initial slide-in animation */
+  @keyframes sidebar-enter {
+    0%   { transform: translateX(-20px); opacity: 0; }
+    100% { transform: translateX(0);     opacity: 1; }
+  }
+
+  .md-sidebar {
+    animation: sidebar-enter 0.4s cubic-bezier(.33,1,.68,1) both;
+  }
+
+  /* Active item vertical bar */
+  .md-nav__item--active > .md-nav__link {
+    position: relative;
+  }
+  .md-nav__item--active > .md-nav__link::before,
+  .md-nav__link::before {
+    content: '';
+    position: absolute;
+    left: -0.6rem;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--md-primary-fg-color);
+    transform: scaleY(0);
+    transition: transform .3s ease;
+    transform-origin: top;
+  }
+  .md-nav__item--active > .md-nav__link::before {
+    transform: scaleY(1);
+  }
+
+  /* Hover lift effect (replaces default progress bar) */
+  .md-nav__link {
+    position: relative;
+    /* Fast transitions: 200ms for color, 150ms for transform with ease-out for snappy feel */
+    transition: color .2s ease, transform .15s ease-out;
+  }
+  /* Disable default underline/progress bar effect */
+  .md-nav__link::after { 
+    display: none !important; 
+  }
+
+  /* Lift effect on hover: moves up 2px and scales to 106% size */
+  .md-nav__link:hover {
+    transform: translateY(-2px) scale(1.06);
+    color: var(--md-primary-fg-color);
+  }
+
+  /* Caret rotation on toggle */
+  .md-nav__link .md-icon {
+    transition: transform .2s ease;
+  }
+  /* Collapse states for MkDocs Material */
+  .md-nav__item--nested > input:checked + label .md-icon,
+  .md-nav__item--nested > .md-nav__link[aria-expanded="true"] .md-icon {
+    transform: rotate(90deg);
+  }
+
+  /* Accordion open / close */
+  /* Animate nested lists but keep them visible unless explicitly hidden */
+  .md-nav__item--nested > .md-nav {
+    overflow: hidden;
+    transition: max-height .25s ease;
+    max-height: 1000px; /* large enough for typical subsections */
+  }
+  /* Collapse when Material adds the [hidden] attribute or when the checkbox is unchecked */
+  .md-nav__item--nested > .md-nav[hidden],
+  .md-nav__item--nested > input + .md-nav {
+    max-height: 0;
+  }
+  /* Re-open when the controlling checkbox becomes checked */
+  .md-nav__item--nested > input:checked + .md-nav {
+    max-height: 1000px;
+  }
+}

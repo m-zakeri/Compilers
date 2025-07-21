@@ -116,12 +116,14 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  #- pymdownx.blocks.caption
-
   - toc:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
+  - pymdownx.arithmatex
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 nav:
     - Home: index.md
@@ -148,6 +150,12 @@ nav:
         - Unit 17 Error recovery in LR parsing: lectures/17_error_recovery_in_LR_parsing.md
         - Unit 18 Bottom-up parser generators: lectures/18_Bottom-up-Parser-Generators.md
         - Unit 19 Parsing with CYK algorithm: lectures/19_CYK_parsing_algorithm.md
+        - Lecture 6 (Translation Methods): lectures/lecture06.md
+        - Lecture 7 (Semantic Analysis): lectures/lecture07.md
+        - Lecture 8 (Intermediate-Code Generation): lectures/lecture08.md
+        - Lecture 9 (Machine-independent Optimizations): lectures/lecture09.md
+        - Lecture 10 (Run-time Environment and Code Generation): lectures/lecture10.md
+
     - ANTLR tutorials:
         - Basic: antlr_tutorials/antlr_basics.md
         - Advanced: antlr_tutorials/antlr_advanced.md
