@@ -785,13 +785,31 @@ Advantages of DFA minimization include reduced complexity, optimal space utiliza
 #### Resolving Ambiguities in Lexers
 
 **Regular Expression Ambiguity:**
-- Ambiguity arises when regular expressions can match input in multiple ways.
+Ambiguity arises when regular expressions can match input in multiple ways.
+- Consider the following rules for example:  
+∙ Keywords: if, else, while, for, ...  
+∙ Identifiers: letter (letter | digit)*
+- What is the desired output for elsevier?  
+∙ ID(elsevier)  
+∙ KEYWORD(else) + ID(vier)   
 
 **Conflict Resolution in Lex:**
 1. **Longest/Maximal Match Rule:**
    - Prefer a longer prefix over a shorter one.
 2. **Declaration Priority:**
    - If the longest prefix matches multiple patterns, prefer the one listed first in the Lex program.
+
+**example:**  
+Consider the following specification of tokens:
+1. $b(bc)^*$
+2. $c^*(ba)^*$
+3. acb
+4. $a^+$
+5. acb*  
+
+Tokenize the given input: aaabbcbcbaacbcaacbcba.
+
+<img src="pictures/an-example-of-tokenized-string.png" width="800" class="center"/>
 
 #### The Flex Manual
 
