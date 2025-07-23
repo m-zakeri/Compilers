@@ -72,9 +72,7 @@
   - 𝐴 → 𝐵𝑥 | 𝑥 | 𝜖, where 𝐴, 𝐵 ∈ 𝑁 and 𝑥 ∈ Σ*
 
 **Regular Grammar:**
-- A regular grammar is one that is either right-linear or left-linear.
-
-
+- A regular grammar is one that is either right-linear or left-linear. 
 
 ### Deterministic Finite Acceptor (DFA)
 
@@ -110,27 +108,80 @@ where
 - `NFA` can have no transition for an input in a given state.
 - `NFA` can make a transition without consuming an input symbol (λ or ε-transition).
 
+# <center><img src="pictures/example-nfa-1.png" width="500" class="center"/> 
 ### Computations of a DFA
 
 - For each input string, there is exactly one path in a `DFA` (O(n)).
 $$ [ L(M) = \{ w \in \Sigma^* : \delta^*(q_0, w) \in F \} ] $$ 
 
+# <center><img src="pictures/computations-of-a-DFA.png" width="500" class="center"/> 
 ### Computations of an NFA and Language Acceptance
 
 - For an input string, there are multiple possible computation paths in an `NFA` $(O(2^n))$.
 $$[ L(M) = \{ w \in \Sigma^* : \delta^*(q_0, w) \cap F = \emptyset \} ] $$
-
+# <center><img src="pictures/computations-of-an-NFA.png" width="500" class="center"/> 
 ### NFA vs. DFA Implementation
 
 - `DFA`s are generally simpler to implement due to their deterministic nature.
+ # <center><img src="pictures/dfa-construction.png" width="500" class="center"/> 
 - `NFA`s may require additional mechanisms to handle non-deterministic transitions.
 - Simulation of `NFA` requires tracking multiple possible states simultaneously.
+ # <center><img src="pictures/nfa-construction.png" width="500" class="center"/> 
 
+**example:** Construct NFA that accepts all strings of the form 0
+𝑘 where 𝑘 is a multiple of 2 or 3.
+
+**solution:**  
+Step 1: Understand the Language
+We are working with strings made only of 0s, and we want to accept them if:
+
+k mod 2 = 0 or
+k mod 3 = 0  
+Accept: 00, 000, 0000, 000000, ...
+
+Step 2: Use Modulo Arithmetic
+We know that:
+
+Multiples of 2 mean the number of 0s is even.
+
+Multiples of 3 mean the number of 0s is divisible by 3.
+
+So we can build two machines:
+
+One that accepts if k % 2 == 0
+
+One that accepts if k % 3 == 0
+
+Then, combine both machines using ε-transitions to form a union.
+
+Step 3: Design NFA for Multiples of 2
+We build a 2-state loop:
+
+That means:
+
+Every 2 zeros, we return to the accepting state.
+
+Accepts: 00, 0000, 000000, ...  
+Step 4: Design NFA for Multiples of 3
+
+That means:
+
+Every 3 zeros, we return to the accepting state.
+
+Accepts: 000, 000000, 000000000, ... 
+
+Step 5: Add a Start State and Combine with ε-transitions
+We introduce a new start state (state 0), and:
+
+Add ε-transition to state 1 (begin the multiple-of-2 path)
+
+Add ε-transition to state 3 (begin the multiple-of-3 path)
+
+That allows the NFA to nondeterministically choose either path.
+
+# <center><img src="pictures/example-nfa-2.png" width="500" class="center"/> 
 
 # <center> Manual Construction of Lexers
-
-<!-- <img src="../pictures/compiler.jpg" width="300" class="center"/> -->
-
 
 #### Recognition of Tokens
 
