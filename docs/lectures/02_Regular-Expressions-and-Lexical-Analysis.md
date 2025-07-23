@@ -128,8 +128,7 @@ $$[ L(M) = \{ w \in \Sigma^* : \delta^*(q_0, w) \cap F = \emptyset \} ] $$
 - Simulation of `NFA` requires tracking multiple possible states simultaneously.
  # <center><img src="pictures/nfa-construction.png" width="500" class="center"/> 
 
-**example:** Construct NFA that accepts all strings of the form 0
-𝑘 where 𝑘 is a multiple of 2 or 3.
+**example:** Construct NFA that accepts all strings of the form $0^k$ where 𝑘 is a multiple of 2 or 3.
 
 **solution:**  
 Step 1: Understand the Language
@@ -180,6 +179,17 @@ Add ε-transition to state 3 (begin the multiple-of-3 path)
 That allows the NFA to nondeterministically choose either path.
 
 # <center><img src="pictures/example-nfa-2.png" width="500" class="center"/> 
+# <center> Regular expressions
+Regular expressions are just a notation for some particular
+operations on languages.
+# <center><img src="pictures/regular-expression-definitions-1.png" width="500" class="center"/> 
+# <center><img src="pictures/regular-expression-definitions-2.png" width="500" class="center"/>
+∙ Regular expressions are used to describe a regular languge
+(pattern) for a computing machine.   
+∙ Extended Regular-Expression Notation: A number of
+additional operators may appear as shorthands in regular
+expressions, to make it easier to express patterns (will be
+discussed later).
 
 # <center> Manual Construction of Lexers
 
@@ -204,10 +214,22 @@ The manual construction of a lexical analyzer involves several steps:
 
 6. **Implement Transition Diagrams:**
    - Translate the transition diagrams into actual code for the lexical analyzer.
+#### Most common tokens
+# <center><img src="pictures/tokens-patterns-value-selected.png" width="500" class="center"/>
 
 #### Transition Diagrams: Notations
 
 As an intermediate step, patterns are converted into stylized flowcharts called "transition diagrams." These diagrams incorporate DFAs for recognizing tokens. If it's necessary to retract the forward pointer one position (i.e., the lexeme doesn't include the symbol that got us to the accepting state), a '*' is placed near that accepting state.
+
+To create a transition diagram for a lexical analyzer from regular-expression patterns, follow these steps:
+
+**1. Define States:** Represent each state as a node (circle) that summarizes the condition of the input scanned so far, tracking characters between the lexemeBegin and forward pointers.  
+**2. Add Edges:** Draw directed edges between states, labeled with a symbol or set of symbols. Each edge indicates a transition from one state to another based on the next input symbol. Ensure the diagram is deterministic (at most one edge per symbol from any state).  
+**3. Designate Start State:** Mark one state as the start state with an incoming edge labeled "start." This is where scanning begins before any input is read.  
+**4. Identify Accepting States:** Mark states that indicate a lexeme has been found with a double circle. These are final states where a token and optional attribute value may be returned to the parser.  
+**5. Handle Retraction (if needed):** If the forward pointer needs to retract one position (i.e., the lexeme excludes the last symbol), place a * near the accepting state.  
+**6. Attach Actions:** Associate any required actions (e.g., returning a token) with accepting states.
+The resulting diagram visually represents the process of scanning input to match patterns, guiding the lexical analyzer to recognize tokens deterministically.
 
 #### Transition Diagram Examples:
 
@@ -227,6 +249,31 @@ As an intermediate step, patterns are converted into stylized flowcharts called 
 
 <img src="../pictures/unsigned-numbers.JPG" width="600" class="center"/>
 
+``` cpp
+TOKEN getRelop()
+{
+   TOKEN retToken = new(RELOP);
+   while(1) { /* repeat character processing until a returnor failure occurs */
+      switch(state) {
+         case 0: c = nextChar();
+         if ( c == '<' ) state = 1;
+         else if ( c == '=' ) state = 5;
+         else if ( c == '>' ) state = 6;
+         else fail(); /* lexeme is not a relop */
+         break;
+         case 1: ...
+         ...
+         case 8: retract();
+         retToken.attribute = GT;
+         return(retToken);
+      }
+   }
+}
+```
+Here we show the action for state 8. Because state 8 bears a *, we must retract the input pointer one position (i.e., put c back on the input
+stream). That task is accomplished by the function retract(). Since state 8represents the recognition of lexeme >, we set the second component of the
+returned ob ject, which we suppose is named attribute, to GT, the code for
+this operator.
 
 #### Lexer Input and Output:
 
@@ -257,8 +304,32 @@ The lexical analyzer takes the source code as input and produces a stream of tok
 
 - Comments are detected and discarded by the lexer.
 - They can be single-line or multi-line.
-- Lexical analyzers always find the next non-whitespace, non-comment token.
+- Lexical analyzers always find the next non-whitespace, non-comment token.  
 
+**example:**
+Design a transition diagram to identify multi-line comments in
+Java (C++) programs.
+``` cpp
+/* This is a
+* multi-line comments */
+```
+**solution:**  
+**S0 (Start State):** Initial state.
+Transition on / to S1.  
+**S1:** Seen /, expecting * to start the comment.
+Transition on * to S2.
+Transition on any other character (not *) back to S0 (or a failure state, not shown for simplicity).   
+**S2:** Inside the comment, after seeing /*.
+Transition on * to S3 (potential end of comment).
+Transition on any other character (including newlines) back to S2 (stay in comment).  
+**S3:** Seen * inside comment, checking for / to end.
+Transition on / to S4 (accepting state, comment complete).
+Transition on any other character (including *) back to S2 (continue comment).      
+**S4 (Accepting State):** Comment complete (seen */).
+Double circle, no retraction needed (lexeme includes */).
+Action: Return token (e.g., COMMENT) to the parser. 
+
+# <center><img src="pictures/comment-example.jpg" width="600" class="center"/>
 #### Lexical Errors and Error Recovery:
 
 - Lexical errors occur when no token pattern matches the remaining input.
@@ -327,19 +398,29 @@ In this example, each parsing function is a Boolean function. Each parsing funct
 
 #### Lexical Analysis Challenges:
 
-- In some languages like Fortran, whitespace is insignificant, making lexical analysis challenging.
-- Lookahead is required to distinguish between tokens, and language design should aim to minimize lookahead.
-
+∙ In Fortran, whitespace is insignificant:       
+∙ VAR1 is exactly the same as VA R1.  
+∙ Philosophy: removing all the whitespace should not change the
+meaning of the program. :-D   
+∙ How does it make the task of scanner difficult?  
+∙ DO 5 I = 1,25 Here DO is a keyword representing a loop.  
+∙ DO 5 I = 1.25 Here DO5I is a variable assigned an
+integer (there is no loop).
 #### Lookahead:
 
-- Lookahead is necessary to decide where one token ends and the next begins.
-- It is required to disambiguate between similar constructs (e.g., `==` and `=`).
-- Some languages, like PL/1, where keywords are not reserved, may require more extensive lookahead for lexical analysis.
-
+Lookahead is required to decide where one token ends and the
+next token begins. We would like to minimize lookahead.  
+∙ Lookahead is always required, e.g., we need lookahead to
+disambiguate between == and =.   
+∙ PL/1: keywords are not reserved.  
+∙ IF ELSE THEN THEN = ELSE; ELSE ELSE = THEN  
+∙ This makes lexical analysis a bit more difficult – need to decide
+what is a variable name and what is a keyword, and so need to
+look at what’s going on in the rest of the expression.  
+∙ There are examples where PL/1 may require unbounded
+lookahead!
 
 # <center> Automatic construction of Lexers
-
-<!-- <img src="../pictures/compiler.jpg" width="300" class="center"/> -->
 
 #### Lexer Construction Steps
 
@@ -440,7 +521,32 @@ However, there are also some disadvantages:
 
 <img src="../pictures/lex-work.JPG" width="800" class="center"/>
 
+**How does lex work?**
 
+<img src="pictures/lexer-automatic-construction-steps-example.png" width="800" class="center"/>
+Flex (a tool for generating lexical analyzers) works by converting a token specification into a deterministic finite automaton (DFA) to recognize patterns in input text and perform corresponding actions. Here's how it operates:
+
+**1. Token Specification:** The input to Flex includes a set of patterns (regular expressions) and associated actions. In the image, the token specification defines:
+ab → {Action 1}
+aab → {Action 2}
+a+ (one or more as) → {Action 3}  
+**2. NFA Construction:** Flex initially constructs a nondeterministic finite automaton (NFA) from the regular expressions. The NFA (left diagram) includes states (e.g., q0 to q9) with ε-transitions (no input) and labeled transitions (e.g., a, b). Multiple paths (e.g., from q0 to q3 via ε and a, or to q7 via b) allow non-deterministic choices.  
+**3. Conversion to DFA:** The NFA is converted into a DFA (right diagram) to ensure determinism, where each state (e.g., s0 to s4) has at most one transition per input symbol (a or b). The DFA includes:
+Start state s0.
+Accepting states (e.g., s2 for aab).
+A trap state to handle invalid inputs.
+Transitions based on the input alphabet Σ = {a, b}, as shown in the transition table.  
+**4. Transition Table:** The table defines state transitions:
+s0 → s1 on a, error on b.
+s1 → s3 on a, s2 on b.
+s2, s3, s4 lead to errors or self-loops (e.g., s4 → s4 on a).
+This guides the DFA through the input string.   
+**5 .Input Processing:** For an input like aab:
+Start at s0 → s1 (on a) → s3 (on a) → s2 (on b).
+s2 is an accepting state, triggering {Action 2} for aab.  
+**6. Action Execution:** When the DFA reaches an accepting state matching the longest prefix of the input (e.g., aab over ab), Flex executes the corresponding action (e.g., returning a token to the parser).
+Flex automates this process, generating C code for a lexical analyzer that uses the DFA to scan input, match patterns, and execute actions efficiently.  
+The algorithm for each part is described in the following sections.
 #### Regular Expression to NFA
 
 - Illustrates the process of converting a regular expression to a Non-deterministic Finite Automaton (NFA).
@@ -462,8 +568,11 @@ An NFA is a type of finite automaton that allows multiple transitions from a sta
 ##### Steps to Convert RE to NFA:
 
 1. **Base Cases:**
+<img src="pictures/re2fa-fig1.png" width="800" class="center"/>
    - **Empty String (𝜖):** Create an NFA with two states (initial and final) and an 𝜖 transition between them.
    - **Single Symbol (a):** Create an NFA with two states, one initial and one final, with a transition labeled by the symbol.
+
+<img src="pictures/re2fa-fig2.png" width="800" class="center"/>
 
 2. **Concatenation (AB):**
    - If RE is AB, create NFAs for A and B.
@@ -474,7 +583,10 @@ An NFA is a type of finite automaton that allows multiple transitions from a sta
    - Create a new initial state with 𝜖 transitions to the initial states of A and B.
    - Create a new final state with 𝜖 transitions from the final states of A and B.
 
-4. **Kleene Closure (A*):**
+
+4. **Kleene Closure ($A^*$):** 
+<img src="pictures/re2fa-fig3.png" width="800" class="center"/>
+
    - If RE is A*, create an NFA for A.
    - Add a new initial state with 𝜖 transitions to the initial state of A and a 𝜖 transition from the final state of A to the initial state of A.
 
@@ -503,6 +615,7 @@ Let's convert the regular expression `(a|b)*abb` to an NFA:
 
 The resulting NFA accepts the language described by the regular expression.
 
+<img src="pictures/example-of-re-to-nfa.png" width="800" class="center"/>
 
 
 
@@ -511,10 +624,46 @@ The resulting NFA accepts the language described by the regular expression.
 
 
 #### Converting NFA to DFA
-
+- For every NFA there exists an equivalent DFA that accepts the
+same set of strings.
 - Demonstrates the algorithm to convert NFAs to DFAs.
 - Each set of possible states in the NFA becomes one state in the DFA, resulting in a more efficient representation.
+<!-- ![Alt text](pictures/nfa-to-dfa.gif) -->
+<div>
+  <img id="myGif" src="pictures/nfa-2-dfa-example1-fig10.png" style="display:none;">
+  <video id="gifVideo" width="300" controls style="display:block;">
+    <source id="gifSource" src="pictures/nfa-to-dfa.gif" type="video/gif">
+  </video>
+  <button onclick="togglePlay()">Toggle Play/Pause</button>
+</div>
 
+<script>
+  const video = document.getElementById('gifVideo');
+  const source = document.getElementById('gifSource');
+  let isPlaying = false;
+
+  function togglePlay() {
+    if (isPlaying) {
+      video.pause();
+      isPlaying = false;
+    } else {
+      video.play();
+      isPlaying = true;
+    }
+  }
+
+  // Pause at the last frame
+  video.addEventListener('ended', () => {
+    video.pause();
+    isPlaying = false;
+  });
+</script>
+**Algorithm:**
+1. Keep track of a set of all possible states in which the
+automaton could be,
+2. View this finite set as one state of new automaton,
+3. When processing if we see a set exactly the same as a set
+constructed earlier we mark it.
 
 
 ### DFA Minimization
