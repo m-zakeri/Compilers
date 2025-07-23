@@ -627,14 +627,72 @@ The resulting NFA accepts the language described by the regular expression.
 - For every NFA there exists an equivalent DFA that accepts the
 same set of strings.
 - Demonstrates the algorithm to convert NFAs to DFAs.
-- Each set of possible states in the NFA becomes one state in the DFA, resulting in a more efficient representation.
-<!-- ![Alt text](pictures/nfa-to-dfa.gif) -->
-<div>
+- Each set of possible states in the NFA becomes one state in the DFA, resulting in a more efficient representation.  
+
+**Algorithm:**
+1. Keep track of a set of all possible states in which the
+automaton could be,
+2. View this finite set as one state of new automaton,
+3. When processing if we see a set exactly the same as a set
+constructed earlier we mark it.
+
+**example:**
+<img src="pictures/nfa-2-dfa-example1-fig10.png" width="800" class="center"/>
+
+1. **Identify the NFA:**  
+- The NFA has states {q0, q1, q2, q3, q4}, with q0 as the start state.   
+Transitions include:  
+- q0 → q1 on a, q0 → q4 on b.
+- q1 → q2 on a, q1 → q3 on ε, q1 → q4 on a,b.
+- q2 → q3 on b, q2 → q2 on ε.
+- q3 is an accepting state (marked with √).
+- q4 → q4 on a,b.  
+ε-transitions allow non-deterministic moves without input.
+2. **Initialize DFA States:**   
+- Start with the ε-closure of the NFA's start state (q0). The ε-closure of q0 (denoted {q0}) includes q0 and any states reachable via ε-transitions.
+- Compute ε-closure({q0}):
+From q0, no ε-transitions, so ε-closure({q0}) = {q0}.
+3. **Create Initial DFA State:**
+- The first DFA state is {q0}, the ε-closure of the NFA start state.
+- Mark {q0} as an unmarked state to process.
+4. **Compute Transitions for Each Input Symbol:**
+- For each unmarked DFA state and each input symbol (a, b):  
+Find the set of NFA states reachable by that symbol.  
+Take the ε-closure of that set to form a new DFA state.
+- For {q0}:
+On a: Move to {q1} (from q0 → q1), then ε-closure({q1}) = {q1, q2, q3} (since q1 → q3 via ε, and q2 → q3 via ε from q2).  
+On b: Move to {q4} (from q0 → q4), then ε-closure({q4}) = {q4}.
+- New DFA states: {q1, q2, q3} and {q4}.
+5. **Process New States:**
+- Mark {q0} as processed.
+- For {q1, q2, q3}:  
+On a: Move to {q1, q2, q3} (q1 → q2, q2 → q3 via ε), then ε-closure = {q1, q2, q3}.  
+On b: Move to {q3} (q2 → q3), then ε-closure = {q3}.
+- For {q4}:  
+On a or b: Move to {q4}, then ε-closure = {q4}.
+- New states: {q3}, with {q1, q2, q3} and {q4} to process.
+6. **Repeat Until All States Are Processed:**
+- For {q3} (accepting since q3 is accepting):  
+On a or b: No transitions, so no new states.
+- Mark all states ({q1, q2, q3}, {q4}, {q3}) as processed.
+- Final DFA states: {q0}, {q1, q2, q3}, {q4}, {q3}.
+7. **Define Transitions and Accepting States:**
+- Transitions (as shown):  
+{q0} → {q1, q2, q3} on a.  
+{q0} → {q4} on b.  
+{q1, q2, q3} → {q1, q2, q3} on a.  
+{q1, q2, q3} → {q3} on b.  
+{q4} → {q4} on a,b.  
+{q3} has no outgoing transitions.  
+- Accepting states: {q1, q2, q3} and {q3} (contain q3).
+
+![Alt text](pictures/nfa-to-dfa.gif)
+<!-- <div>
   <img id="myGif" src="pictures/nfa-2-dfa-example1-fig10.png" style="display:none;">
   <video id="gifVideo" width="300" controls style="display:block;">
     <source id="gifSource" src="pictures/nfa-to-dfa.gif" type="video/gif">
   </video>
-  <button onclick="togglePlay()">Toggle Play/Pause</button>
+  <button onclick="togglePlay()">Play/Pause</button>
 </div>
 
 <script>
@@ -657,19 +715,13 @@ same set of strings.
     video.pause();
     isPlaying = false;
   });
-</script>
-**Algorithm:**
-1. Keep track of a set of all possible states in which the
-automaton could be,
-2. View this finite set as one state of new automaton,
-3. When processing if we see a set exactly the same as a set
-constructed earlier we mark it.
+</script> -->
 
 
 ### DFA Minimization
 
 DFA minimization is the process of converting a given Deterministic Finite Automaton (DFA) to an equivalent DFA with the minimum number of states. This process is also known as the optimization of DFA and uses a partitioning algorithm.
-
+<img src="pictures/isomorphic-dfas.png" width="800" class="center"/>
 The steps to minimize a DFA are as follows:
 
 1. **Partitioning**: Divide the set of states (Q) into two sets. One set will contain all final states and the other set will contain non-final states. This partition is called P0.
@@ -725,6 +777,10 @@ Advantages of DFA minimization include reduced complexity, optimal space utiliza
 3. Mark pairs where transitions on the same symbol lead to marked pairs.
 4. Repeat step 3 until no unmarked pairs remain.
 5. Merge unmarked states to achieve a minimized DFA.
+
+**example:**
+![Alt text](pictures/dfa-minimization.gif)
+
 
 #### Resolving Ambiguities in Lexers
 
