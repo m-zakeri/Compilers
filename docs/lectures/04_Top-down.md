@@ -1,7 +1,7 @@
 # Top Dawn Parsing
 
-<img src="../pictures/compiler.jpg" width="300" class="center"/>
 
+# <center> <img src="../pictures/compiler.jpg" width="300" class="center"/>
 We have learnt in the last chapter that the top-down parsing technique parses the input, and starts constructing a parse tree from the root node gradually moving down to the leaf nodes. The types of top-down parsing are depicted below:
 
 ```
@@ -24,7 +24,34 @@ We have learnt in the last chapter that the top-down parsing technique parses th
 Recursive descent is a top-down parsing technique that constructs the parse tree from the top and the input is read from left to right. It uses procedures for every terminal and non-terminal entity. This parsing technique recursively parses the input to make a parse tree, which may or may not require back-tracking. But the grammar associated with it (if not left factored) cannot avoid back-tracking. A form of recursive-descent parsing that does not require any back-tracking is known as ***predictive parsing***.
 
 This parsing technique is regarded recursive as it uses context-free grammar which is recursive in nature.
+- A typical procedure for a nonterminal in a top-down parser is
+as follows:
+# <img src="pictures/typical-procedure-for-a-nonterminal-in-a-top-down-parser.png" width="600" class="center"/>
+This code represents a recursive descent parser for a top-down parsing approach, specifically implementing a procedure A() for a nonterminal symbol A. Here's how it works:
+1. Choose a Production: The parser selects one production rule for nonterminal A, expressed as A → X₁X₂…Xₖ, where Xᵢ are symbols (terminals or nonterminals).
+2. terate Over Symbols: For each symbol Xᵢ in the production (from 1 to k):
+- If Xᵢ is a Nonterminal: The parser recursively calls the procedure for Xᵢ (e.g., Xᵢ()), allowing it to process the corresponding grammar rule.
+- If Xᵢ is a Terminal and Matches Input: If Xᵢ matches the current input symbol a, the parser advances the input to the next symbol.
+- Otherwise: If Xᵢ does not match the input (and is not a nonterminal), an error is reported.
+3. Recursive Nature: The process repeats for each nonterminal encountered, building a parse tree from the top down by expanding nonterminals into their productions and matching terminals with the input.  
 
+This method assumes a predictive parser with a single production choice per nonterminal for simplicity, and it fails if the input cannot be matched according to the chosen production. 
+
+**problem:** The pseudocode does not specify how the parser selects which production rule for A (e.g., A → X₁X₂…Xₖ) to apply when there are multiple possible rules. Without a clear criterion or strategy (e.g., a parsing table or lookahead), the choice is arbitrary, making the parser nondeterministic. This can lead to different parse results for the same input, depending on the chosen production, which is undesirable for a reliable top-down parser.
+
+**solution:** Use the lookahead symbol: the
+first, i.e., leftmost, terminal of the input string.
+
+**example:**
+# <img src="pictures/a-grammar-for-some-statements-in-C-and-Java.png" width="600" class="center"/>
+# <img src="pictures/expect-method-in-recursive-decent-parser.png" width="600" class="center"/>
+The match(terminal t) function is used in a top-down parser to verify and consume terminals from the input:
+
+- It checks if the current lookahead symbol (lookahead) matches the expected terminal t.
+- If they match, it advances the input by calling nextTerminal() to set lookahead to the next input symbol.
+- If they do not match, it reports a "syntax error" and does not advance the input.
+
+This function ensures the parser stays synchronized with the input stream, failing when the input deviates from the expected grammar.
 
 ### Back-tracking
 
