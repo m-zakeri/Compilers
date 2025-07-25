@@ -1011,7 +1011,7 @@ Designing more powerful parsers often involves considering different parsing met
 
 However, parsing more grammars non-directionally poses a challenge, especially when we consider allowing more time-consuming algorithms. To address this, we can employ various strategies:
 
-* **Brute Forcing:** This approach involves enumerating everything possible. While straightforward, it can be computationally expensive due to its exhaustive nature.
+* **Brute Forcing:** This approach involves enumerating everything possible. While straightforward, it can be computationally expensive due to its exhaustive nature.   
 * **Backtracking:** This strategy involves trying different subtrees and discarding partial solutions if they prove unsuccessful. This allows the parser to explore different branches of the parse tree until a valid parse is found.
 * **Dynamic Programming:** This method involves saving partial solutions in a table for later use. This technique is efficient as it avoids recomputation by storing the result of a subproblem and reusing it when needed. However, dynamic programming requires a non-directional parsing method, which is not inherent in LL and LR parsers.
 
