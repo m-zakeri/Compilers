@@ -1,4 +1,5 @@
 
+# Bottom-up Parsing
 ## Bottom-Up Parsing Process
 
 # <center><img src="../pictures/compiler.jpg" width="300" class="center"/>
@@ -7,15 +8,40 @@ Bottom-up parsing is the process of reducing an input string to the start symbol
 
 ## Handle Pruning
 
-Bottom-up parsing during a left-to-right scan of the input constructs a right-most derivation in reverse. A "handle" is a substring that matches the body of a production, and whose reduction represents one step along the reverse of a rightmost derivation.
+- Bottom-up parsing during a left-to-right scan of the input constructs a right-most derivation in reverse. 
+- A "handle" is a substring that matches the body of a production, and whose reduction represents one step along the reverse of a rightmost derivation.
+- A handle A → β in the parse tree for w:
+<img src="pictures/A-handle-A-B.png" width="600" class="center"/>
 
 ## Shift-Reduce Parsing
 
-Shift-reduce parsing is a form of bottom-up parsing in which a stack holds grammar symbols and an input buffer holds the rest of the string to be parsed. Primary operations are shift and reduce. During a left-to-right scan of the input string, the parser shifts zero or more input symbols onto the stack, until it is ready to reduce a string of grammar symbols on top of the stack. It then reduces to the head of the appropriate production with number Rx. The parser repeats this cycle until it has detected an error or until the stack contains the start symbol and the input is empty.
+- Shift-reduce parsing is a form of bottom-up parsing in which a stack holds grammar symbols and an input buffer holds the rest of the string to be parsed. 
+- Primary operations are shift and reduce. 
+   - During a left-to-right scan of the input string, the parser shifts zero or more input symbols onto the stack, until it is ready to reduce a string of grammar symbols on top of the stack. 
+   - It then reduces to the head of the appropriate production with number R<sub>x</sub>. 
+   - The parser repeats this cycle until it has detected an error or until the stack contains the start symbol and the input is empty.
+- There are actually four possible actions a shift-reduce parser
+can make:
+   1. Shift. Shift the next input symbol onto the top of the stack.
+   2. Reduce. The right end of the string to be reduced must be at
+the top of the stack. Locate the left end of the string within the
+stack and decide with what nonterminal to replace the string.
+   3. Accept. Announce successful completion of parsing.
+   4. Error. Discover a syntax error and call an error recovery
+routine
+
+ **Primary operations** 
+<img src="pictures/shift-reduce-parsing-primary-operations.png" width="600" class="center"/>
+
 
 ### Shift-Reduce Parsing Notations
 
-We use $ to mark the bottom of the stack and also the right end of the input. Split string into two substrings, right and left, the dividing point is marked by a |. Right substring is still not examined by parser (a string of terminals). Left substring has both terminals and non-terminals.
+- We use \$ to mark the bottom of the stack and also the right end of the input. 
+- Split string into two substrings, right and left, the dividing point is marked by a |. 
+   - Right substring is still not examined by parser (a string of terminals). 
+   - Left substring has both terminals and non-terminals.
+   - Note: The | is not part of the string
+- Initially, all input is unexamined " | a1a2...an\$".
 
 ### Shift-Reduce Parsing Example
 
@@ -54,52 +80,78 @@ S|
 ```
 Here, `shift` means pushing the next input symbol onto the top of the stack, and `reduce` means popping zero or more symbols off the stack (production RHS) and pushing a non-terminal on the stack (production LHS)
 
+ <img src="pictures/shift-reduce-parsing-example-trace-step16.png" width="600" class="center"/>
 
 ### Shift-Reduce Parsing Stack
 
-Left substring can be implemented by a stack. Top of the stack is the | symbol. Shift pushes a terminal on the stack. Reduce pops Zero or more symbols of the stack (production RHS) and pushes a non-terminal on the stack (production LHS).
+- Left substring can be implemented by a stack. 
+- Top of the stack is the | symbol. 
+- Shift pushes a terminal on the stack. 
+- Reduce pops Zero or more symbols of the stack (production RHS) and pushes a non-terminal on the stack (production LHS).
+
+**example**
+ <img src="pictures/shift-reduce-parsing-example-trace-full-stack.png" width="600" class="center"/>
 
 ## Conflicts During Shift-Reduce Parsing
 
-There are context-free grammars for which shift-reduce parsing cannot be used. Every shift-reduce parser for such a grammar can reach a configuration in which the parser, knowing the entire stack and also the next k input symbols, cannot decide:
+- There are context-free grammars for which shift-reduce parsing cannot be used. 
+- Every shift-reduce parser for such a grammar can reach a configuration in which the parser, knowing the entire stack and also the next k input symbols, cannot decide:
 
-1. Whether to shift or to reduce (a shift/reduce conflict)
-2. Or cannot decide which of several reductions to make (a reduce/reduce conflict)
+   1. Whether to shift or to reduce (a shift/reduce conflict)
+   2. Or cannot decide which of several reductions to make (a reduce/reduce conflict)
+- Consider the following ambiguous grammar for if-then-else
+statements:
+ <img src="pictures/shift-reduce-parsing-shift-reduce-conflict-example-part1.png" width="500" class="center"/>
 
+- If we have a shift-reduce parser in configuration:
+<img src="pictures/shift-reduce-parsing-shift-reduce-conflict-example-part2.png" width="500" class="center"/>
+- There is a shift/reduce conflict,
+- We cannot tell whether if expr then stmt is the handle.
 
+**example** 
+- Consider the following productions involving procedure calls
+and array references:
+<img src="pictures/shift-reduce-parsing-reduce-reduce-conflict-example-part1.png" width="500" class="center"/>
+- If we have a shift-reduce parser in configuration:
+<img src="pictures/shift-reduce-parsing-reduce-reduce-conflict-example-part2.png" width="500" class="center"/>
+- There is a reduce/reduce conflict,
+- It is evident that the id on top of the stack must be reduced,
+but by which production?
+- The correct choice is production (5) if id is a procedure, but
+production (7) if id is an array.
+- We need a precise mechanism to decide which action to
+take: shift or reduce, if reduce should be taken then to which
+production?
 ## Final Thoughts
 
 Remember, mastering these concepts takes time and practice. Don't hesitate to ask questions or seek clarification if something is unclear. Happy studying!
 
-
-
-# Compiler Design Lesson: Bottom-Up Parsing Process and LR Parsing
-
-## Introduction
-
-Bottom-up parsing is a fundamental concept in compiler design. It involves reducing an input string to the start symbol S of the grammar. At each reduction step, a specific substring matching the body of a production (RHS) is replaced by the nonterminal at the head of that production (LHS). The key decisions during bottom-up parsing are about when to reduce and about what production to apply, as the parse proceeds.
-
 ## LR Parsing and LR Grammars
 
-LR parsing is the most prevalent type of bottom-up parser today. The term "LR" stands for left-to-right scanning of the input and constructing a rightmost derivation in reverse. The "k" in LR(k) refers to the number of input symbols of lookahead that are used in making parsing decisions. The cases where k = 0 or k = 1 are of practical interest. When (k) is omitted, k is assumed to be 1. LR parsers are table-driven, similar to nonrecursive LL parsers.
+- LR parsing is the most prevalent type of bottom-up parser today. The term "LR" stands for left-to-right scanning of the input and constructing a rightmost derivation in reverse. 
+- A grammar for which we can construct a parsing table using an LR parsing algorithm is said to be an LR grammar. The class of grammars that can be parsed using LR methods is a proper superset of the class of grammars that can be parsed with predictive or LL methods.
 
-## LR(k) Parsers and Grammars
+### LR(k) Parsers and Grammars
 
-A grammar for which we can construct a parsing table using an LR parsing algorithm is said to be an LR grammar. The class of grammars that can be parsed using LR methods is a proper superset of the class of grammars that can be parsed with predictive or LL methods. For a grammar to be LL(k), we must be able to recognize the use of a production by seeing only the first k symbols of what its right side derives.
+The "k" in LR(k) refers to the number of input symbols of lookahead that are used in making parsing decisions. The cases where k = 0 or k = 1 are of practical interest. When (k) is omitted, k is assumed to be 1. LR parsers are table-driven, similar to nonrecursive LL parsers.  
+For a grammar to be LL(k), we must be able to recognize the use of a production by seeing only the first k symbols of what its right side derives.
 
 For a grammar to be LR(k), we must be able to recognize the occurrence of the right side of a production in a right-sentential form, with k input symbols of lookahead. This requirement is far less stringent than the one for LL(k) grammars. The principal drawback of the LR method is that it is too much work to construct an LR parser by hand for a typical programming-language grammar. A specialized tool, an LR parser generator, is needed.
+
+- The most prevalent type of bottom-up parser today is based
+   - the "R"is for constructing a rightmost derivation in reverse,
+   - the "k"for the number of input symbols of lookahead that are
+used in making parsing decisions.
+   - The cases k = 0 or k = 1 are of practical interest.
+- When (k) is omitted, k is assumed to be 1.
+- LR parsers are table-driven, much like the non-recursive LL
+parsers.
 
 ## Variants of LR Parsers
 
 There are several variants of LR parsers: SLR parsers, LALR parsers, canonical LR(1) parsers, minimal LR(1) parsers, and generalized LR parsers (GLR parsers). LR parsers can be generated by a parser generator from a formal grammar defining the syntax of the language to be parsed. They are widely used for the processing of computer languages. An LR parser reads input text from left to right without backing up and produces a rightmost derivation in reverse. The name "LR" is often followed by a numeric qualifier, as in "LR(1)" or sometimes "LR(k)". To avoid backtracking or guessing, the LR parser is allowed to peek ahead at k lookahead input symbols before deciding how to parse earlier symbols. Typically k is 1 and is not mentioned.
-
-## Conclusion
-
-Mastering these concepts takes time and practice. Understanding the difference between LL and LR parsing, and the various types of LR parsers, is crucial for effective compiler design. Don't hesitate to ask questions or seek clarification if something is unclear. Happy studying!
-
-# Expanding the Concepts
-
-## Representing Item Sets
+## LR(0) parsing
+### Representing Item Sets
 
 In the context of LR(0) parsing, an item set represents the current state of the parser. Each item in the set corresponds to a production in the grammar, with a dot indicating the current position in the production. For example, if we have a production `A -> BC`, there will be four items corresponding to this production:
 
@@ -110,7 +162,7 @@ In the context of LR(0) parsing, an item set represents the current state of the
 
 These items represent the different stages of recognizing the production `A -> BC`.
 
-## Closure and Goto of Item Sets
+### Closure and Goto of Item Sets
 
 The closure operation takes a set of items and produces a new set containing all items that can be derived from the original set. This is done through a series of steps:
 
@@ -118,9 +170,18 @@ The closure operation takes a set of items and produces a new set containing all
 2. For each item in the closure set that is of the form `A -> α.Bβ`, check if there is a production `B -> γ` in the grammar. If so, add the item `B -> .γβ` to the closure set.
 3. Repeat step 2 until no more new items can be added to the closure set.
 
+>The closure ensures that all nonterminals following the dot are expanded into their possible productions, allowing the parser to anticipate all valid next steps. This is a key step in constructing the LR(0) automaton.
+
 The GOTO operation, on the other hand, is used to determine the next state based on the current state and the next input symbol. It is defined as the closure of the set of all items of the form `A -> αB.β`, where `A -> α.Bβ` is in the current state.
 
-## Closure and Goto of Item Sets: Example
+>Intuitively, the GOTO functionis used to define the transitions in the LR(0) automaton for a grammar. The
+states of the automaton correspond to sets of items, and GOTO(I;B) specifies
+the transition from the state for I under input B. 
+
+>**Note:** Note: By convention, S
+′ → S$ is the kernel of the first item,
+I0.
+**example:**
 
 Let's consider a simple grammar:
 
@@ -144,11 +205,54 @@ GOTO(I0, E) = {E -> E + .T, E -> .T}
 
 We continue this process until we reach the final state, which indicates that the input string is valid according to the grammar.
 
-## Canonical Collection of Sets of LR(0) Items
+**example:**  
+```
+(0) E
+′ → E$
+(1) E → E + T
+(2) E → T
+(3) T → T * F
+(4) T → F
+(5) F → (E)
+(6) F → id
+```
+CLOSURE(I0 ={︀[E′ → .E$]}︀):   
+<img src="pictures/closuer-i-example.png" width="150" class="center"/>  
+
+- Start with $[E' \rightarrow \cdot E\$]$.
+- For $E$ after the dot, add all $E$-productions: $[E \rightarrow \cdot E + T]$, $[E \rightarrow \cdot T]$.
+- For $T$ in $[E \rightarrow \cdot T]$, add all $T$-productions: $[T \rightarrow \cdot T * F]$, $[T \rightarrow \cdot F]$.
+- For $F$ in $[T \rightarrow \cdot F]$, add all $F$-productions: $[F \rightarrow \cdot (E)]$, $[F \rightarrow \cdot id]$.
+- Repeat until no new items are added, resulting in the full set.  
+
+GOTO(I0, E):   
+<img src="pictures/goto-i-example.png" width="150" class="center"/>
+
+- Take all items in $I_0$ and move the dot past $E$ where $E$ is after the dot.
+- From $[E' \rightarrow \cdot E\$]$, move to $[E' \rightarrow E \cdot \$]$.
+- From $[E \rightarrow \cdot E + T]$, move to $[E \rightarrow E \cdot + T]$.
+- Collect these into $I_1$, excluding items where the dot cannot move past $E$.
+
+### Canonical Collection of Sets of LR(0) Items
 
 To construct the parsing table, we need to compute the canonical collection of sets of LR(0) items for an augmented grammar. This involves creating a set of states, where each state represents a set of items. The transitions between states are determined by the GOTO operations.
 
-## LR(0) Item Sets: Example
+#### Algorithm 
+<img src="pictures/canonical-collection-of-sets-of-LR0-items
+.png" width="600" class="center"/>
+
+The items(G') algorithm is like building a map of all the possible steps a parser can take to understand a grammar $ G' $ with an added start rule. Here's how it works in a more natural way:
+
+1. Kick Things Off: It starts by creating a small group called $ C $ with just one set, which is the "closure" of the rule $[S' \rightarrow \cdot S]$, where $ S' $ is a special starting point we add to the grammar.
+2. Explore Step by Step: It keeps going through each group of rules (or "sets") in $ C $. For every group and every symbol (like a letter or word) in the grammar:
+
+   - If moving the parser's focus past that symbol (using $ \text{GOTO} $) creates a new, useful set of rules that isn’t already in $ C $, it adds that new set to the group.
+
+4. Keep Going Until Done: It repeats this exploration until no new groups pop up after a full round, meaning we’ve mapped out all the possible parsing states.
+
+
+
+**example:**
 
 Let's consider a slightly more complex grammar:
 
@@ -160,21 +264,125 @@ C -> aC | d
 We start by augmenting the grammar to handle left recursion:
 
 ```
-S' -> SC'
-C' -> aC' | d
+(0) S′ → S$
+(1) S → CC
+(2) C → aC
+(3) C → d
 ```
 
-We then compute the item set for the augmented grammar:
+The canonical collection in this LR(0) parsing table is computed step by step as follows, based on the given grammar with productions $ S' \rightarrow SS $, $ S \rightarrow CC $, $ C \rightarrow aC $, and $ C \rightarrow d $. The process involves computing closures and GOTO transitions to build the set of states (I0 to I6):
 
-```
-I0 = {S' -> .SC', C' -> .aC' | d}
-```
+1. Initialize with Closure of Start Symbol:
 
-We continue this process until we reach the final state.
+   - Start with $ I_0 = \text{CLOSURE}([S' \rightarrow \cdot SS]) $.
+   - Add $[S' \rightarrow \cdot SS]$.
+   - Since $ S $ follows the dot, add all $ S $-productions: $[S \rightarrow \cdot CC]$.
+   - Since $ C $ follows the dot in $[S \rightarrow \cdot CC]$, add all $ C $-productions: $[C \rightarrow \cdot aC]$, $[C \rightarrow \cdot d]$.
+   - Result: $ I_0 = \{ [S' \rightarrow \cdot SS], [S \rightarrow \cdot CC], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] \} $.
 
-## Structure of the LR Parsing Table
+
+2. Compute GOTO for $ I_0 $:
+
+   - GOTO($ I_0, S $): Move dot past $ S $ in $[S' \rightarrow \cdot SS]$ to get $[S' \rightarrow S \cdot S]$. No further closure needed. Result: $ I_4 $.
+   - GOTO($ I_0, C $): Move dot past $ C $ in $[S \rightarrow \cdot CC]$ to get $[S \rightarrow C \cdot C]$. Add $ C $-productions for the second $ C $: $[C \rightarrow \cdot aC]$, $[C \rightarrow \cdot d]$. Result: $ I_3 $.
+   - GOTO($ I_0, a $): Move dot past $ a $ in $[C \rightarrow \cdot aC]$ to get $[C \rightarrow a \cdot C]$. Add $ C $-productions: $[C \rightarrow \cdot aC]$, $[C \rightarrow \cdot d]$. Result: $ I_2 $.
+   - GOTO($ I_0, d $): Move dot past $ d $ in $[C \rightarrow \cdot d]$ to get $[C \rightarrow d \cdot]$. This is a reduce item. Result: $ I_1 $.
+
+
+3. Expand from New States:
+
+   - GOTO($ I_3, C $): Move dot past second $ C $ in $[S \rightarrow C \cdot C]$ to get $[S \rightarrow CC \cdot]$. This is a reduce item. Result: $ I_6 $.
+   - GOTO($ I_2, C $): Move dot past $ C $ in $[C \rightarrow a \cdot C]$ to get $[C \rightarrow aC \cdot]$. This is a reduce item. Result: $ I_5 $.
+   - GOTO($ I_4, \$ $): Move dot past $ S $ in $[S' \rightarrow S \cdot S]$ with end marker $ \$ $ to get $[S' \rightarrow SS \cdot]$. This is an accept state. Result: Accept (no new state needed).
+
+
+4. Iterate Until No New States:
+
+   - Check all new states ($ I_1, I_2, I_3, I_4, I_5, I_6 $) for further GOTO transitions.
+   - $ I_1, I_5, I_6 $ are reduce states with no further moves.
+   - $ I_2 $ and $ I_3 $ were already expanded.
+   - No new states are generated, so the collection is complete: $ \{ I_0, I_1, I_2, I_3, I_4, I_5, I_6 \} $.
+
+
+
+The resulting states and transitions form the canonical collection, with actions (shift, reduce, accept) assigned based on the dot positions and grammar rules.
+<img src="pictures/canonical-collection-of-sets-of-LR0-items-example
+.png" width="600" class="center"/>
+
+<img src="pictures/canonical-collection-of-sets-of-LR0-items-example-automaton
+.png" width="600" class="center"/>
+
+### Structure of the LR Parsing Table
 
 The LR parsing table consists of two parts: a parsing-action function `ACTION` and a goto function `GOTO`. The `ACTION` function determines what action the parser should take based on the current state and the next input symbol. The `GOTO` function determines the next state based on the current state and the next input symbol.
+<img src="pictures/structure-of-the-LR-parsing-table
+.png" width="600" class="center"/>
+
+**example**  
+Assume that we have these:
+```
+(0) S′ → S$
+(1) S → CC
+(2) C → aC
+(3) C → d
+```
+<img src="pictures/canonical-collection-of-sets-of-LR0-items-example
+.png" width="600" class="center"/>
+
+Now let's construct the LR(0) parsing table:
+1. Prepare the Framework:
+   - Create a grid with rows labeled by states 0 through 6 (matching the canonical collection states I0 to I6).
+   - Divide the columns into two sections: "Action" for terminals ($ a $, $ d $, $ \$ $) and "Goto" for nonterminals ($ S $, $ C $).
+   - Initialize all cells as empty, ready to be filled based on the state items and transitions.
+2. Analyze Each State for Actions:
+
+   - State 0 ($ I_0 = \{ [S' \rightarrow \cdot SS], [S \rightarrow \cdot CC], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] \} $):
+
+      - $ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_0, a) = I_2 $, so set Action[$ a $] = "S2" (shift to 2).
+      - $ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_0, d) = I_1 $, so set Action[$ d $] = "S1" (shift to 1).
+      - No complete items or $ \$ $-related moves, so Action[$ \$ $] = "err" (error).
+   - State 1 ($ I_1 = \{ [C \rightarrow d \cdot] \} $):
+      - $ [C \rightarrow d \cdot] $ is a complete item, reduce by $ C \rightarrow d $ (assume $ R_3 $), so set Action[$ a $] = "R3", Action[$ d $] = "R3", Action[$ \$ $] = "R3".
+   - State 2 ($ I_2 = \{ [C \rightarrow a \cdot C], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] \} $):
+
+      - $ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_2, a) = I_2 $, so set Action[$ a $] = "S2" (shift to 2).
+      - $ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_2, d) = I_1 $, so set Action[$ d $] = "S1" (shift to 1).
+      - No complete items or $ \$ $-moves, so Action[$ \$ $] = "err".
+   - State 3 ($ I_3 = \{ [S \rightarrow C \cdot C], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] \} $):
+
+      - $ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_3, a) = I_2 $, so set Action[$ a $] = "S2" (shift to 2).
+      - $ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_3, d) = I_1 $, so set Action[$ d $] = "S1" (shift to 1).
+      - No complete items or $ \$ $-moves, so Action[$ \$ $] = "err".
+   - State 4 ($ I_4 = \{ [S' \rightarrow S \cdot S] \} $):
+
+      - No terminals to shift on, and $[S' \rightarrow S \cdot S]$ with $ \$ $ completes the parse, so set Action[$ \$ $] = "accept".
+      - No valid moves for $ a $ or $ d $, so Action[$ a $] = "err", Action[$ d $] = "err".
+   - State 5 ($ I_5 = \{ [C \rightarrow aC \cdot] \} $):
+
+      - $ [C \rightarrow aC \cdot] $ is a complete item, reduce by $ C \rightarrow aC $ (assume $ R_2 $), so set Action[$ a $] = "R2", Action[$ d $] = "R2", Action[$ \$ $] = "R2".
+   - State 6 ($ I_6 = \{ [S \rightarrow CC \cdot] \} $):
+
+      - $ [S \rightarrow CC \cdot] $ is a complete item, reduce by $ S \rightarrow CC $ (assume $ R_1 $), so set Action[$ a $] = "R1", Action[$ d $] = "R1", Action[$ \$ $] = "R1".
+
+
+
+3. Analyze Each State for Gotos:
+   - State 0:
+      - $ \text{GOTO}(I_0, S) = I_4 $, so set Goto[$ S $] = 4.
+      - $ \text{GOTO}(I_0, C) = I_3 $, so set Goto[$ C $] = 3.
+   - State 1: No nonterminal transitions, so Goto[$ S $] and Goto[$ C $] remain empty.
+   - State 2:
+      - $ \text{GOTO}(I_2, C) = I_5 $, so set Goto[$ C $] = 5.
+   - State 3:
+      - $ \text{GOTO}(I_3, C) = I_6 $, so set Goto[$ C $] = 6.
+   - States 4, 5, 6: No further nonterminal transitions, so Goto columns remain empty.
+4. Finalize the Table:
+   - Fill in the grid with the determined actions and gotos.
+   - Ensure all cells are populated: shifts (S), reduces (R), accept, or errors (err) for Action; state numbers for Goto; leave empty where no transition applies.
+   - The resulting table matches the image, with state 0 shifting on $ a $ to 2 (S2) and $ d $ to 1 (S1), going to 4 with $ S $ and 3 with $ C $, and so on, reflecting the parser’s behavior based on the canonical collection.
+
+<img src="pictures/structure-of-the-LR-parsing-table1-an-example
+.png" width="600" class="center"/>
 
 # LR(0) Parsing: Example
 

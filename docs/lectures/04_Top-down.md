@@ -293,7 +293,7 @@ S $⇒^*$ wα
 <img src="pictures/predictive-parsing-algorithm.png
 " width="600" class="center"/>
 
-This algorithm implements a shift-reduce parser using a parsing table $ M $ for a grammar $ G $ to determine if a string $ w $ is in the language $ L(G) $ and, if so, produces its leftmost derivation. Here's how it works:
+This algorithm implements a predictive parsing using a parsing table $ M $ for a grammar $ G $ to determine if a string $ w $ is in the language $ L(G) $ and, if so, produces its leftmost derivation. Here's how it works:
 1. Initialization:
 
 - Start with the input string $ w $ and the parsing table $ M $.
