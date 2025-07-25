@@ -384,7 +384,7 @@ Now let's construct the LR(0) parsing table:
 <img src="pictures/structure-of-the-LR-parsing-table1-an-example
 .png" width="600" class="center"/>
 
-# LR(0) Parsing: Example
+**LR(0) Parsing: Example**
 
 Consider the following parsing table generated from the grammar `E -> E + T | T` :
 
@@ -405,7 +405,7 @@ State int+;()ET
 
 This table shows that if the parser is in state 0 and reads an integer, it shifts the integer and moves to state 9. If it reads a plus sign, it reduces `E -> T` and stays in state 1. If it reads a left parenthesis, it reduces `T -> (E)` and moves to state 6. And so on.
 
-# LR(0) DFA Construction: Example
+**LR(0) DFA Construction: Example**
 
 Let's consider a slightly more complex grammar:
 
@@ -429,7 +429,7 @@ We then
 
 
 
-# Structure of the LR Parsing Table: Example
+**Structure of the LR Parsing Table: Example**
 
 Let's consider the grammar `G'` from the previous example:
 
@@ -450,7 +450,9 @@ The parsing table for this grammar would be constructed based on the item sets a
 
 The 'Action' column indicates whether the parser should shift (read the next input symbol and push it onto the stack), reduce (apply a grammar rule to the top of the stack), or go to (move to a new state without consuming any input symbols).
 
-# LR-parsing algorithm i
+### LR-parsing algorithm
+<img src="pictures/lr-main-parsing-algorithm
+.png" width="600" class="center"/>
 
 The LR-parsing algorithm works as follows:
 
@@ -460,64 +462,49 @@ The LR-parsing algorithm works as follows:
 4. Perform the action: if it's a shift, push the input symbol onto the stack and move to the next state. If it's a reduce, replace the top of the stack with the left-hand side of the grammar rule. If it's a go to, move to the next state without changing the stack.
 5. Repeat steps 2-4 until the entire input has been read and the stack contains only the start symbol and the end marker.
 
-# LR-parsing algorithm ii
+>- All LR parsers (LR(0), LR(1), LALR(1), and SLR(1)) behave in this
+fashion,
+>- The only difference between one LR parser and another is the
+information in the ACTION and GOTO
+fields of the parsing table.
 
-The second LR-parsing algorithm is similar to the first one, but instead of using the ACTION field of the parsing table, it uses the GOTO field to determine the next state. This allows the parser to avoid reading the next input symbol until it knows whether it needs to shift or go to.
+**example:**
+Assume that we have these:
+```
+(0) S′ → S$
+(1) S → CC
+(2) C → aC
+(3) C → d
+```
+<img src="pictures/structure-of-the-LR-parsing-table1-an-example
+.png" width="600" class="center"/>
+Now let's parse the following input:
+```
+add$
+```
+<img src="pictures/structure-of-the-LR-parsing-table1-an-example-trcae
+.png" width="600" class="center"/>
 
-# LR(0) parsing table: Example
-
-The LR(0) parsing table provides the same functionality as the LR parsing algorithms described above, but in a more compact form. It consists of two parts: the ACTION table and the GOTO table.
-
-The ACTION table maps each state and input symbol to an action (shift, reduce, accept, or error). The GOTO table maps each state and grammar symbol to a next state.
-
-Here is an example of an LR(0) parsing table for a simple grammar:
-
-| State | Input | Action | Next State |
-|-------|-------|--------|------------|
-| 0    | a    | Shift | 1         |
-| 1    | b    | Reduce |           |
-| 0    | b    | Error |           |
-
-This table tells us that if we are in state 0 and read an 'a', we should shift it onto the stack and move to state 1. If we are in state 1 and read a 'b', we should reduce by the rule `A -> aB`. If we are in state 0 and read a 'b', we should report an error.
-
-# LR(0) Parsing: Example
-
-Let's consider the following parsing table for the grammar `G`:
-
-(0) `S'` → `S$`
-(1) `S → CC`
-(2) `C → aC`
-(3) `C → d`
-
-And the example input `add$`.
-
-We start by initializing the stack with the start symbol `S'` and the end marker `$`. Then we read the first input symbol 'a'. According to the parsing table, we shift 'a' onto the stack and move to state 1. We continue this process until we have consumed all the input symbols.
-
-At the end of the parsing process, if the stack contains only the start symbol and the end marker, the input string is accepted. Otherwise, it is rejected.
-
-# All LR parsers (LR(0), LR(1), LALR(1), and SLR(1)) behave in this fashion
-
-All LR parsers follow a similar process: they initialize the stack with the start symbol and the end marker, then read the input symbols one by one, looking up actions in the parsing table to decide whether to shift, reduce, or go to. The only difference between them lies in the construction of the parsing table, which depends on the specific variant of LR parsing being used.
-
-# LR(0) Parsing
-
-LR(0) parsing is a type of bottom-up parsing method used in compiler design. It uses a finite automaton to guide the parsing process. The LR(0) parser reads the input symbols from left to right (L), applies the productions in reverse order (R), and looks ahead zero symbols (0) to decide what action to take.
-
-The LR(0) parser uses two tables during the parsing process: the ACTION table and the GOTO table. The ACTION table maps each state and input symbol to an action (shift, reduce, accept, or error). The GOTO table maps each state and grammar symbol to a next state.
-
-# LR(0) Parser Scope
+### LR(0) Parser Scope
 
 The scope of an LR(0) parser refers to the set of languages it can recognize. An LR(0) parser can recognize a context-free language if and only if the language is unambiguous and does not contain left recursion.
 
-# LR(0) Limitations
+### LR(0) Limitations
 
 One limitation of LR(0) parsing is that it cannot handle certain types of ambiguous grammars, such as those with left recursion or grammars that require more than one token of lookahead to resolve ambiguities.
+<img src="pictures/lr0-limitations
+.png" width="600" class="center"/>
 
-# LR(0) Parsing Table with Conflicts
+### LR(0) Parsing Table with Conflicts
 
 Conflicts in the LR(0) parsing table occur when there are multiple possible actions for a given state and input symbol. These conflicts must be resolved before the parsing table can be used effectively. One common way to resolve conflicts is by using operator precedence and associativity rules, or by transforming the grammar to remove the ambiguity.
 
-# LR(0) Grammar: Exercises
+<img src="pictures/lr0-limitations-example
+.png" width="600" class="center"/>
+
+The conflict in state 1 with input $ \$ $ is a shift-reduce issue: the parser can either reduce $ S \rightarrow E $ (r1) or shift to state 6 (s6). This arises because LR(0) lacks lookahead, allowing both actions from items like $[S \rightarrow E \cdot]$ and $ [S' \rightarrow S \cdot \$] $, making the parse ambiguous.
+
+**LR(0) Grammar: Exercises**
 
 To construct the LR(0) parsing table for a given grammar, you would typically follow these steps:
 
@@ -529,7 +516,7 @@ To construct the LR(0) parsing table for a given grammar, you would typically fo
 
 The exercise asks you to construct the LR(0) parsing table for several different grammars. You would need to follow the steps above for each grammar.
 
-# Which one is LR(0)?
+**Which one is LR(0)?**
 
 To determine whether a grammar is suitable for LR(0) parsing, you would need to check whether the grammar is unambiguous and does not contain left recursion. If both conditions are met, then the grammar is suitable for LR(0) parsing.
 
@@ -545,22 +532,31 @@ From the given grammars, the ones that are suitable for LR(0) parsing are:
 
 The remaining grammars either contain left recursion (`S → AA` and `A → aA`) or are ambiguous (`S → A`), making them unsuitable for LR(0) parsing.
 
-# Simple LR Parsing (SLR or SLR(1))
+## Simple LR Parsing (SLR or SLR(1))
 
 
 Simple LR parsing, also known as SLR or SLR(1), is an extension of LR(0) parsing. It introduces a single token of lookahead to help resolve conflicts between shift and reduce operations. 
 
 For each reduction item `A → γ·`, the parser looks at the lookahead symbol `c`. It applies the reduction only if `c` is in the `FOLLOW(A)` set, which contains all the terminal symbols that can appear immediately after `A` in a sentential form derived from the start symbol.
 
-# SLR Parsing Table
+### SLR Parsing Table
 
 The SLR parsing table eliminates some conflicts compared to the LR(0) table. It is essentially the same as the LR(0) table, but with reduced rows. Reductions do not fill entire rows. Instead, reductions `A → γ·` are added only in the columns of symbols in `FOLLOW(A)`.
 
-# SLR Grammar
+### SLR Grammar
+- SLR grammar: A grammar for which the SLR parsing table
+does not have any conflicts. 
 
 An SLR grammar is a context-free grammar for which the SLR parsing table does not have any conflicts. In other words, an SLR grammar is one that can be parsed by an SLR parser without encountering any shift/reduce or reduce/reduce conflicts.
 
-# SLR Parsing: Example
+**example:**  
+
+Now we compute the SLR parsing tabble for the previous conficting LR(0) table.
+<img src="pictures/slr-parsing-example1
+.png" width="600" class="center"/>
+Here instead of putting the r1 in all the rows we compute the FOLLOW(S) in production `S → .E`. In this case only \$ is in the follow set so other cells in the column get empty, so the conflict gets resolved.
+
+**SLR Parsing: Example**
 
 The SLR parsing algorithm is similar to the LR(0) parsing algorithm, but with the addition of considering the lookahead symbol when deciding whether to shift or reduce. Here is a simplified version of the algorithm:
 
@@ -570,7 +566,7 @@ The SLR parsing algorithm is similar to the LR(0) parsing algorithm, but with th
 4. If the action is a shift, push the input symbol onto the stack and move to the next state. If the action is a reduce, replace the top of the stack with the left-hand side of the grammar rule. If the action is a go to, move to the next state without changing the stack.
 5. Repeat steps 2-4 until the entire input has been read and the stack contains only the start symbol and the end marker.
 
-# SLR Parsing: Example
+**SLR Parsing: Example**
 
 Let's consider a simple grammar:
 
@@ -586,21 +582,41 @@ We start by initializing the stack with the start symbol `E` and the end marker 
 
 At the end of the parsing process, if the stack contains only the start symbol and the end marker, the input string is accepted. Otherwise, it is rejected.
 
-# Expanding the Concepts
+**example**  
+SLR collection:
+<img src="pictures/expression-grammar-slr-automaton
+.png" width="600" class="center"/>
+SLR table:
+<img src="pictures/slr-parsing-table-for-expression-grammar
+.png" width="600" class="center"/>
 
-## SLR Parsing
+### SLR Parsing
 
 SLR (Simple LR) parsing is an extension of LR(0) parsing. It introduces a single token of lookahead to help resolve conflicts between shift and reduce operations. For each reduction item `A → γ·`, the parser looks at the lookahead symbol `c`. It applies the reduction only if `c` is in the `FOLLOW(A)` set, which contains all the terminal symbols that can appear immediately after `A` in a sentential form derived from the start symbol.
 
-## SLR Parsing Scope
+### SLR Parsing Scope
 
 The scope of an SLR parser refers to the set of languages it can recognize. An SLR parser can recognize a context-free language if and only if the language is unambiguous and does not contain left recursion. However, unlike LR(0) parsers, SLR parsers can handle certain types of ambiguous grammars by considering the lookahead symbol when deciding whether to shift or reduce.
 
-## SLR Parsing Limitations
+### SLR Parsing Limitations
 
 Despite its advantages, SLR parsing still has limitations. One of the main limitations is that it cannot handle certain types of ambiguous grammars, such as those with left recursion or grammars that require more than one token of lookahead to resolve ambiguities. Additionally, the SLR parsing algorithm requires additional computational resources compared to LR(0) parsing due to the need to calculate the `FOLLOW(A)` set for each non-terminal.
+**example**
+```
+(0) S′ → S$
+(1) S → AaAb
+(2) S → BbBa
+(3) A → ε
+(4) B → ε
+```
 
-## Show That the Following Grammar Is Not SLR
+<img src="pictures/slr-parsing-example2-conflicts
+.png" width="600" class="center"/>
+
+>To verify the type of a given grammer you should construct the parsing table for each type and if in had no conflicts, the grammar is of that type.
+
+
+**Show That the Following Grammar Is Not SLR**
 
 Let's consider the following grammar:
 
@@ -616,7 +632,7 @@ If we try to construct the SLR parsing table for this grammar, we will encounter
 
 In general, to show that a grammar is not SLR, we need to construct the SLR parsing table and check for any reduce-reduce conflicts. If we find any such conflicts, then the grammar is not SLR.
 
-# SLR Parsing: Example
+**SLR Parsing: Example**
 
 Let's consider a simple grammar:
 
@@ -632,33 +648,26 @@ We start by initializing the stack with the start symbol `E` and the end marker 
 
 At the end of the parsing process, if the stack contains only the start symbol and the end marker, the input string is accepted. Otherwise, it is rejected.
 
-# LR(1) Parsing and LR(1) Grammars
+## LR(1) Parsing and LR(1) Grammars
 
 LR(1) parsing, also known as canonical LR(1) parsing, is an extension of LR(0) parsing. It uses similar concepts as SLR, but it uses one lookahead symbol instead of none. The idea is to get as much as possible out of one lookahead symbol. The LR(1) item is an LR(0) item combined with lookahead symbols possibly following the production locally within the same item set. For instance, an LR(0) item could be `S → ·S + E`, and an LR(1) item could be `S → ·S + E , +`. Similar to SLR parsing, lookahead only impacts reduce operations in LR(1). If the LR(1) parsing action function has no multiply defined entries, then the given grammar is called an LR(1) grammar.
 
-# LR(1) Closure
+### LR(1) Closure
 Similar to LR(0) closure, but also keeps track of the lookahead symbol. If `I` is a set of items, `CLOSURE(I)` is the set of items such that:
 
 1. Initially, every item in `I` is in `CLOSURE(I)`,
 2. If `A → α · B` and `B → γ` is a production whose closures are not in `I` then add the item `B → γ` , `FIRST(β)` to `CLOSURE(I)`.
 3. In step (2) if `β → ε` then add the item `B → γ , δ` to `CLOSURE(I)`.
 4. For recursive items with form `A → ·Aα , δ ` and ``A → ·β , δ` replace the items with `A → ·Aα , δ, FIRST(α)` and `A → ·β , δ, FIRST(α)`.
-Apply these steps (2), (3), and (4) until no more new items can be added to `CLOSURE(I)`.
+5. Apply these steps (2), (3), and (4) until no more new items can be added to `CLOSURE(I)`.
 
-# LR(1) GOTO and States
+### LR(1) GOTO and States
 Initial state: start with `[S' → S$ , $]` as the kernel of `I0`, then apply the `CLOSURE(I)` operation. The GOTO function is analogous to GOTO in LR(0) parsing.
 
-# LR(1) Items
+### LR(1) Items
 An LR(1) item is a pair `[α; β]`, where `α` is a production from the grammar with a dot at some position in the RHS and `β` is a lookahead string containing one symbol (terminal or EOF). What about LR(1) items? Several LR(1) items may have the same core. For instance, `[A ::= X · Y Z; a]` and `[A ::= X · Y Z; b]` would be represented as `[A ::= X · Y Z; {a, b}]`.
 
-
-
-
-# LR(1) Parsing and LR(1) Grammars
-
-LR(1) parsing, also known as canonical LR(1) parsing, is an extension of LR(0) parsing. It uses similar concepts as SLR, but it uses one lookahead symbol instead of none. The idea is to get as much as possible out of one lookahead symbol. The LR(1) item is an LR(0) item combined with lookahead symbols possibly following the production locally within the same item set. For instance, an LR(0) item could be `S → ·S + E`, and an LR(1) item could be `S → ·S + E , +`. Similar to SLR parsing, lookahead only impacts reduce operations in LR(1). If the LR(1) parsing action function has no multiply defined entries, then the given grammar is called an LR(1) grammar.
-
-# LR(1) Parsing Table: Example
+**LR(1) Parsing Table: Example**
 
 Let's consider the following grammar:
 
@@ -670,8 +679,44 @@ Let's consider the following grammar:
 ```
 
 First, we augment the grammar by adding a new start symbol and a new production that starts with the old start symbol followed by a special end marker `$`. Then we compute the closure of the set of items derived from the new start symbol. We repeat this process for each new state until no more new states can be added. For each state and input symbol, we determine the action to take (shift, reduce, or go to) based on the transitions in the state machine. Finally, we write the resulting actions into the ACTION and GOTO fields of the parsing table.
+<img src="pictures/lalr1-parsing-example2-conflicts-part1
+.png" width="600" class="center"/>
+In an LR(1) parser, lookaheads are computed as part of constructing the LR(1) items within each state of the canonical collection. For the given grammar $ (0) S' \rightarrow S\$ $, $ (1) S \rightarrow CC $, $ (2) C \rightarrow aC $, $ (3) C \rightarrow d $, the lookaheads are determined during the closure and GOTO operations. Here's how they are computed step by step:
 
-# LR(1) Parsing Table: Exercise
+1. Initialize with the Augmented Production:
+
+   - Start with the initial item $ [S' \rightarrow \cdot S, \$] $, where the lookahead $ \$ $ is taken from the right side of the augmented production $ S' \rightarrow S\$ $, as $ \$ $ is the end marker.
+
+
+2. Compute Closure:
+
+   - For each item $ [A \rightarrow \alpha \cdot B \beta, a] $ in a state (where $ B $ is a nonterminal), add $ [B \rightarrow \cdot \gamma, b] $ for every production $ B \rightarrow \gamma $, where $ b $ is any terminal that can follow $ A \rightarrow \alpha B \beta $.
+   - Example: In state 0 with $ [S' \rightarrow \cdot S, \$] $, add $ [S \rightarrow \cdot CC, \$] $ because $ \$ $ follows $ S $ in $ S' \rightarrow S\$ $.
+   - For $ [S \rightarrow \cdot CC, \$] $, add $ [C \rightarrow \cdot aC, \$] $ and $ [C \rightarrow \cdot d, \$] $, as $ \$ $ can follow $ C $ in the context of $ S \rightarrow CC $ followed by $ S' \rightarrow S\$ $.
+
+
+3. Compute GOTO and Propagate Lookaheads:
+
+   - When moving the dot past a symbol $ X $ to form $ \text{GOTO}(I, X) $, the lookahead $ a $ from $ [A \rightarrow \alpha \cdot X \beta, a] $ is carried over to the new item $ [A \rightarrow \alpha X \cdot \beta, a] $.
+   - Example: From $ [S' \rightarrow \cdot S, \$] $ in state 0, $ \text{GOTO}(I_0, S) = I_{14} $ with $ [S' \rightarrow S \cdot, \$] $, keeping $ \$ $ as the lookahead.
+   - For $ [S \rightarrow C \cdot C, \$] $ in state 3, $ \text{GOTO}(I_3, C) = I_6 $ with $ [S \rightarrow CC \cdot, \$] $, retaining $ \$ $.
+
+
+4. Handle Epsilon and Follow Sets:
+
+   - If $ \beta $ is empty (e.g., a reduction item), the lookahead $ a $ is determined by the FOLLOW set of $ A $, computed from the context where $ A $ appears. Since $ S' \rightarrow S\$ $ is the only context, $ FOLLOW(S) = \{ \$ \} $, and this propagates to all reductions.
+   - Example: $ [C \rightarrow d \cdot, \$] $ in state 10 gets $ \$ $ from $ FOLLOW(C) $ via $ S \rightarrow CC $.
+
+
+5. Iterate Until Complete:
+
+   - Repeat closure and GOTO for new states, ensuring all lookaheads are propagated or computed based on the grammar’s structure and the initial $ \$ $ from $ S' \rightarrow S\$ $.
+
+<img src="pictures/structure-of-the-LR1-parsing-table2-an-example
+.png" width="600" class="center"/>
+
+
+**LR(1) Parsing Table: Exercise**
 
 Let's consider the following grammar:
 
@@ -683,37 +728,31 @@ E → num
 We would follow the same steps as in the example to construct the LR(1) parsing table for this grammar. However, since the grammar is quite simple, the resulting table should also be relatively straightforward.
 
 Remember, the goal is to identify any conflicts in the parsing table. A conflict occurs when there are multiple possible actions for a given state and input symbol. If there are no conflicts, then the grammar is suitable for LR(1) parsing.
-
-# <center> LALR(1)
-
-
-
-
-
-Expanding on the topic of LALR(1) parsing and LALR(1) grammars, we can discuss some advanced features and considerations:
-
-## Precedence Declarations
-
-In some grammars, operators may have different precedences, such as multiplication having higher precedence than addition. This can be represented in a grammar using precedence declarations. For instance:
-
-```
-precedence left PLUS;
-precedence left TIMES;
-```
-
-These declarations would cause the parser to reduce the left state on token `+` and to shift the right state on token `*`, achieving the desired precedence. LALR parser generators also allow a precedence declaration to be attached directly to a production, specifying its priority with respect to other productions of the same nonterminal .
-
-## LR(1) Construction
+## LALR(1)
+- LALR (Look-Ahead LR) parser: Simple technique to
+eliminate and minimize LR(1) states.
+- Technique: If two LR(1) states are identical except for the
+look ahead symbol of their items, merge them.
+- It is more memory efficient, typically merges several LR(1)
+states.
+- May also have more reduce/reduce conflicts.
+- Power of LALR parsing is enough for many mainstream
+computer languages
+- Several automatic parser generators such as YACC or GNU
+Bison.
+<img src="pictures/lalr1-states
+.png" width="600" class="center"/>
+### LR(1) Construction
 
 The LR(1) construction extends the LR(0) automaton construction to an LR(1) automaton. Just as in the LR(0) automaton, the states are a set of items that is closed under prediction. However, the items now contain a set of lookahead tokens. Thus, an LR(1) item has the form `X→α.,β~~~~λ`, where the symbols `α` represent the top of the automaton stack, the dot represents the current input position, the symbols `β` derive possible future input, and the set of tokens `λ` describes tokens that could appear in the input stream after the derivation of `β` .
 
-## LALR Grammars
+### LALR Grammars
 
 The number of LR(1) states is often unnecessarily large, because the LR(1) automaton ends up with many states that are identical other than lookahead tokens. This insight leads to LALR automata. An LALR automaton is exactly the same as an LR(1) automaton except that it merges together all states that are identical other than lookaheads. In the merge, the lookahead sets are combined for each item. Many parser generators are based on LALR, including commonly used software like yacc, bison, CUP, mlyacc, ocamlyacc, and Menhir.
 
 While LALR is in practice just about as good as full LR, it does occasionally lose some expressive power. To see why, consider what happens when the two LR(1) states in the following diagram are merged to form the state marked M: The two states on the top are unambiguous LR(1) states in which the lookahead character indicates which of the two productions to reduce. But when merged, the resulting state has reduce–reduce conflicts on both `+` and `$`. When merging LR(1) states creates a new conflict, the grammar must be LR(1) but not LALR(1) .
 
-## LALR(1) Parser Behavior
+### LALR(1) Parser Behavior
 
 The LALR(1) parser behaves similarly to the LR(1) parser for correct inputs, producing the same sequence of reduce and shift actions. On an incorrect input, the LALR parser produces the same sequence of actions up to the last shift action, although it might then do a few more reduce actions before reporting the error. So although the LALR parser has fewer states, its behavior is identical for correct inputs, and extremely similar for incorrect inputs .
 
@@ -780,6 +819,33 @@ State Stack Input Action
 In this example, the LALR(1) parser successfully parses the input string `xqy` according to the given grammar. Note that the actual parsing process would involve more steps and more complex entries in the parsing table.
 
 Keep in mind that this is a simplified example. In practice, the construction of the LALR(1) parsing table can be complex and time-consuming, especially for larger grammars. Also, the LALR(1) parser may produce different results for incorrect inputs, depending on how the parsing table is constructed and how conflicts are resolved.
+**example**
+Assume that we have these:
+```
+(0) S' → S$
+(1) S → CC
+(2) C → aC
+(3) C → d
+```
+<img src="pictures/collection-of-sets-of-LR1-items-example
+.png" width="600" class="center"/>
+Now let's convert it to LALR:
+Here I1 and I6 share the same productions but with different lookaheads so they can be merged. it is the same  i2 and I7, and I5 and I9.
+<img src="pictures/collection-of-sets-of-LALR1-items-example-not-merged
+.png" width="600" class="center"/>
+After merging, combine the itmes' names (I1 and I6 -> I1-6). For GOTO actions replace them with the new names. 
+<img src="pictures/collection-of-sets-of-LALR1-items-example-merged
+.png" width="600" class="center"/>
+After that constuct the parsing table.
+<img src="pictures/structure-of-the-LALR1-parsing-table2-an-example
+.png" width="600" class="center"/>
+
+### LALR(1) Parsing scope
+As mentioned before merging can result in conflicts. you can se an example below:
+
+Merging I1 and I7 results in reduce-reduce conflicts (R3/ R4) in action[1-7,a] and action[1-7, b].
+<img src="pictures/lalr1-parsing-example2-conflicts-part2
+.png" width="600" class="center"/>
 
 # Embrace the Power of Ambiguous Grammars
 Every ambiguous grammar fails to be LR and thus is not part of any of the classes of the LR grammars discussed. Yet, certain types of ambiguous grammars prove to be quite useful in the specification and implementation of languages. For language constructs like expressions, an ambiguous grammar provides a shorter, more natural specification than any equivalent unambiguous grammar. Furthermore, ambiguous grammars result in fewer productions, leading to parsing tables with a smaller size. Disambiguating rules that allow only one parse tree for each sentence add to the appeal of ambiguous grammars.
