@@ -847,58 +847,67 @@ Merging I1 and I7 results in reduce-reduce conflicts (R3/ R4) in action[1-7,a] a
 <img src="pictures/lalr1-parsing-example2-conflicts-part2
 .png" width="600" class="center"/>
 
-# Embrace the Power of Ambiguous Grammars
+## Embrace the Power of Ambiguous Grammars
 Every ambiguous grammar fails to be LR and thus is not part of any of the classes of the LR grammars discussed. Yet, certain types of ambiguous grammars prove to be quite useful in the specification and implementation of languages. For language constructs like expressions, an ambiguous grammar provides a shorter, more natural specification than any equivalent unambiguous grammar. Furthermore, ambiguous grammars result in fewer productions, leading to parsing tables with a smaller size. Disambiguating rules that allow only one parse tree for each sentence add to the appeal of ambiguous grammars.
 
-# The Impact of Unambiguous vs. Ambiguous Grammars
+### The Impact of Unambiguous vs. Ambiguous Grammars
 
 Consider the parsing tables for an unambiguous expression grammar. The SLR parsing table contains 12 rows, while the LR(1) parsing table contains 22 rows. This difference in size underscores the benefits of ambiguous grammars. They simplify the specification of language constructs and reduce the size of the parsing tables, making them more manageable and efficient.
 
-# Resolving Conflicts with Precedence and Associativity
+### Resolving Conflicts with Precedence and Associativity
 
 When dealing with ambiguous grammars, conflicts can arise due to operator precedence and associativity. For instance, in an augmented expression grammar, the sets of LR(0) items can reveal potential conflicts. However, by carefully applying precedence and associativity rules, these conflicts can be effectively resolved.
 
-# Showcasing the Power of LR(1) Grammars
-
-While some ambiguous grammars are LR(1), others are not. For example, the following grammar is LR(1) but not LALR(1):
-
-```
-(0) S' → S$
-(1) S → AbC
-(2) S → Ba
-(3) A → a
-(4) B → a
-(5) C → Aa
-(6) C → Bb
-```
-
-Merging items 1 and 7 results in reduce-reduce conflicts in action[1-7, a] and action[1-7, b]. This example illustrates the limitations of LALR(1) parsing and highlights the power of LR(1) parsing .
-
-# Conclusion
-
-Ambiguous grammars offer a powerful tool for specifying and implementing languages. They simplify the specification of language constructs, reduce the size of parsing tables, and allow for the resolution of conflicts through disambiguation rules. While LR(1) parsing offers significant advantages, it's essential to remember that not all ambiguous grammars are LR(1). Understanding these nuances can help us leverage the strengths of ambiguous grammars while mitigating their limitations.
-
-# Mastering LR Parsing Errors
-
+## Error recovery in LR parsing
 LR parsing is a powerful technique used in computer programming language compilers and other associated tools. One of the challenges it faces is handling errors. An LR parser will detect an error when it consults the parsing action table and finds an error entry. Errors are never detected by consulting the goto table. 
 
-## Panic-Mode Error Recovery
+### Panic-Mode Error Recovery
+- An LR parser will detect an error when it consults the parsing
+action table and finds an error entry.
+- Errors are never detected by consulting the goto table.
+- In LR parsing, we can implement panic-mode error recovery as follows:
 
-In LR parsing, we can implement panic-mode error recovery as follows:
-
-1. Scan down the stack until a state `s` with a goto on a particular nonterminal `A` is found.
-2. Zero or more input symbols are then discarded until a symbol `a` is found that can legitimately follow `A`.
-3. The parser then stacks the state `GOTO(s, A)` and resumes normal parsing.
+   1. Scan down the stack until a state `s` with a goto on a particular nonterminal `A` is found.
+   2. Zero or more input symbols are then discarded until a symbol `a` is found that can legitimately follow `A`.
+   3. The parser then stacks the state `GOTO(s, A)` and resumes normal parsing.
 
 This approach allows the parser to recover from errors by discarding erroneous input and resuming normal parsing.
 
-## Phrase-Level Error Recovery
+### Phrase-Level Error Recovery
 
-Phrase-level recovery is another strategy for handling errors in LR parsing. This approach involves examining each error entry in the LR parsing table and deciding, based on language usage, the most likely programmer error that would give rise to that error. An appropriate recovery procedure can then be constructed, presumably modifying the top of the stack and/or first input symbols in a way deemed appropriate for each error entry.
+- Phrase-level recovery is another strategy for handling errors in LR parsing. This approach involves examining each error entry in the LR parsing table and deciding, based on language usage, the most likely programmer error that would give rise to that error. 
+- An appropriate recovery procedure can then be constructed, presumably modifying the top of the stack and/or first input symbols in a way deemed appropriate for each error entry.
 
-In designing specific error-handling routines for an LR parser, we can fill in each blank entry in the action field with a pointer to an error routine that will take the appropriate action selected by the compiler designer. The actions may include insertion or deletion of symbols from the stack or the input or both, or alteration and transposition of input symbols. We must make our choices so that the LR parser will not get into an infinite loop.
+- In designing specific error-handling routines for an LR parser, we can fill in each blank entry in the action field with a pointer to an error routine that will take the appropriate action selected by the compiler designer. 
+- The actions may include insertion or deletion of symbols from the stack or the input or both, or alteration and transposition of input symbols. 
+- We must make our choices so that the LR parser will not get into an infinite loop.
 
-## Example of Error Recovery Using LR Parser
+**example:**  
+LR parsing table with error routines for the expression grammar:
+```
+E → E + E 
+E → E * E 
+E → ( E ) 
+E → id
+```
+<img src="pictures/LR-parsing-table-with-error-routines
+.png" width="600" class="center"/>
+
+- e1:
+   1. push state 3 (the goto of states 0, 2, 4 and 5 on id);
+   2. issue diagnostic "missing operand."
+- e2:
+   1. remove the right parenthesis from the input;
+   2. issue diagnostic "unbalanced right parenthesis."
+- e3:
+   1. push state 4 (corresponding to symbol +) onto the stack;
+   2. issue diagnostic "missing operator.
+- e4:
+   1. push state 9 (for a right parenthesis) onto the stack;
+   2. issue diagnostic "missing right parenthesis."
+
+
+**Example of Error Recovery Using LR Parser**
 
 Consider the following grammar:
 
@@ -927,69 +936,13 @@ In this example, the LR parser successfully parses the input string `id+)$` acco
 
 Understanding and mastering these error recovery strategies can significantly improve the robustness and reliability of LR parsers.
 
-
-# LR Parsing Error Recovery: A Comprehensive Guide
-
-Error recovery is a crucial aspect of LR parsing, which is widely used in computer programming language compilers and other associated tools. An LR parser will detect an error when it consults the parsing action table and finds an error entry. Errors are never detected by consulting the goto table. 
-
-## Implementing Panic-Mode Error Recovery
-
-In LR parsing, we can implement panic-mode error recovery as follows:
-
-1. Scan down the stack until a state `s` with a goto on a particular nonterminal `A` is found.
-2. Zero or more input symbols are then discarded until a symbol `a` is found that can legitimately follow `A`.
-3. The parser then stacks the state `GOTO(s, A)` and resumes normal parsing.
-
-This approach allows the parser to recover from errors by discarding erroneous input and resuming normal parsing.
-
-## Phrase-Level Error Recovery
-
-Phrase-level recovery is another strategy for handling errors in LR parsing. This approach involves examining each error entry in the LR parsing table and deciding, based on language usage, the most likely programmer error that would give rise to that error. An appropriate recovery procedure can then be constructed, presumably modifying the top of the stack and/or first input symbols in a way deemed appropriate for each error entry.
-
-In designing specific error-handling routines for an LR parser, we can fill in each blank entry in the action field with a pointer to an error routine that will take the appropriate action selected by the compiler designer. The actions may include insertion or deletion of symbols from the stack or the input or both, or alteration and transposition of input symbols. We must make our choices so that the LR parser will not get into an infinite loop.
-
-## LR Parsing Error Recovery: Example
-
-Consider the following expression grammar:
-
-```
-E → E + E | E * E | (E) | id
-```
-
-Let's say we want to parse the input string `id+)$`. Here's how the LR parser would work:
-
-```
-STACK INPUT
-0   id+)$
-0id3 +)$
-0E1 +)$
-0E1 + 4)$
-0E1 + 4id3
-0E1 + 4E7
-0E1
-$
-```
-
-In this example, the LR parser successfully parses the input string `id+)$` according to the given grammar. Note that the actual parsing process would involve more steps and more complex entries in the parsing table.
-
-## Error Routines for LR Parsing
-
-Let's consider an LR parsing table with error routines for the expression grammar. Suppose we have four errors:
-
-- **e1**: Push state 3 (the goto of states 0, 2, 4 and 5 on id); issue diagnostic "missing operand."
-- **e2**: Remove the right parenthesis from the input; issue diagnostic "unbalanced right parenthesis."
-- **e3**: Push state 4 (corresponding to symbol +) onto the stack; issue diagnostic "missing operator."
-- **e4**: Push state 9 (for a right parenthesis) onto the stack; issue diagnostic "missing right parenthesis."
-
-These error routines demonstrate how LR parsers can recover from common syntax errors encountered during parsing.
-
-# Introduction to YACC
+## The YACC parser generator
 
 YACC (Yet Another Compiler-Compiler) is a powerful tool used in the field of computer science to generate parsers for compilers. It was designed to produce a parser from a given grammar specification, which is a set of rules defining the syntax of a particular language. The parser generated by YACC is an LALR (Look-Ahead, Left-to-Right, Rightmost derivation with 1 lookahead token) parser, operating from left to right and trying to derive the rightmost element of a sentence in a sentence structure according to the grammar.
 
 YACC works in three main parts: declarations, translation rules, and supporting C routines. Each part plays a crucial role in the process of generating a parser for a given language.
 
-## Declarations
+### Declarations
 
 The declarations section of a YACC specification includes information about the tokens used in the syntax definition. Tokens are the smallest units of meaningful data in a programming language, and they could be keywords, identifiers, operators, literals, etc. YACC automatically assigns numbers for tokens, but this can be overridden by specifying a number after the token name. For example, `%token NUMBER 621`. YACC also recognizes single characters as tokens, so the assigned token numbers should not overlap with ASCII codes.
 
@@ -998,7 +951,7 @@ The declarations section of a YACC specification includes information about the 
 %token ID
 ```
 
-## Translation Rules
+### Translation Rules
 
 The translation rules section contains grammar definitions in a modified BNF (Backus-Naur Form) form. These rules define how the parser should interpret sequences of tokens. Each rule in YACC has a string specification that resembles a production of a grammar. It has a nonterminal on the left-hand side (LHS) and a few alternatives on the right-hand side (RHS). YACC generates an LALR(1) parser for the language from the productions, which is a bottom-up parser.
 
@@ -1009,7 +962,7 @@ The translation rules section contains grammar definitions in a modified BNF (Ba
 %% 
 ```
 
-## Supporting C Routines
+### Supporting C Routines
 
 The supporting C routines section includes C code external to the definition of the parser and variable declarations. It can also include the specification of the starting symbol in the grammar: `%start nonterminal`. If the `yylex()` function is not defined in the auxiliary routines sections, then it should be included with `#include "lex.yy.c"`. If the YACC file contains the `main()` definition, it must be compiled to be executable.
 
@@ -1018,20 +971,41 @@ The supporting C routines section includes C code external to the definition of 
 ....
 ```
 
-# Building a C Compiler using Lex and Yacc
+### Building a C Compiler using Lex and Yacc
 
 Building a C compiler involves several steps, including writing the lexical analyzer (Lex), writing the syntax analyzer (Yacc), and integrating the two. The Lex program reads the source code and breaks it down into tokens, while the Yacc program takes these tokens and checks if they conform to the grammar of the language.
 
 To build a C compiler, you start by writing the Lex file, which defines the tokens for the C language. After that, you write the Yacc file, which defines the grammar of the C language and specifies how the tokens should be parsed. Once you have both Lex and Yacc files ready, you can integrate them by adding the `#include "lex.yy.c"` statement in the Yacc file. Then, you can compile the Yacc file using the `yacc -v -d parser1.y` command and link it with the Lex library using the `gcc -ll y.tab.c` command.
 
-# YACC Exercises
+**example**
+
+<img src="pictures/Yacc-specification-of-an-advanced-desk-calculator
+.png" width="600" class="center"/>
+
+### Using YACC with ambiguous grammars
+- By default YACC will resolve all parsing action conflict using
+the following two rules:
+   1. A reduce/reduce conflict is resolved by choosing the
+   conflicting production listed first in the YACC specification.
+   2. A shift/reduce conflict is resolved in favor of shift.
+- Since these default rules may not always be what the compiler
+writer wants, YACC provides a general mechanism for
+resolving shift/reduce conflicts.
+- That is precedences and associativities to terminals:
+   - %left ’+’ ’-’,
+   - %right ’=’,
+   - %nonassoc ’<’
+
+### YACC Exercises
 
 1. Implement both versions of simple and advanced calculator compilers with YACC or GNU BISON.
 2. Add the exponent operator, ∧, to your calculator.
 3. Add error recovery methods discussed in the previous section to your calculator compiler.
 4. Discuss other bottom-up parser generators (e.g., GNU BISON) within your groups.
 
-# Designing More Powerful Parsers
+## CYK Parsing Algorithm
+
+### Designing More Powerful Parsers
 
 Designing more powerful parsers often involves considering different parsing methods. Two of the most prevalent types of parsers are LL and LR parsers. These parsers are deterministic, directional, and operate in linear time, making them capable of recognizing restricted forms of context-free grammars.
 
@@ -1041,7 +1015,7 @@ However, parsing more grammars non-directionally poses a challenge, especially w
 * **Backtracking:** This strategy involves trying different subtrees and discarding partial solutions if they prove unsuccessful. This allows the parser to explore different branches of the parse tree until a valid parse is found.
 * **Dynamic Programming:** This method involves saving partial solutions in a table for later use. This technique is efficient as it avoids recomputation by storing the result of a subproblem and reusing it when needed. However, dynamic programming requires a non-directional parsing method, which is not inherent in LL and LR parsers.
 
-# Directionality of Parsing Methods
+### Directionality of Parsing Methods
 
 Parsing methods can be categorized into two types: directional and non-directional methods.
 
@@ -1049,21 +1023,24 @@ Directional methods process the input symbol by symbol from left to right. LL an
 
 Non-directional methods, on the other hand, allow access to input in an arbitrary order. They require the entire input to be in memory before parsing can start. This flexibility allows non-directional parsers to handle more flexible grammars than directional parsers. An example of a non-directional parser is the CYK parser.
 
-# CYK (Cocke-Younger-Kasami)
+### CYK (Cocke-Younger-Kasami)
 
 The CYK algorithm is one of the earliest recognition and parsing algorithms, developed independently by three Russian scientists: J. Cocke, D.H. Younger, and T. Kasami. This algorithm uses a bottom-up parsing approach, reducing already recognized right-hand sides of a production rule to its left-hand side non-terminal. As it is non-directional, it accesses input in an arbitrary order, necessitating the entire input to be in memory before parsing can begin.
+- Bottom-up parsing (starts with terminals): reduces already
+recognized right-hand side of a production rule to its left-hand
+side non-terminal
+- Non-directional: accesses input in arbitrary order so requires
+the entire input to be in memory before parsing can start
 
-# CYK Parsing
-
-
+### CYK Parsing
 
 The CYK algorithm operates on a dynamic programming or table-filling approach. It constructs solutions compositionally from sub-solutions. Notably, the CYK algorithm recognizes any context-free grammar in Chomsky Normal Form. It operates on a binary parse tree.
 
-# Chomsky Normal Form
+#### Chomsky Normal Form
 
 A Context-Free Grammar (CFG) is said to be in Chomsky Normal Form (CNF) if each rule is of the form `A → BC` or `A → a`, where `a` is any terminal, and `A`, `B`, `C` are non-terminals. `B` and `C` cannot be the start variable. We allow the rule `S → ε` if `ε` is in `L`.
 
-# CYK Algorithm: Basic Idea
+### CYK Algorithm: Basic Idea
 
 The CYK algorithm works as follows:
 
@@ -1077,80 +1054,78 @@ The CYK algorithm works as follows:
 For more details about converting a CFG grammar to the CNF form, please refer to the appendix slides.
 
 
-## Solution Representation for Substring Recognition
+### Solution Representation for Substring Recognition
 In the context of the CYK (Cocke-Younger-Kasami) algorithm, solution representation for substring recognition is essential. The CYK algorithm is a dynamic programming algorithm that is used for parsing context-free grammars. It constructs parse trees by recognizing and combining smaller parse trees. Therefore, the ability to recognize specific subsequences within a larger string is crucial.
+<img src="pictures/CYK-substring-recognition
+.png" width="600" class="center"/>
 
-## Substring Recognition
+### Substring Recognition
 Substring recognition is a key component of the CYK algorithm. It involves identifying and recognizing specific subsequences within a larger string. This process is fundamental to the operation of the CYK algorithm, which constructs parse trees by recognizing and combining smaller parse trees. The recognition of these smaller parse trees is done through the recognition table.
+<img src="pictures/CYK-substring-recognition1
+.png" width="600" class="center"/>
 
-## Recognition Table
+
+### Recognition Table
 The recognition table is a two-dimensional array that is used to store the potential non-terminal symbols that can generate a particular substring of the input string. Each cell in the table represents a substring of the input string. The value of a cell indicates the set of non-terminal symbols that can generate the corresponding substring. This table is filled iteratively, with each cell being updated based on the values of its neighboring cells.
+<img src="pictures/CYK-recognition-table1
+.png" width="600" class="center"/>
 
-## CYK Algorithm: Example Trace
-An example trace of the CYK algorithm involves stepping through the algorithm and observing how it processes a given input string and applies the grammar rules. This involves iterating over the input string and the grammar rules, applying the rules, and updating the recognition table accordingly.
+### CYK Algorithm: Example Trace
+<img src="pictures/CYK-example-trace0
+.png" width="600" class="center"/>
 
-## CYK Pseudocode
-The CYK algorithm can be represented in pseudocode, which is a high-level description of the algorithm that can be easily understood and translated into any programming language. The pseudocode for the CYK algorithm would involve loops to iterate over the input string and the grammar rules, conditional statements to apply the rules, and data structures like arrays or matrices to store the recognition table.
+1. Initialization (Diagonal - Length 1 substrings):
+   - For each character in "babab":
+      - Position 0: 'b' → B (from B → b)
+      - Position 1: 'a' → A or C (from A → a, C → a)
+      - Position 2: 'b' → B
+      - Position 3: 'a' → A or C
+      - Position 4: 'b' → B
+   - Table (first row):
+      - (0,0): {B}
+      - (1,1): {A, C}
+      - (2,2): {B}
+      - (3,3): {A, C}
+      - (4,4): {B}
+2. Length 2 Substrings:
+   - (0,1): 'ba' → Check A → BA: B (from 0) and A (from 1) → {A}
+   - (1,2): 'ab' → No direct match, but check B → BC: B (from 1) and C (from 2) → {B} if C is possible later
+   - (2,3): 'ba' → {A}
+   - (3,4): 'ab' → No direct match
+   - Table update:
+      - (0,1): {A}
+      - (1,2): {}
+      - (2,3): {A}
+      - (3,4): {}
+3. Length 3 Substrings:
+   - (0,2): 'bab' → Check S → AB: A (from 0,1) and B (from 2) → {S}
+   - (1,3): 'aba' → Check S → CB: C (from 1) and B (from 3) → {S} if C is confirmed
+   - (2,4): 'bab' → {S}
+   - Table update:
+      - (0,2): {S}
+      - (1,3): {S}
+      - (2,4): {S}
+4. Length 4 Substrings:
+   - (0,3): 'baba' → Check S → AB: A (from 0,2) and B (from 3) → {S}
+   - (1,4): 'abab' → Check S → CB: C (from 1,3) and B (from 4) → {S}
+   - Table update:
+      - (0,3): {S}
+      - (1,4): {S}
+5. Length 5 Substring (Whole String):
+   - (0,4): 'babab' → Check S → AB: A (from 0,3) and B (from 4) → {S}, or S → CB: C (from 0,3) and B (from 4) → {S}
+   - Table update:
+      - (0,4): {S}
 
-## CYK Complexity Analysis
-The time and space complexity of the CYK algorithm can be analyzed to understand its efficiency. The space complexity of the CYK algorithm is O(n²), where n is the size of the input word. This is because the algorithm uses a n x n table to store the recognition table.
+<img src="pictures/CYK-example-trace11
+.png" width="600" class="center"/>
 
-The time complexity of the CYK algorithm is O(|G|n³), where |G| is the size of the grammar and n is the size of the input word. This is because the algorithm needs to iterate over the input string and the grammar rules, which results in a cubic time complexity.
+The top cell (0,4) contains {S}, indicating that the string "babab" can be derived from the start symbol S, confirming it is accepted by the grammar.
 
-## CYK Parsing: Problems
-While the CYK algorithm is powerful, it does come with certain challenges. The high time and space complexity can make it less suitable for large inputs or complex grammars. Additionally, converting the grammar to Chomsky Normal Form (CNF) can sometimes make it difficult to retain the intended structure of the grammar.
+### CYK Pseudocode
+<img src="pictures/CYK-pseudocode1
+.png" width="600" class="center"/>
 
-## CYK Parsing: Exercises
-There are several exercises associated with the CYK algorithm. These exercises provide practical applications of the algorithm and help to deepen understanding of its workings.
-
-For instance, one exercise asks to show the CYK algorithm with a given grammar and input word. Another exercise asks to use the CYK method to determine if a specific string is in the language generated by a given grammar. There are also exercises on modifying the CYK algorithm to count the number of parse trees for a given input string and discussing the probabilistic version of the CYK method.
-
-
-# CYK Complexity Analysis
-
-The time and space complexity of the CYK algorithm can be analyzed to understand its efficiency. 
-
-The space complexity of the CYK algorithm is O(n²), where n is the size of the input word. This is because the algorithm uses a n x n table to store the recognition table.
-
-The time complexity of the CYK algorithm is O(|G|n³), where |G| is the size of the grammar and n is the size of the input word. This is because the algorithm needs to iterate over the input string and the grammar rules, which results in a cubic time complexity.
-
-The complexity of the grammar |G| is defined as the sum of the lengths of the right-hand sides of all production rules in the grammar.
-
-# CYK Algorithm Pseudocode
-
-The CYK algorithm can be represented in pseudocode, which is a high-level description of the algorithm that can be easily understood and translated into any programming language. The pseudocode for the CYK algorithm would involve loops to iterate over the input string and the grammar rules, conditional statements to apply the rules, and data structures like arrays or matrices to store the recognition table.
-
-The pseudocode for the CYK algorithm is as follows:
-
-```
-For i = 1 to n:
- For each variable A:
-    We check if A -> b is a rule and b = w[i]
-    If so, we place A in cell (i, i) of our table.
-
-For l = 2 to n:
- For i = 1 to n-l+1:
-      j = i+l-1
-       For k = i to j-1:
-          For each rule A -> BC: 
-       We check if (i, k) cell contains B and (k + 1, j) cell contains C:
-            If so, we put A in cell (i, j) of our table.
-
-We check if S is in (1, n):
- If so, we accept the string
- Else, we reject.
-```
-
-# CYK Parsing: Exercise Solutions
-
-1. For the given grammar and input word, the CYK algorithm can be shown by manually applying the algorithm's steps to the given input and grammar.
-2. To determine if the string `w = aaabbbb` is in the language generated by the grammar `S → aSb | b`, we can apply the CYK algorithm to this string and grammar.
-3. To modify the CYK algorithm to count the number of parse trees of a given input string, we can add a counter to the algorithm that increments whenever a new parse tree is formed.
-4. For the probabilistic version of the CYK method (P-CYK), weights (probabilities) are stored in the table instead of booleans, so P[i,j,A] will contain the minimum weight (maximum probability) that the substring from i to j can be derived from A. Further extensions of the algorithm allow all parses of a string to be enumerated from lowest to highest weight (highest to lowest probability).
-
-
-
-# CYK Complexity Analysis
+### CYK Complexity Analysis
 
 The time and space complexity of the CYK algorithm can be analyzed as follows:
 
@@ -1162,32 +1137,16 @@ The complexity of the grammar |G| is defined as the sum of the lengths of the ri
 
 |G| = ∑_{(A→v)∈P} (1 + |v|)
 
-# CYK Algorithm Pseudocode
+### CYK Parsing: Problems
+While the CYK algorithm is powerful, it does come with certain challenges. The high time and space complexity can make it less suitable for large inputs or complex grammars. Additionally, converting the grammar to Chomsky Normal Form (CNF) can sometimes make it difficult to retain the intended structure of the grammar.
 
-The CYK algorithm can be represented in pseudocode, which is a high-level description of the algorithm that can be easily understood and translated into any programming language. The pseudocode for the CYK algorithm would involve loops to iterate over the input string and the grammar rules, conditional statements to apply the rules, and data structures like arrays or matrices to store the recognition table.
+### CYK Parsing: Exercises
+There are several exercises associated with the CYK algorithm. These exercises provide practical applications of the algorithm and help to deepen understanding of its workings.
 
-The pseudocode for the CYK algorithm is as follows:
+For instance, one exercise asks to show the CYK algorithm with a given grammar and input word. Another exercise asks to use the CYK method to determine if a specific string is in the language generated by a given grammar. There are also exercises on modifying the CYK algorithm to count the number of parse trees for a given input string and discussing the probabilistic version of the CYK method.
 
-```
-For i = 1 to n:
- For each variable A:
-   We check if A -> b is a rule and b = w[i]
-   If so, we place A in cell (i, i) of our table.
 
-For l = 2 to n:
- For i = 1 to n-l+1:
-     j = i+l-1
-      For k = i to j-1:
-         For each rule A -> BC: 
-      We check if (i, k) cell contains B and (k + 1, j) cell contains C:
-           If so, we put A in cell (i, j) of our table.
-
-We check if S is in (1, n):
- If so, we accept the string
- Else, we reject.
-```
-
-# CYK Parsing: Exercise Solutions
+#### CYK Parsing: Exercise Solutions
 
 1. For the given grammar and input word, the CYK algorithm can be shown by manually applying the algorithm's steps to the given input and grammar.
 2. To determine if the string `w = aaabbbb` is in the language generated by the grammar `S → aSb | b`, we can apply the CYK algorithm to this string and grammar.
