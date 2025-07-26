@@ -1,0 +1,3090 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Compiler design (Dragon) course materials and codes">
+      
+      
+        <meta name="author" content="Morteza Zakeri">
+      
+      
+        <link rel="canonical" href="https://m-zakeri.github.io/Compilers/lectures/07_Semantic-Analysis/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Lecture 7: Semantic Analysis (Types and Symbol Tables) - Compiler Design Course</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylex.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Lecture 7: Semantic Analysis (Types and Symbol Tables) - Compiler Design Course" >
+      
+        <meta  property="og:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  property="og:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/07_Semantic-Analysis.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://m-zakeri.github.io/Compilers/lectures/07_Semantic-Analysis/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Lecture 7: Semantic Analysis (Types and Symbol Tables) - Compiler Design Course" >
+      
+        <meta  name="twitter:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  name="twitter:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/07_Semantic-Analysis.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lecture-7-semantic-analysis-types-and-symbol-tables" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Compiler Design Course" class="md-header__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Compiler Design Course
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lecture 7: Semantic Analysis (Types and Symbol Tables)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../announcements/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Announcements
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../antlr_tutorials/antlr_basics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ANTLR tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../language_applications/main/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Language applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../assignments/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Assignments
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projects
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../calendar/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Calendar
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Tracker
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Compiler Design Course" class="md-nav__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Compiler Design Course
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Announcements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Lectures
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lectures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 0 Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Compiler-Basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 1 Compiler basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_Bootstrapping.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 2 Bootstrapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regular-Expressions-and-Lexical-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 3 Lexical analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_Manual_Construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 4 Manual constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_Automatic_construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 5 Automatic constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Syntax-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 6 Syntax analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_Types-of-Grammar.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 7 Type of grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_Ambiguity-Problems-and-Eliminating-the-Ambiguity.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 8 Eliminating ambiguity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 9 Top-down parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_Bottom-up_I.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 10 Bottom-up parsing (I)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_Bottom-up_II.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 11 Bottom-up parsing (II)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_LR0_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 12 LR(0) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_SLR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 13 SLR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_LR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 14 LR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_LALR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 15 LALR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_ambiguous_SLRs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 16 Ambiguous SLR grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_error_recovery_in_LR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 17 Error recovery in LR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_Bottom-up-Parser-Generators.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 18 Bottom-up parser generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_CYK_parsing_algorithm.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 19 Parsing with CYK algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture06.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 6 (Translation Methods)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture07.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 7 (Semantic Analysis)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture08.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 8 (Intermediate-Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture09.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 9 (Machine-independent Optimizations)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture10.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 10 (Run-time Environment and Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    ANTLR tutorials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            ANTLR tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_slides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Slides
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Language applications
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Language applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement1main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement2main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement3main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement4main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assignments/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Assignments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/writing_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/programming_assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Programming assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Projects
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Projects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_symbol_table_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Symbol table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_software_metrics_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Software metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_code_smell_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code smell detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactoring_to_design_patterns_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Refactoring to patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactorings_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code refactoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_clean_code_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Clean code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_source_code_instrumentation_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code instrumentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/mini_java_compiler_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MiniJava compiler development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calendar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calendar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/capstone-projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Capstone Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Solutions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Issue Tracker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="lecture-7-semantic-analysis-types-and-symbol-tables">Lecture 7: Semantic Analysis (Types and Symbol Tables)</h1>
+<hr />
+<h2 id="outline">Outline</h2>
+<ol>
+<li><strong>Type Checking Basics</strong><ul>
+<li>Type systems</li>
+<li>Type expressions</li>
+<li>Type system implementation</li>
+<li>Scope in type checking</li>
+</ul>
+</li>
+<li><strong>Symbol Tables</strong><ul>
+<li>Implementing symbol tables</li>
+<li>Use of symbol tables</li>
+</ul>
+</li>
+<li><strong>Types and Declarations</strong></li>
+<li><strong>Type Checking, Conversion, and Inference SDT's</strong><ul>
+<li>Type checking</li>
+<li>Type conversion</li>
+<li>Type inference</li>
+</ul>
+</li>
+<li><strong>Symbol Tables for Program Analysis and Transformation</strong></li>
+<li><strong>Summary of Lecture 7</strong></li>
+</ol>
+<hr />
+<h3 id="type-checking-in-compilers">Type checking in compilers</h3>
+<p><img src="../pictures/lecture07_1.jpg" width="600"/></p>
+<hr />
+<h2 id="non-context-free-syntax">Non-context-free syntax</h2>
+<ul>
+<li>Programs that are correct with respect to the language's lexical and context-free syntactic rules may still contain other syntactic errors.</li>
+<li>Lexical analysis and context-free syntax analysis are not powerful enough to ensure the correct usage of variables, objects, functions, statements, etc.</li>
+<li>Non-context-free syntactic analysis is known as <strong>semantic analysis</strong>.</li>
+</ul>
+<h2 id="semantic-analysis">Semantic analysis</h2>
+<ul>
+<li>The semantic analyzer uses the syntax tree and the information in the symbol table to check the source program for semantic consistency with the language definition.</li>
+<li><strong>Symbol tables</strong> are data structures that are used by compilers to hold information about source-program constructs.</li>
+<li>The information is collected incrementally by the analysis phases of a compiler and used by the synthesis phases to generate the target code.</li>
+<li>An important part of semantic analysis is <strong>type checking</strong>, where the compiler checks that each operator has matching operands.</li>
+<li>We shall study various types of symbol tables and SDT's for type checking in this lecture.</li>
+</ul>
+<h2 id="incorrect-programs">Incorrect programs</h2>
+<ul>
+<li><strong>Example 1</strong>: lexical analysis does not distinguish between different variable or function identifiers (it returns the same token for all identifiers):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Correct</th>
+<th style="text-align: left;">Incorrect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>int a; a=1;</code></td>
+<td style="text-align: left;"><code>int a; b=1;</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Example 2</strong>: syntax analysis does not correlate the declarations with the uses of variables in the program:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Correct</th>
+<th style="text-align: left;">Incorrect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>int a; a=1;</code></td>
+<td style="text-align: left;"><code>a=1;</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Example 3</strong>: syntax analysis does not correlate the types from the declarations with the uses of variables:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Correct</th>
+<th style="text-align: left;">Incorrect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>int a; a=1;</code></td>
+<td style="text-align: left;"><code>int a; a=1.0;</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="goals-of-semantic-analysis">Goals of semantic analysis</h2>
+<ul>
+<li>Semantic analysis ensures that the program satisfies a set of additional rules regarding the usage of programming constructs (variables, objects, expressions, statements).</li>
+<li>Examples of semantic rules:<ul>
+<li>Variables must be declared before being used.</li>
+<li>A variable should not be declared multiple times in the same scope.</li>
+<li>In an assignment statement, the variable and the assigned expression must have the same type.</li>
+<li>The condition of an <code>if-statement</code> must have type Boolean.</li>
+</ul>
+</li>
+<li>Categories of rules:<ul>
+<li>Semantic rules regarding <strong>types</strong>.</li>
+<li>Semantic rules regarding <strong>scopes</strong>.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="1-type-checking-basics">1. Type Checking Basics</h2>
+<h3 id="type-systems">Type systems</h3>
+<p><strong>What are types?</strong></p>
+<ul>
+<li>Types describe the values possibly computed during execution of the program.</li>
+<li>Types are predicates on values.<ul>
+<li>e.g., "int x" in Java means x ∈ [-2^31, 2^31-1].</li>
+</ul>
+</li>
+<li>Think "type = set of possible values".</li>
+<li><strong>Type errors</strong>: improper, type-inconsistent operations during program execution.</li>
+<li><strong>Type-safety</strong>: absence of type errors at run time.</li>
+</ul>
+<p><strong>Type information</strong></p>
+<p>Type information classifies a program's constructs (e.g., variables, statements, expressions, functions) into categories, and imposes rules on their use (in terms of those categories) with the goal of avoiding runtime errors.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Construct</th>
+<th style="text-align: left;">Example</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">variables</td>
+<td style="text-align: left;"><code>int a;</code></td>
+<td style="text-align: left;">integer location</td>
+</tr>
+<tr>
+<td style="text-align: left;">expressions</td>
+<td style="text-align: left;"><code>(a+1)==2</code></td>
+<td style="text-align: left;">Boolean</td>
+</tr>
+<tr>
+<td style="text-align: left;">statements</td>
+<td style="text-align: left;"><code>a=1.0;</code></td>
+<td style="text-align: left;">void</td>
+</tr>
+<tr>
+<td style="text-align: left;">functions</td>
+<td style="text-align: left;"><code>int pow(int n, int m)</code></td>
+<td style="text-align: left;">int × int → int</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How to ensure type-safety?</strong></p>
+<ul>
+<li>Bind (assign) types, then check types:<ul>
+<li><strong>Type binding</strong>: defines types for constructs in the program (e.g., variables, functions).<ul>
+<li>Can be either <strong>explicit</strong> (<code>int x</code>) or <strong>implicit</strong> (<code>x=1</code>).</li>
+<li><strong>Type consistency (safety)</strong> = correctness with respect to the type bindings.</li>
+</ul>
+</li>
+<li><strong>Type checking</strong>: static semantic checks to enforce the type safety of the program.<ul>
+<li>Enforce a set of type-checking rules.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Static vs. dynamic typing</strong></p>
+<ul>
+<li>Static and dynamic typing refer to type definitions (i.e., bindings of types to variables, expressions, etc.).</li>
+<li><strong>Statically typed language</strong>: types are defined and checked at compile-time, and do not change during the execution of the program.<ul>
+<li>E.g., Pascal, C, Java.</li>
+</ul>
+</li>
+<li><strong>Dynamically typed language</strong>: types defined and checked at run-time, during program execution.<ul>
+<li>E.g., Lisp, Scheme, Smalltalk, Python.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Strong vs. weak typing</strong></p>
+<ul>
+<li>Strong and weak typing refer to how much type consistency is enforced.<ul>
+<li><strong>Strongly typed languages</strong>: guarantees that accepted programs are type-safe: Java.</li>
+<li><strong>Weakly typed languages</strong>: allow programs that contain type errors: C.</li>
+</ul>
+</li>
+<li>Can achieve strong typing using either static or dynamic typing.</li>
+</ul>
+<p><strong>Why static checking?</strong></p>
+<ul>
+<li><strong>Efficient code</strong>: Dynamic checks slow down the program execution.</li>
+<li><strong>Guarantees that all executions will be safe</strong>: With dynamic checking, you never know when the next execution of the program will fail due to a type error.</li>
+<li>But is conservative for sound systems; needs to be expressive: Reject few type-safe programs.</li>
+</ul>
+<p><strong>Type systems concept summary</strong></p>
+<ul>
+<li><strong>Static vs. dynamic typing</strong>: when to define/check types?</li>
+<li><strong>Strong vs. weak typing</strong>: how many type errors?</li>
+<li><strong>Sound type systems</strong>: statically catch all type errors (and possibly reject some programs that have no type errors).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Strong Typing</strong></th>
+<th style="text-align: left;"><strong>Weak Typing</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Static Typing</strong></td>
+<td style="text-align: left;">ML, Pascal, Java, Modula-3</td>
+<td style="text-align: left;">C, C++</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Dynamic Typing</strong></td>
+<td style="text-align: left;">Scheme, Python, Smalltalk, PostScript</td>
+<td style="text-align: left;">assembly code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-expressions">Type expressions</h3>
+<p><strong>Recap: Type system</strong></p>
+<ul>
+<li>Type is a predicate on value.</li>
+<li><strong>Type expressions</strong>: describe the possible types in the program: e.g., int, string, array[], class, etc.</li>
+<li><strong>Type system</strong>: defines types for language constructs (e.g., expressions, statements, ...).</li>
+</ul>
+<p><strong>Type expression</strong></p>
+<ul>
+<li>Languages have <strong>basic types</strong> (a.k.a. primitive types or ground types).<ul>
+<li>E.g., int, char, boolean.</li>
+</ul>
+</li>
+<li>Build type expressions using basic types with:<ul>
+<li>Type constructors</li>
+<li>Type aliases</li>
+</ul>
+</li>
+</ul>
+<p><strong>Array type</strong></p>
+<ul>
+<li>Various kinds of array types in different programming languages.</li>
+<li><code>array(T)</code>: array with elements of type T and no bounds.<ul>
+<li>C, Java: <code>int[]</code>, Modula-3: <code>array of integer</code>.</li>
+</ul>
+</li>
+<li><code>array(T, S)</code>: array with size.<ul>
+<li>C: <code>int[10]</code>, Modula-3: <code>array[10] of integer</code>.</li>
+<li>May be indexed 0..size-1.</li>
+</ul>
+</li>
+<li><code>array(T, L, U)</code>: array with upper/lower bounds.<ul>
+<li>Pascal or Ada: <code>array[2..5] of integer</code>.</li>
+</ul>
+</li>
+<li><code>array(T, S1, ..., Sn)</code>: multi-dimensional arrays.<ul>
+<li>FORTRAN: <code>real(3,5)</code>.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Record type</strong></p>
+<ul>
+<li>A record is <code>{id1: T1, ..., idn: Tn}</code> for some identifiers <code>idi</code> and types <code>Ti</code>.</li>
+<li>Supports access operations on each field, with corresponding type.</li>
+<li>C: <code>struct { int a; float b; }</code></li>
+<li>Pascal: <code>record a: integer; b: real; end</code></li>
+<li>Objects: generalize the notion of records.</li>
+</ul>
+<p><strong>Pointers</strong></p>
+<ul>
+<li>Pointer types characterize values that are addresses of variables of other types.</li>
+<li><code>Pointer(T)</code>: pointer to an object of type T.</li>
+<li>C pointers: <code>T*</code> (e.g., <code>int *x;</code>).</li>
+<li>Pascal pointers: <code>^T</code> (e.g., <code>x: ^integer;</code>).</li>
+<li>Java: Object references.</li>
+</ul>
+<p><strong>Function Types</strong></p>
+<ul>
+<li>A function value can be invoked with some argument expressions with types <code>Ti</code>, returns return type <code>Tr</code>.</li>
+<li>Type: <code>T1 × T2 × ... × Tn → Tr</code>.</li>
+<li>C/C++ functions: <code>int pow(int x, int y)</code> has type <code>int × int → int</code>.</li>
+<li>Java: methods have function types.</li>
+<li>Some languages have first-class functions (usually in functional languages, e.g., ML, LISP).</li>
+<li>C and C++ have function pointers.</li>
+<li>Java does not.</li>
+</ul>
+<p><strong>Type alias</strong></p>
+<ul>
+<li>Some languages allow type aliases (type definitions, equates):<ul>
+<li>C: <code>typedef int int_array[];</code></li>
+<li>Modula-3: <code>type int_array = array of int;</code></li>
+</ul>
+</li>
+<li>Java does not allow type aliases.</li>
+<li>Aliases are not type constructors! <code>int_array</code> is the same type as <code>int[]</code>.</li>
+<li>Different type expressions may denote the same type.</li>
+</ul>
+<h3 id="type-system-implementation">Type system implementation</h3>
+<p><strong>Implementation approaches</strong></p>
+<ol>
+<li>Use a separate class hierarchy for type ASTs:
+    <div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">class</span> <span class="nc">BaseType</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Type</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">...</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">class</span> <span class="nc">IntType</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BaseType</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">...</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">class</span> <span class="nc">BoolType</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BaseType</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kd">class</span> <span class="nc">ArrayType</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="n">Type</span><span class="w"> </span><span class="n">elemType</span><span class="p">;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kd">class</span> <span class="nc">FunctionType</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">...</span>
+</span></code></pre></div></li>
+<li>Translate type expressions to type objects during parsing:
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>// non-terminal Type type
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>type ::= BOOLEAN { RESULT=new BoolType(); }
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>       | ARRAY LBRACKET type:t RBRACKET { RESULT=new ArrayType(t); }
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>       ...
+</span></code></pre></div></li>
+<li>Bind names to type objects in the symbol table during subsequent AST traversal.</li>
+</ol>
+<h3 id="scope-in-type-checking">Scope in type checking</h3>
+<p><strong>Processing type declaration</strong></p>
+<ul>
+<li>Type declarations add new identifiers and their types in the symbol tables.</li>
+<li>Class definitions must be added to symbol table:<ul>
+<li><code>class_defn ::= CLASS ID:id { decls:d }</code></li>
+</ul>
+</li>
+<li>Forward references require multiple passes over AST to collect legal names.<ul>
+<li>Example: <code>class A { B b; } class B { ... }</code></li>
+</ul>
+</li>
+<li>Need to handle scope information.</li>
+</ul>
+<p><strong>Scope information</strong></p>
+<ul>
+<li>Scope information characterizes the declaration of identifiers and the portions of the program where use of each identifier is allowed.</li>
+<li>Example identifiers: variables, functions, objects, labels.</li>
+<li><strong>Lexical scope</strong> is a textual region in the program:<ol>
+<li>Statement block</li>
+<li>Formal argument list</li>
+<li>Object body</li>
+<li>Function or method body</li>
+<li>Module body</li>
+<li>Whole program (multiple modules)</li>
+</ol>
+</li>
+<li><strong>Scope of an identifier</strong>: the lexical scope in which it is valid.</li>
+</ul>
+<p><strong>Scope examples in C:</strong></p>
+<ul>
+<li>Scope of variables in statement blocks:</li>
+</ul>
+<p><img src="../pictures/lecture07_2.jpg" width="600"/></p>
+<p><strong>Other scope examples:</strong></p>
+<ul>
+<li><strong>Function arguments</strong>: <code>int factorial(int n) { /* scope of n is the function body */ }</code></li>
+<li><strong>Labels</strong>: <code>void f() { goto I; ... I: a=1; /* scope of I is the function body */ }</code></li>
+<li><strong>Object fields and methods</strong>:
+    <div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">class</span> <span class="nc">A</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="c1">// scope of x is class A</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">g</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// scope of g is class A and its subclasses</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kd">class</span> <span class="nc">B</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">h</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">g</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+</span></code></pre></div></li>
+</ul>
+<p><strong>Semantic rules for scopes</strong></p>
+<ul>
+<li>
+<p>Main rules regarding scopes:</p>
+<ul>
+<li><strong>Rule 1</strong>: Use an identifier only if it is defined in an enclosing scope.</li>
+<li><strong>Rule 2</strong>: Do not declare identifiers of the same kind with identical names more than once in the same scope.</li>
+</ul>
+</li>
+<li>
+<p>You can declare identifiers with the same name if they are of a different kind</p>
+</li>
+</ul>
+<p><img src="../pictures/lecture07_3.jpg" width="600"/></p>
+<hr />
+<h2 id="2-symbol-tables">2. Symbol Tables</h2>
+<ul>
+<li>Semantic checks refer to properties of identifiers in the program - their scope or type.</li>
+<li>Need an environment to store the information about identifiers - <strong>Symbol Table</strong> (or Symtab).</li>
+<li>Each entry in the symbol table contains:<ul>
+<li>The name of an identifier.</li>
+<li>Additional information: its kind, its type, its size, if it is constant, ...</li>
+</ul>
+</li>
+</ul>
+<p><strong>Example Symbol Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">NAME</th>
+<th style="text-align: left;">KIND</th>
+<th style="text-align: left;">TYPE</th>
+<th style="text-align: left;">OTHER</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">foo</td>
+<td style="text-align: left;">fun</td>
+<td style="text-align: left;">int x int → bool</td>
+<td style="text-align: left;">extern</td>
+</tr>
+<tr>
+<td style="text-align: left;">m</td>
+<td style="text-align: left;">par</td>
+<td style="text-align: left;">int</td>
+<td style="text-align: left;">auto</td>
+</tr>
+<tr>
+<td style="text-align: left;">n</td>
+<td style="text-align: left;">par</td>
+<td style="text-align: left;">int</td>
+<td style="text-align: left;">const</td>
+</tr>
+<tr>
+<td style="text-align: left;">tmp</td>
+<td style="text-align: left;">var</td>
+<td style="text-align: left;">bool</td>
+<td style="text-align: left;">const</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Handling scope information in symbol table</strong></p>
+<ul>
+<li>How to represent scope information in the symbol table?<ol>
+<li>There is a hierarchy of scopes in the program.</li>
+<li>Use a similar hierarchy of symbol tables.</li>
+<li>One symbol table for each scope.</li>
+<li>Each symbol table contains the symbols declared in that lexical scope.</li>
+</ol>
+</li>
+</ul>
+<p><strong>Example</strong></p>
+<p><img src="../pictures/lecture07_4.jpg" width="600"/></p>
+<p><strong>Handling identifiers with the same name</strong></p>
+<ul>
+<li>The hierarchical structure of symbol tables automatically solves the problem of resolving name collisions.</li>
+<li>To find the declaration of an identifier that is active at a program point:<ol>
+<li>Start from the current scope.</li>
+<li>Go up in the hierarchy until you find an identifier with the same name, or fail.</li>
+</ol>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<p><img src="../pictures/lecture07_5.jpg" width="600"/></p>
+<p><strong>Catching semantic errors</strong></p>
+<p><img src="../pictures/lecture07_6.jpg" width="600"/></p>
+<p><strong>Symbol table operations</strong></p>
+<ul>
+<li>Three main operations:<ol>
+<li>Create a new empty symbol table with a given parent table.</li>
+<li>Insert a new identifier in a symbol table (or error on re-declaration).</li>
+<li>Look-up an identifier in a symbol table (or error if not found).</li>
+</ol>
+</li>
+<li>Cannot build symbol tables during lexical analysis because the hierarchy of scopes is encoded in the syntax.</li>
+<li>Build the symbol tables either:<ul>
+<li>While parsing, using semantic actions.</li>
+<li>After the AST is constructed.</li>
+</ul>
+</li>
+</ul>
+<h3 id="implementing-symbol-tables">Implementing symbol tables</h3>
+<p><strong>Implementation methods</strong></p>
+<ul>
+<li>Array implementation</li>
+<li>List implementation</li>
+<li><strong>Hash-table implementation</strong></li>
+</ul>
+<!-- end list -->
+
+<ol>
+<li>
+<p><strong>Array implementation</strong>:</p>
+<ul>
+<li>
+<p>Simple implementation = array</p>
+<ul>
+<li>one entry per symbol.</li>
+<li>Scan the array for loopup, compare name at each entry.</li>
+</ul>
+</li>
+<li>
+<p>Disadvantage: </p>
+<ul>
+<li>Table has fixed size.</li>
+<li>Need to know in advance the number of entries</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>List implementation</strong>:</p>
+<ul>
+<li>Dynamic structure = list<ul>
+<li>One cell per entry in the table.</li>
+<li>Can grow dynamically during compilation.</li>
+</ul>
+</li>
+<li>Disadvantage:<ul>
+<li>Inefficient for large Symbol tables</li>
+<li>Need to scan half the list on average</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Hash-table implementation</strong>:</p>
+<ul>
+<li>Efficient implementation = hash table<ul>
+<li>It is an array of lists (buckets)</li>
+<li>Uses a hashing function to map the symbol name to the corresponding bucket: <code>hashfunc : string → int</code>.</li>
+</ul>
+</li>
+<li>Good hash function = even distribution in the buckets.</li>
+<li>We shall implement scopes by setting up a separate symbol table for each scope.</li>
+</ul>
+</li>
+</ol>
+<p><strong>Symbol table per scope (Chained symbol tables)</strong></p>
+<p><img src="../pictures/lecture07_7.jpg" width="600"/></p>
+<ul>
+<li>A chain of symbol tables can represent nested scopes. A table for an inner scope holds a reference to the table for its parent (outer) scope.</li>
+<li>Lookup proceeds from the current scope's table up through the chain of parent tables.</li>
+</ul>
+<p><strong>Java implementation for Chained Symbol Tables:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// package symbols;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.*</span><span class="p">;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Env</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Hashtable</span><span class="w"> </span><span class="n">table</span><span class="p">;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="n">Env</span><span class="w"> </span><span class="n">prev</span><span class="p">;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Env</span><span class="w"> </span><span class="p">(</span><span class="n">Env</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="n">table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Hashtable</span><span class="p">();</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">put</span><span class="w"> </span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">Symbol</span><span class="w"> </span><span class="n">sym</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="n">table</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">sym</span><span class="p">);</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Symbol</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">Env</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">prev</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">            </span><span class="n">Symbol</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Symbol</span><span class="p">)(</span><span class="n">e</span><span class="p">.</span><span class="na">table</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">s</span><span class="p">));</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">found</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Forward references</strong></p>
+<ul>
+<li>A forward reference is the use of an identifier within the scope of its declaration, but before the declaration itself appears in the text.</li>
+<li>Any compiler phase that uses information from the symbol table must be performed <em>after</em> the table is fully constructed.</li>
+<li>This means you cannot type-check and build the symbol table at the same time if forward references are allowed.</li>
+<li>Example requiring 2 passes:
+    <div class="language-java highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">class</span> <span class="nc">A</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">f1</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">f2</span><span class="p">();</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c1">// f2 used before it&#39;s declared</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="nf">f2</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</span></code></pre></div></li>
+</ul>
+<h3 id="use-of-symbol-tables">Use of symbol tables</h3>
+<p><strong>SDT for translating with symbol tables</strong>
+An SDT can manage the creation and destruction of symbol tables for nested blocks.</p>
+<ul>
+<li>When entering a block (<code>{</code>), create a new <code>Env</code> and link it to the previous one.</li>
+<li>When exiting a block (<code>}</code>), restore the previous <code>Env</code>.</li>
+<li>For declarations (<code>type id;</code>), add the symbol to the current <code>top</code> environment.</li>
+<li>For uses (<code>id</code>), look up the symbol starting from the <code>top</code> environment.</li>
+</ul>
+<p>Example Input:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>{ int x; char y;
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  { bool y; x; y; }
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  x; y; }
+</span></code></pre></div>
+<p>Example Output (with types annotated):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{ { x:int; y:bool; } x:int; y:char; }
+</span></code></pre></div>
+<p>In a recursive-descent parser, the <code>saved</code> environment would be a local variable in the procedure for <code>block</code>.</p>
+<hr />
+<h2 id="3-types-and-declarations">3. Types and Declarations</h2>
+<p>An SDT can process type declarations and compute type information (like type expressions and memory width) to store in the symbol table.</p>
+<p><strong>Grammar:</strong></p>
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">D → T id; D | ε</span><script type="math/tex">D → T id; D | ε</script></span></li>
+<li><span class="arithmatex"><span class="MathJax_Preview">T → B C | record { D }</span><script type="math/tex">T → B C | record { D }</script></span></li>
+<li><span class="arithmatex"><span class="MathJax_Preview">B → int | float</span><script type="math/tex">B → int | float</script></span></li>
+<li><span class="arithmatex"><span class="MathJax_Preview">C → ε | [num] C</span><script type="math/tex">C → ε | [num] C</script></span></li>
+</ul>
+<p><strong>SDT with Semantic Rules:</strong>
+Attributes <code>type</code> and <code>width</code> are synthesized up the parse tree.</p>
+<ul>
+<li><strong>For <code>B</code></strong>: Set base type and width (<code>int</code> is 4, <code>float</code> is 8).</li>
+<li><strong>For <code>C</code></strong>: An inherited attribute passes the base type down, and synthesized attributes build up array types. <code>C.type = array(num.value, C1.type)</code> and <code>C.width = num.value * C1.width</code>.</li>
+<li><strong>For <code>T</code></strong>: Combines the base type and array information.</li>
+<li><strong>For <code>D</code></strong>: Adds the final type and computed offset to the symbol table for each identifier.</li>
+<li><strong>For <code>P</code></strong>: A marker nonterminal <code>M</code> can be used to initialize a global <code>offset</code> variable, allowing the SDT to be written in postfix form. <span class="arithmatex"><span class="MathJax_Preview">P → M D</span><script type="math/tex">P → M D</script></span> where <span class="arithmatex"><span class="MathJax_Preview">M → ε {offset=0;}</span><script type="math/tex">M → ε {offset=0;}</script></span>.</li>
+</ul>
+<hr />
+<h2 id="4-type-checking-conversion-and-inference-sdts">4. Type Checking, Conversion, and Inference SDT's</h2>
+<h3 id="type-checking">Type checking</h3>
+<p><strong>Type synthesis and type inference</strong></p>
+<ul>
+<li>To do type checking, a compiler needs to assign a type expression to each component of the source program.</li>
+<li>Type checking can take on two forms: synthesis and inference.<ul>
+<li><strong>Type synthesis</strong> builds up the type of an expression from the types of its subexpressions.</li>
+<li><strong>Type inference</strong> determines the type of a language construct from the way it is used. It is needed for languages like ML, which check types but do not require names to be declared.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Type checking rules</strong></p>
+<ul>
+<li>Type checking is the validation of a set of type rules. Examples:<ul>
+<li>The type of a variable must match its declaration.</li>
+<li>Operands of <code>+</code>, <code>*</code>, <code>-</code>, <code>/</code> must be integers; the result is an integer.</li>
+<li>Operands of <code>==</code>, <code>!=</code> must be integer or string; the result is boolean.</li>
+<li>In an assignment, the variable and expression types must match.</li>
+<li>In a function call, actual argument types must match formal parameter types.</li>
+<li>The return value type must match the function's declared return type.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Semantic rules for type checking (Expressions):</strong></p>
+<ul>
+<li><code>E → literal</code> ⇒ <code>E.type := 'char'</code></li>
+<li><code>E → num</code> ⇒ <code>E.type := 'int'</code></li>
+<li><code>E → id</code> ⇒ <code>E.type := lookup(id.entry)</code></li>
+<li><code>E → E1 mod E2</code> ⇒ <code>E.type := if E1.type == 'int' and E2.type == 'int' then 'int' else type_error</code></li>
+<li><code>E → E1[E2]</code> ⇒ <code>E.type := if E2.type == 'int' and E1.type == 'array(s,t)' then t else type_error</code></li>
+</ul>
+<p><strong>Semantic rules for type checking (Statements):</strong></p>
+<ul>
+<li><code>S → id := E</code> ⇒ <code>S.type := if id.type == E.type then void else type_error</code></li>
+<li><code>S → if E then S1</code> ⇒ <code>S.type := if E.type == 'boolean' and S1.type == void then void else type_error</code></li>
+<li><code>S → while E do S1</code> ⇒ <code>S.type := if E.type == 'boolean' and S1.type == void then void else type_error</code></li>
+</ul>
+<p><strong>Type checking implementation</strong></p>
+<ul>
+<li>Type checking can be implemented by an AST visitor.</li>
+</ul>
+<!-- end list -->
+
+<div class="language-java highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">class</span> <span class="nc">TypeCheck</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Visitor</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="nf">visit</span><span class="p">(</span><span class="n">Add</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">symbolTable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Type</span><span class="p">)</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">e1</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">symbolTable</span><span class="p">);</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Type</span><span class="p">)</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">e2</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">symbolTable</span><span class="p">);</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">t1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Int</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">t2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Int</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Int</span><span class="p">;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TypeCheckError</span><span class="p">(</span><span class="s">&quot;+&quot;</span><span class="p">);</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="nf">visit</span><span class="p">(</span><span class="n">Num</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">symbolTable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Int</span><span class="p">;</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="n">Object</span><span class="w"> </span><span class="nf">visit</span><span class="p">(</span><span class="n">Id</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">symbolTable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">((</span><span class="n">SymbolTable</span><span class="p">)</span><span class="n">symbolTable</span><span class="p">).</span><span class="na">lookupType</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Types comparison</strong></p>
+<ul>
+<li><strong>Option 1</strong>: Implement <code>T1.Equals(T2)</code>. For OO languages, also need <code>T1.SubtypeOf(T2)</code>.</li>
+<li><strong>Option 2</strong>: Use unique objects for each distinct type. This allows for faster comparison using <code>==</code>.</li>
+</ul>
+<h3 id="type-conversion">Type conversion</h3>
+<ul>
+<li><strong>Widening conversions</strong>: intended to preserve information (e.g., <code>int</code> to <code>float</code>).</li>
+<li><strong>Narrowing conversions</strong>: can lose information (e.g., <code>double</code> to <code>int</code>).</li>
+<li><strong>Explicit conversion (cast)</strong>: programmer must write something to cause the conversion.</li>
+<li><strong>Implicit conversion (coercion)</strong>: done automatically by the compiler. Usually limited to widening conversions.</li>
+</ul>
+<p><strong>Type conversion implementation</strong></p>
+<ul>
+<li>For an expression like <code>E → E1 + E2</code>:<ol>
+<li>Find the maximum type: <code>E.type = max(E1.type, E2.type)</code>.</li>
+<li>Widen both operands to the max type: <code>a1 = widen(E1.addr, E1.type, E.type)</code>.</li>
+<li>Generate code for the operation: <code>gen(E.addr '=' a1 '+' a2)</code>.</li>
+</ol>
+</li>
+<li>The <code>widen</code> function generates conversion instructions if necessary.
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Addr widen(Addr a, Type t, Type w) {
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    if (t == w) return a;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    else if (t == integer &amp;&amp; w == float) {
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        temp = new Temp();
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        gen(temp &#39;=&#39; &#39;(float)&#39; a);
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        return temp;
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    }
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    else error;
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>}
+</span></code></pre></div></li>
+</ul>
+<h3 id="type-inference">Type inference</h3>
+<ul>
+<li><strong>Unification</strong> is the problem of determining whether two expressions <code>s</code> and <code>t</code> can be made identical by substituting expressions for the variables in <code>s</code> and <code>t</code>.</li>
+<li>This process is used to infer types in languages that don't require explicit type declarations.</li>
+<li>Example: For <code>fun length(x) = if null(x) then 0 else length(tl(x)) + 1;</code>, the compiler unifies type variables to deduce that <code>x</code> must be a <code>list(α)</code> and the function's type is <code>list(α) → integer</code>.</li>
+</ul>
+<hr />
+<h2 id="5-symbol-tables-for-program-analysis-and-transformation">5. Symbol Tables for Program Analysis and Transformation</h2>
+<ul>
+<li>Symbol tables are not just for compilation; they are crucial for advanced program analysis and transformation tools, like those used for automated refactoring.</li>
+<li><strong>Generic Symbol Table</strong>: A generic, reusable symbol table implementation for statically scoped languages is available at <code>github.com/antlr/symtab</code>.</li>
+<li><strong>Object-oriented models</strong>: Some tools (like JDeodorant) use detailed object-oriented models to represent types, properties, and relationships for sophisticated analysis.</li>
+<li><strong>SciTools Understand</strong>:<ul>
+<li>Provides a code-search database based on <strong>Entities</strong> (anything in code like a file, class, variable) and <strong>References</strong> (a specific place where an entity appears, defining a relationship).</li>
+<li>A <strong>Kind Filter</strong> is a string used to filter lists (e.g., <code>db-&gt;ents("public method")</code>).</li>
+<li>The Python API allows querying this database to analyze code structure.</li>
+<li>Example Query: List the file and line where each function is defined.
+    <div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">understand</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">db</span> <span class="o">=</span> <span class="n">understand</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;test.udb&quot;</span><span class="p">)</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">ents</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">ents</span><span class="p">(</span><span class="s2">&quot;function ~unknown ~unresolved&quot;</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">ent</span><span class="p">:</span> <span class="n">ent</span><span class="o">.</span><span class="n">longname</span><span class="p">()):</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">ref</span> <span class="o">=</span> <span class="n">ent</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="s2">&quot;definein&quot;</span><span class="p">);</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="k">if</span> <span class="n">ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="nb">print</span> <span class="p">(</span><span class="n">ent</span><span class="o">.</span><span class="n">longname</span><span class="p">(),</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">ent</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="s2">&quot;)&quot;</span><span class="p">);</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">file</span><span class="p">()</span><span class="o">.</span><span class="n">relname</span><span class="p">(),</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">line</span><span class="p">(),</span> <span class="s2">&quot;)&quot;</span><span class="p">);</span>
+</span></code></pre></div></li>
+</ul>
+</li>
+<li><strong>Open Understand</strong>: An open-source implementation of the SciTools Understand Python API.</li>
+</ul>
+<hr />
+<h2 id="summary">Summary</h2>
+<ul>
+<li>Semantic checks ensure the correct usage of variables, objects, expressions, statements, functions, and labels in the program.</li>
+<li><strong>Scope semantic checks</strong> ensure that identifiers are correctly used within the scope of their declaration.</li>
+<li><strong>Type semantic checks</strong> ensure the type consistency of various constructs in the program.</li>
+<li><strong>Symbol tables</strong>: a data structure for storing information about symbols in the program.<ul>
+<li>Used in semantic analysis and subsequent compiler stages.</li>
+<li>Used in program analysis for code query.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li>Aho, Alfred V., Monica S. Lam, Ravi Sethi and Jeffrey D. Ullman (2006). Compilers: Principles, Techniques, and Tools (2nd Edition).</li>
+<li>Hagberg, Aric A., Daniel A. Schult and Pieter J. Swart (2008). “Exploring Network Structure, Dynamics, and Function using NetworkX”.</li>
+<li>Leicht, E. A. and M. E. J. Newman (mar. de 2008). “Community Structure in Directed Networks”.</li>
+<li>Mitchell, Brian S. and Spiros Mancoridis (mar. de 2006). “On the Automatic Modularization of Software Systems Using the Bunch Tool”.</li>
+<li>Parr, T. (2009). Language Implementation Patterns: Create Your Own Domain-Specific and General Programming Languages.</li>
+<li>SciTools (2020). Understand.</li>
+<li>Tsantalis, Nikolaos and Alexander Chatzigeorgiou (2009). “Identification of Move Method Refactoring Opportunities”.</li>
+<li>Zafeiris, Vassilis E., Sotiris H. Poulias, N.A. Diamantidis and E.A. Giakoumakis (2017). “Automated refactoring of super-class method invocations to the Template Method design pattern”.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2020-2025 &copy; all rights reserved. Morteza Zakeri, Intelligent Software Engineering Laboratory at Tehran Polytechnic.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mortazazakeri" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/mztel" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m115 168.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7.2-.7.3-3.1-1.2-4.4s-3.6-.8-5.1-.5c-2.2.5-37.1 23.5-104.6 69.1-9.9 6.8-18.9 10.1-26.9 9.9-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3.6-4.5 6.7-9 18.4-13.7 72.3-31.5 120.5-52.3 144.6-62.3 68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6.5 9.6 2.9 2 1.7 3.2 4.1 3.5 6.7.5 3.2.6 6.5.4 9.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "announce.dismiss", "content.footnote.tooltips", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

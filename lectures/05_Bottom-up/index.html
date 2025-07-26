@@ -1,0 +1,3351 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Compiler design (Dragon) course materials and codes">
+      
+      
+        <meta name="author" content="Morteza Zakeri">
+      
+      
+        <link rel="canonical" href="https://m-zakeri.github.io/Compilers/lectures/05_Bottom-up/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Bottom-up Parsing - Compiler Design Course</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylex.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Bottom-up Parsing - Compiler Design Course" >
+      
+        <meta  property="og:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  property="og:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/05_Bottom-up.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://m-zakeri.github.io/Compilers/lectures/05_Bottom-up/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Bottom-up Parsing - Compiler Design Course" >
+      
+        <meta  name="twitter:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  name="twitter:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/05_Bottom-up.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bottom-up-parsing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Compiler Design Course" class="md-header__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Compiler Design Course
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Bottom-up Parsing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../announcements/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Announcements
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../antlr_tutorials/antlr_basics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ANTLR tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../language_applications/main/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Language applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../assignments/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Assignments
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projects
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../calendar/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Calendar
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Tracker
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Compiler Design Course" class="md-nav__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Compiler Design Course
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Announcements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Lectures
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lectures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 0 Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Compiler-Basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 1 Compiler basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_Bootstrapping.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 2 Bootstrapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regular-Expressions-and-Lexical-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 3 Lexical analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_Manual_Construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 4 Manual constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_Automatic_construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 5 Automatic constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Syntax-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 6 Syntax analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_Types-of-Grammar.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 7 Type of grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_Ambiguity-Problems-and-Eliminating-the-Ambiguity.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 8 Eliminating ambiguity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 9 Top-down parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_Bottom-up_I.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 10 Bottom-up parsing (I)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_Bottom-up_II.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 11 Bottom-up parsing (II)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_LR0_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 12 LR(0) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_SLR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 13 SLR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_LR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 14 LR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_LALR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 15 LALR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_ambiguous_SLRs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 16 Ambiguous SLR grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_error_recovery_in_LR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 17 Error recovery in LR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_Bottom-up-Parser-Generators.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 18 Bottom-up parser generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_CYK_parsing_algorithm.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 19 Parsing with CYK algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture06.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 6 (Translation Methods)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture07.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 7 (Semantic Analysis)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture08.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 8 (Intermediate-Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture09.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 9 (Machine-independent Optimizations)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture10.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 10 (Run-time Environment and Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    ANTLR tutorials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            ANTLR tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_slides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Slides
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Language applications
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Language applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement1main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement2main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement3main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement4main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assignments/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Assignments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/writing_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/programming_assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Programming assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Projects
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Projects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_symbol_table_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Symbol table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_software_metrics_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Software metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_code_smell_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code smell detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactoring_to_design_patterns_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Refactoring to patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactorings_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code refactoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_clean_code_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Clean code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_source_code_instrumentation_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code instrumentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/mini_java_compiler_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MiniJava compiler development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calendar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calendar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/capstone-projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Capstone Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Solutions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Issue Tracker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="bottom-up-parsing">Bottom-up Parsing</h1>
+<h2 id="bottom-up-parsing-process">Bottom-Up Parsing Process</h2>
+<h1 id="_1"><center><img src="../pictures/compiler.jpg" width="300" class="center"/></h1>
+<p>Bottom-up parsing is the process of reducing an input string to the start symbol S of the grammar. At each reduction step, a specific substring matching the body of a production (RHS) is replaced by the nonterminal at the head of that production (LHS). The key decisions during bottom-up parsing are about when to reduce and about what production to apply, as the parse proceeds.</p>
+<h2 id="handle-pruning">Handle Pruning</h2>
+<ul>
+<li>Bottom-up parsing during a left-to-right scan of the input constructs a right-most derivation in reverse. </li>
+<li>A "handle" is a substring that matches the body of a production, and whose reduction represents one step along the reverse of a rightmost derivation.</li>
+<li>A handle A → β in the parse tree for w:
+<img src="pictures/A-handle-A-B.png" width="600" class="center"/></li>
+</ul>
+<h2 id="shift-reduce-parsing">Shift-Reduce Parsing</h2>
+<ul>
+<li>Shift-reduce parsing is a form of bottom-up parsing in which a stack holds grammar symbols and an input buffer holds the rest of the string to be parsed. </li>
+<li>Primary operations are shift and reduce. </li>
+<li>During a left-to-right scan of the input string, the parser shifts zero or more input symbols onto the stack, until it is ready to reduce a string of grammar symbols on top of the stack. </li>
+<li>It then reduces to the head of the appropriate production with number R<sub>x</sub>. </li>
+<li>The parser repeats this cycle until it has detected an error or until the stack contains the start symbol and the input is empty.</li>
+<li>There are actually four possible actions a shift-reduce parser
+can make:</li>
+<li>Shift. Shift the next input symbol onto the top of the stack.</li>
+<li>Reduce. The right end of the string to be reduced must be at
+the top of the stack. Locate the left end of the string within the
+stack and decide with what nonterminal to replace the string.</li>
+<li>Accept. Announce successful completion of parsing.</li>
+<li>Error. Discover a syntax error and call an error recovery
+routine</li>
+</ul>
+<p><strong>Primary operations</strong> 
+<img src="pictures/shift-reduce-parsing-primary-operations.png" width="600" class="center"/></p>
+<h3 id="shift-reduce-parsing-notations">Shift-Reduce Parsing Notations</h3>
+<ul>
+<li>We use $ to mark the bottom of the stack and also the right end of the input. </li>
+<li>Split string into two substrings, right and left, the dividing point is marked by a |. </li>
+<li>Right substring is still not examined by parser (a string of terminals). </li>
+<li>Left substring has both terminals and non-terminals.</li>
+<li>Note: The | is not part of the string</li>
+<li>Initially, all input is unexamined " | a1a2...an$".</li>
+</ul>
+<h3 id="shift-reduce-parsing-example">Shift-Reduce Parsing Example</h3>
+<p>Let's consider the following productions:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>r1  S-&gt;E 
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>r4  E-&gt;T
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>r2 E -&gt;E+T 
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>r3  T-&gt;(E)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>r5  T -&gt;num
+</span></code></pre></div>
+And the input string <code>|num+(num+num)$</code>. The parsing process would go as follows:</p>
+<p><div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>|num+(num+num)     shift
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>num|+(num+num)   reduce(r5)   
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>T|+(num+num)    reduce(r4)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>E|+(num+num)  shift
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>E+|(num+num)   shift
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>E+(|num+num)   shift
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>E+(num|+num)  reduce(r5)
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>E+(T|+num)   reduce(r4)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>E+(E|+num)   shift
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>E+(E+|num)   shift
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>E+((E+num|)   reduce(r5)
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>E+(E+T|)    reduce(r2)
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>E+(E|)   shift
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>E+(E)    reduce(r3)
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>E+T    reduce(r2)
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>E|    reduce(r1)
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>S|
+</span></code></pre></div>
+Here, <code>shift</code> means pushing the next input symbol onto the top of the stack, and <code>reduce</code> means popping zero or more symbols off the stack (production RHS) and pushing a non-terminal on the stack (production LHS)</p>
+<p><img src="pictures/shift-reduce-parsing-example-trace-step16.png" width="600" class="center"/></p>
+<h3 id="shift-reduce-parsing-stack">Shift-Reduce Parsing Stack</h3>
+<ul>
+<li>Left substring can be implemented by a stack. </li>
+<li>Top of the stack is the | symbol. </li>
+<li>Shift pushes a terminal on the stack. </li>
+<li>Reduce pops Zero or more symbols of the stack (production RHS) and pushes a non-terminal on the stack (production LHS).</li>
+</ul>
+<p><strong>example</strong>
+ <img src="pictures/shift-reduce-parsing-example-trace-full-stack.png" width="600" class="center"/></p>
+<h2 id="conflicts-during-shift-reduce-parsing">Conflicts During Shift-Reduce Parsing</h2>
+<ul>
+<li>There are context-free grammars for which shift-reduce parsing cannot be used. </li>
+<li>
+<p>Every shift-reduce parser for such a grammar can reach a configuration in which the parser, knowing the entire stack and also the next k input symbols, cannot decide:</p>
+</li>
+<li>
+<p>Whether to shift or to reduce (a shift/reduce conflict)</p>
+</li>
+<li>Or cannot decide which of several reductions to make (a reduce/reduce conflict)</li>
+<li>
+<p>Consider the following ambiguous grammar for if-then-else
+statements:
+ <img src="pictures/shift-reduce-parsing-shift-reduce-conflict-example-part1.png" width="500" class="center"/></p>
+</li>
+<li>
+<p>If we have a shift-reduce parser in configuration:
+<img src="pictures/shift-reduce-parsing-shift-reduce-conflict-example-part2.png" width="500" class="center"/></p>
+</li>
+<li>There is a shift/reduce conflict,</li>
+<li>We cannot tell whether if expr then stmt is the handle.</li>
+</ul>
+<p><strong>example</strong> 
+- Consider the following productions involving procedure calls
+and array references:
+<img src="pictures/shift-reduce-parsing-reduce-reduce-conflict-example-part1.png" width="500" class="center"/>
+- If we have a shift-reduce parser in configuration:
+<img src="pictures/shift-reduce-parsing-reduce-reduce-conflict-example-part2.png" width="500" class="center"/>
+- There is a reduce/reduce conflict,
+- It is evident that the id on top of the stack must be reduced,
+but by which production?
+- The correct choice is production (5) if id is a procedure, but
+production (7) if id is an array.
+- We need a precise mechanism to decide which action to
+take: shift or reduce, if reduce should be taken then to which
+production?</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Remember, mastering these concepts takes time and practice. Don't hesitate to ask questions or seek clarification if something is unclear. Happy studying!</p>
+<h2 id="lr-parsing-and-lr-grammars">LR Parsing and LR Grammars</h2>
+<ul>
+<li>LR parsing is the most prevalent type of bottom-up parser today. The term "LR" stands for left-to-right scanning of the input and constructing a rightmost derivation in reverse. </li>
+<li>A grammar for which we can construct a parsing table using an LR parsing algorithm is said to be an LR grammar. The class of grammars that can be parsed using LR methods is a proper superset of the class of grammars that can be parsed with predictive or LL methods.</li>
+</ul>
+<h3 id="lrk-parsers-and-grammars">LR(k) Parsers and Grammars</h3>
+<p>The "k" in LR(k) refers to the number of input symbols of lookahead that are used in making parsing decisions. The cases where k = 0 or k = 1 are of practical interest. When (k) is omitted, k is assumed to be 1. LR parsers are table-driven, similar to nonrecursive LL parsers.<br />
+For a grammar to be LL(k), we must be able to recognize the use of a production by seeing only the first k symbols of what its right side derives.</p>
+<p>For a grammar to be LR(k), we must be able to recognize the occurrence of the right side of a production in a right-sentential form, with k input symbols of lookahead. This requirement is far less stringent than the one for LL(k) grammars. The principal drawback of the LR method is that it is too much work to construct an LR parser by hand for a typical programming-language grammar. A specialized tool, an LR parser generator, is needed.</p>
+<ul>
+<li>The most prevalent type of bottom-up parser today is based</li>
+<li>the "R"is for constructing a rightmost derivation in reverse,</li>
+<li>the "k"for the number of input symbols of lookahead that are
+used in making parsing decisions.</li>
+<li>The cases k = 0 or k = 1 are of practical interest.</li>
+<li>When (k) is omitted, k is assumed to be 1.</li>
+<li>LR parsers are table-driven, much like the non-recursive LL
+parsers.</li>
+</ul>
+<h2 id="variants-of-lr-parsers">Variants of LR Parsers</h2>
+<p>There are several variants of LR parsers: SLR parsers, LALR parsers, canonical LR(1) parsers, minimal LR(1) parsers, and generalized LR parsers (GLR parsers). LR parsers can be generated by a parser generator from a formal grammar defining the syntax of the language to be parsed. They are widely used for the processing of computer languages. An LR parser reads input text from left to right without backing up and produces a rightmost derivation in reverse. The name "LR" is often followed by a numeric qualifier, as in "LR(1)" or sometimes "LR(k)". To avoid backtracking or guessing, the LR parser is allowed to peek ahead at k lookahead input symbols before deciding how to parse earlier symbols. Typically k is 1 and is not mentioned.</p>
+<h2 id="lr0-parsing">LR(0) parsing</h2>
+<h3 id="representing-item-sets">Representing Item Sets</h3>
+<p>In the context of LR(0) parsing, an item set represents the current state of the parser. Each item in the set corresponds to a production in the grammar, with a dot indicating the current position in the production. For example, if we have a production <code>A -&gt; BC</code>, there will be four items corresponding to this production:</p>
+<ul>
+<li><code>A -&gt; .BC</code></li>
+<li><code>A -&gt; B.C</code></li>
+<li><code>A -&gt; BC.</code></li>
+<li><code>A -&gt; B.C.</code></li>
+</ul>
+<p>These items represent the different stages of recognizing the production <code>A -&gt; BC</code>.</p>
+<h3 id="closure-and-goto-of-item-sets">Closure and Goto of Item Sets</h3>
+<p>The closure operation takes a set of items and produces a new set containing all items that can be derived from the original set. This is done through a series of steps:</p>
+<ol>
+<li>Add every item in the original set to the closure set.</li>
+<li>For each item in the closure set that is of the form <code>A -&gt; α.Bβ</code>, check if there is a production <code>B -&gt; γ</code> in the grammar. If so, add the item <code>B -&gt; .γβ</code> to the closure set.</li>
+<li>Repeat step 2 until no more new items can be added to the closure set.</li>
+</ol>
+<blockquote>
+<p>The closure ensures that all nonterminals following the dot are expanded into their possible productions, allowing the parser to anticipate all valid next steps. This is a key step in constructing the LR(0) automaton.</p>
+</blockquote>
+<p>The GOTO operation, on the other hand, is used to determine the next state based on the current state and the next input symbol. It is defined as the closure of the set of all items of the form <code>A -&gt; αB.β</code>, where <code>A -&gt; α.Bβ</code> is in the current state.</p>
+<blockquote>
+<p>Intuitively, the GOTO functionis used to define the transitions in the LR(0) automaton for a grammar. The
+states of the automaton correspond to sets of items, and GOTO(I;B) specifies
+the transition from the state for I under input B. </p>
+<p><strong>Note:</strong> Note: By convention, S
+′ → S$ is the kernel of the first item,
+I0.
+<strong>example:</strong></p>
+</blockquote>
+<p>Let's consider a simple grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>E -&gt; E + T | T
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>T -&gt; F | (E)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>F -&gt; id
+</span></code></pre></div>
+<p>We start with the initial state <code>I0 = {E -&gt; .E + T}</code>. We apply the closure operation to get the closure of <code>I0</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>I0 = {E -&gt; .E + T, E -&gt; E + .T}
+</span></code></pre></div>
+<p>Then, we apply the GOTO operation with the input symbol <code>E</code> to get the next state:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GOTO(I0, E) = {E -&gt; E + .T, E -&gt; .T}
+</span></code></pre></div>
+<p>We continue this process until we reach the final state, which indicates that the input string is valid according to the grammar.</p>
+<p><strong>example:</strong><br />
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(0) E
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>′ → E$
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>(1) E → E + T
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>(2) E → T
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>(3) T → T * F
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>(4) T → F
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>(5) F → (E)
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>(6) F → id
+</span></code></pre></div>
+CLOSURE(I0 ={︀[E′ → .E$]}︀): <br />
+<img src="pictures/closuer-i-example.png" width="150" class="center"/>  </p>
+<ul>
+<li>Start with <span class="arithmatex"><span class="MathJax_Preview">[E' \rightarrow \cdot E\$]</span><script type="math/tex">[E' \rightarrow \cdot E\$]</script></span>.</li>
+<li>For <span class="arithmatex"><span class="MathJax_Preview">E</span><script type="math/tex">E</script></span> after the dot, add all <span class="arithmatex"><span class="MathJax_Preview">E</span><script type="math/tex">E</script></span>-productions: <span class="arithmatex"><span class="MathJax_Preview">[E \rightarrow \cdot E + T]</span><script type="math/tex">[E \rightarrow \cdot E + T]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[E \rightarrow \cdot T]</span><script type="math/tex">[E \rightarrow \cdot T]</script></span>.</li>
+<li>For <span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span> in <span class="arithmatex"><span class="MathJax_Preview">[E \rightarrow \cdot T]</span><script type="math/tex">[E \rightarrow \cdot T]</script></span>, add all <span class="arithmatex"><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span>-productions: <span class="arithmatex"><span class="MathJax_Preview">[T \rightarrow \cdot T * F]</span><script type="math/tex">[T \rightarrow \cdot T * F]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[T \rightarrow \cdot F]</span><script type="math/tex">[T \rightarrow \cdot F]</script></span>.</li>
+<li>For <span class="arithmatex"><span class="MathJax_Preview">F</span><script type="math/tex">F</script></span> in <span class="arithmatex"><span class="MathJax_Preview">[T \rightarrow \cdot F]</span><script type="math/tex">[T \rightarrow \cdot F]</script></span>, add all <span class="arithmatex"><span class="MathJax_Preview">F</span><script type="math/tex">F</script></span>-productions: <span class="arithmatex"><span class="MathJax_Preview">[F \rightarrow \cdot (E)]</span><script type="math/tex">[F \rightarrow \cdot (E)]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[F \rightarrow \cdot id]</span><script type="math/tex">[F \rightarrow \cdot id]</script></span>.</li>
+<li>Repeat until no new items are added, resulting in the full set.  </li>
+</ul>
+<p>GOTO(I0, E): <br />
+<img src="pictures/goto-i-example.png" width="150" class="center"/></p>
+<ul>
+<li>Take all items in <span class="arithmatex"><span class="MathJax_Preview">I_0</span><script type="math/tex">I_0</script></span> and move the dot past <span class="arithmatex"><span class="MathJax_Preview">E</span><script type="math/tex">E</script></span> where <span class="arithmatex"><span class="MathJax_Preview">E</span><script type="math/tex">E</script></span> is after the dot.</li>
+<li>From <span class="arithmatex"><span class="MathJax_Preview">[E' \rightarrow \cdot E\$]</span><script type="math/tex">[E' \rightarrow \cdot E\$]</script></span>, move to <span class="arithmatex"><span class="MathJax_Preview">[E' \rightarrow E \cdot \$]</span><script type="math/tex">[E' \rightarrow E \cdot \$]</script></span>.</li>
+<li>From <span class="arithmatex"><span class="MathJax_Preview">[E \rightarrow \cdot E + T]</span><script type="math/tex">[E \rightarrow \cdot E + T]</script></span>, move to <span class="arithmatex"><span class="MathJax_Preview">[E \rightarrow E \cdot + T]</span><script type="math/tex">[E \rightarrow E \cdot + T]</script></span>.</li>
+<li>Collect these into <span class="arithmatex"><span class="MathJax_Preview">I_1</span><script type="math/tex">I_1</script></span>, excluding items where the dot cannot move past <span class="arithmatex"><span class="MathJax_Preview">E</span><script type="math/tex">E</script></span>.</li>
+</ul>
+<h3 id="canonical-collection-of-sets-of-lr0-items">Canonical Collection of Sets of LR(0) Items</h3>
+<p>To construct the parsing table, we need to compute the canonical collection of sets of LR(0) items for an augmented grammar. This involves creating a set of states, where each state represents a set of items. The transitions between states are determined by the GOTO operations.</p>
+<h4 id="algorithm">Algorithm</h4>
+<p><img src="pictures/canonical-collection-of-sets-of-LR0-items
+.png" width="600" class="center"/></p>
+<p>The items(G') algorithm is like building a map of all the possible steps a parser can take to understand a grammar $ G' $ with an added start rule. Here's how it works in a more natural way:</p>
+<ol>
+<li>Kick Things Off: It starts by creating a small group called $ C $ with just one set, which is the "closure" of the rule <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow \cdot S]</span><script type="math/tex">[S' \rightarrow \cdot S]</script></span>, where $ S' $ is a special starting point we add to the grammar.</li>
+<li>
+<p>Explore Step by Step: It keeps going through each group of rules (or "sets") in $ C $. For every group and every symbol (like a letter or word) in the grammar:</p>
+</li>
+<li>
+<p>If moving the parser's focus past that symbol (using $ \text{GOTO} $) creates a new, useful set of rules that isn’t already in $ C $, it adds that new set to the group.</p>
+</li>
+<li>
+<p>Keep Going Until Done: It repeats this exploration until no new groups pop up after a full round, meaning we’ve mapped out all the possible parsing states.</p>
+</li>
+</ol>
+<p><strong>example:</strong></p>
+<p>Let's consider a slightly more complex grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>S -&gt; CC
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>C -&gt; aC | d
+</span></code></pre></div>
+<p>We start by augmenting the grammar to handle left recursion:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>(0) S′ → S$
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(1) S → CC
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(2) C → aC
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(3) C → d
+</span></code></pre></div>
+<p>The canonical collection in this LR(0) parsing table is computed step by step as follows, based on the given grammar with productions $ S' \rightarrow SS $, $ S \rightarrow CC $, $ C \rightarrow aC $, and $ C \rightarrow d $. The process involves computing closures and GOTO transitions to build the set of states (I0 to I6):</p>
+<ol>
+<li>
+<p>Initialize with Closure of Start Symbol:</p>
+</li>
+<li>
+<p>Start with $ I_0 = \text{CLOSURE}([S' \rightarrow \cdot SS]) $.</p>
+</li>
+<li>Add <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow \cdot SS]</span><script type="math/tex">[S' \rightarrow \cdot SS]</script></span>.</li>
+<li>Since $ S $ follows the dot, add all $ S $-productions: <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow \cdot CC]</span><script type="math/tex">[S \rightarrow \cdot CC]</script></span>.</li>
+<li>Since $ C $ follows the dot in <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow \cdot CC]</span><script type="math/tex">[S \rightarrow \cdot CC]</script></span>, add all $ C $-productions: <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot aC]</span><script type="math/tex">[C \rightarrow \cdot aC]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot d]</span><script type="math/tex">[C \rightarrow \cdot d]</script></span>.</li>
+<li>
+<p>Result: $ I_0 = { [S' \rightarrow \cdot SS], [S \rightarrow \cdot CC], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] } $.</p>
+</li>
+<li>
+<p>Compute GOTO for $ I_0 $:</p>
+</li>
+<li>
+<p>GOTO($ I_0, S $): Move dot past $ S $ in <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow \cdot SS]</span><script type="math/tex">[S' \rightarrow \cdot SS]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow S \cdot S]</span><script type="math/tex">[S' \rightarrow S \cdot S]</script></span>. No further closure needed. Result: $ I_4 $.</p>
+</li>
+<li>GOTO($ I_0, C $): Move dot past $ C $ in <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow \cdot CC]</span><script type="math/tex">[S \rightarrow \cdot CC]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow C \cdot C]</span><script type="math/tex">[S \rightarrow C \cdot C]</script></span>. Add $ C $-productions for the second $ C $: <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot aC]</span><script type="math/tex">[C \rightarrow \cdot aC]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot d]</span><script type="math/tex">[C \rightarrow \cdot d]</script></span>. Result: $ I_3 $.</li>
+<li>GOTO($ I_0, a $): Move dot past $ a $ in <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot aC]</span><script type="math/tex">[C \rightarrow \cdot aC]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow a \cdot C]</span><script type="math/tex">[C \rightarrow a \cdot C]</script></span>. Add $ C $-productions: <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot aC]</span><script type="math/tex">[C \rightarrow \cdot aC]</script></span>, <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot d]</span><script type="math/tex">[C \rightarrow \cdot d]</script></span>. Result: $ I_2 $.</li>
+<li>
+<p>GOTO($ I_0, d $): Move dot past $ d $ in <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow \cdot d]</span><script type="math/tex">[C \rightarrow \cdot d]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow d \cdot]</span><script type="math/tex">[C \rightarrow d \cdot]</script></span>. This is a reduce item. Result: $ I_1 $.</p>
+</li>
+<li>
+<p>Expand from New States:</p>
+</li>
+<li>
+<p>GOTO($ I_3, C $): Move dot past second $ C $ in <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow C \cdot C]</span><script type="math/tex">[S \rightarrow C \cdot C]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow CC \cdot]</span><script type="math/tex">[S \rightarrow CC \cdot]</script></span>. This is a reduce item. Result: $ I_6 $.</p>
+</li>
+<li>GOTO($ I_2, C $): Move dot past $ C $ in <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow a \cdot C]</span><script type="math/tex">[C \rightarrow a \cdot C]</script></span> to get <span class="arithmatex"><span class="MathJax_Preview">[C \rightarrow aC \cdot]</span><script type="math/tex">[C \rightarrow aC \cdot]</script></span>. This is a reduce item. Result: $ I_5 $.</li>
+<li>
+<p>GOTO($ I_4, $ $): Move dot past $ S $ in <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow S \cdot S]</span><script type="math/tex">[S' \rightarrow S \cdot S]</script></span> with end marker $ $ $ to get <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow SS \cdot]</span><script type="math/tex">[S' \rightarrow SS \cdot]</script></span>. This is an accept state. Result: Accept (no new state needed).</p>
+</li>
+<li>
+<p>Iterate Until No New States:</p>
+</li>
+<li>
+<p>Check all new states ($ I_1, I_2, I_3, I_4, I_5, I_6 $) for further GOTO transitions.</p>
+</li>
+<li>$ I_1, I_5, I_6 $ are reduce states with no further moves.</li>
+<li>$ I_2 $ and $ I_3 $ were already expanded.</li>
+<li>No new states are generated, so the collection is complete: $ { I_0, I_1, I_2, I_3, I_4, I_5, I_6 } $.</li>
+</ol>
+<p>The resulting states and transitions form the canonical collection, with actions (shift, reduce, accept) assigned based on the dot positions and grammar rules.
+<img src="pictures/canonical-collection-of-sets-of-LR0-items-example
+.png" width="600" class="center"/></p>
+<p><img src="pictures/canonical-collection-of-sets-of-LR0-items-example-automaton
+.png" width="600" class="center"/></p>
+<h3 id="structure-of-the-lr-parsing-table">Structure of the LR Parsing Table</h3>
+<p>The LR parsing table consists of two parts: a parsing-action function <code>ACTION</code> and a goto function <code>GOTO</code>. The <code>ACTION</code> function determines what action the parser should take based on the current state and the next input symbol. The <code>GOTO</code> function determines the next state based on the current state and the next input symbol.
+<img src="pictures/structure-of-the-LR-parsing-table
+.png" width="600" class="center"/></p>
+<p><strong>example</strong><br />
+Assume that we have these:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>(0) S′ → S$
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>(1) S → CC
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>(2) C → aC
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>(3) C → d
+</span></code></pre></div>
+<img src="pictures/canonical-collection-of-sets-of-LR0-items-example
+.png" width="600" class="center"/></p>
+<p>Now let's construct the LR(0) parsing table:
+1. Prepare the Framework:
+   - Create a grid with rows labeled by states 0 through 6 (matching the canonical collection states I0 to I6).
+   - Divide the columns into two sections: "Action" for terminals ($ a $, $ d $, $ $ <span class="arithmatex"><span class="MathJax_Preview">) and "Goto" for nonterminals (</span><script type="math/tex">) and "Goto" for nonterminals (</script></span> S $, $ C $).
+   - Initialize all cells as empty, ready to be filled based on the state items and transitions.
+2. Analyze Each State for Actions:</p>
+<ul>
+<li>
+<p>State 0 ($ I_0 = { [S' \rightarrow \cdot SS], [S \rightarrow \cdot CC], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] } $):</p>
+<ul>
+<li>$ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_0, a) = I_2 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> a $] = "S2" (shift to 2).</li>
+<li>$ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_0, d) = I_1 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> d $] = "S1" (shift to 1).</li>
+<li>No complete items or $ $ <span class="arithmatex"><span class="MathJax_Preview">-related moves, so Action[</span><script type="math/tex">-related moves, so Action[</script></span> $ $] = "err" (error).</li>
+<li>State 1 ($ I_1 = { [C \rightarrow d \cdot] } $):</li>
+<li>$ [C \rightarrow d \cdot] $ is a complete item, reduce by $ C \rightarrow d $ (assume $ R_3 <span class="arithmatex"><span class="MathJax_Preview">), so set Action[</span><script type="math/tex">), so set Action[</script></span> a <span class="arithmatex"><span class="MathJax_Preview">] = "R3", Action[</span><script type="math/tex">] = "R3", Action[</script></span> d <span class="arithmatex"><span class="MathJax_Preview">] = "R3", Action[</span><script type="math/tex">] = "R3", Action[</script></span> $ $] = "R3".</li>
+<li>
+<p>State 2 ($ I_2 = { [C \rightarrow a \cdot C], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] } $):</p>
+</li>
+<li>
+<p>$ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_2, a) = I_2 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> a $] = "S2" (shift to 2).</p>
+</li>
+<li>$ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_2, d) = I_1 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> d $] = "S1" (shift to 1).</li>
+<li>No complete items or $ $ <span class="arithmatex"><span class="MathJax_Preview">-moves, so Action[</span><script type="math/tex">-moves, so Action[</script></span> $ $] = "err".</li>
+<li>
+<p>State 3 ($ I_3 = { [S \rightarrow C \cdot C], [C \rightarrow \cdot aC], [C \rightarrow \cdot d] } $):</p>
+</li>
+<li>
+<p>$ [C \rightarrow \cdot aC] $: $ \text{GOTO}(I_3, a) = I_2 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> a $] = "S2" (shift to 2).</p>
+</li>
+<li>$ [C \rightarrow \cdot d] $: $ \text{GOTO}(I_3, d) = I_1 <span class="arithmatex"><span class="MathJax_Preview">, so set Action[</span><script type="math/tex">, so set Action[</script></span> d $] = "S1" (shift to 1).</li>
+<li>No complete items or $ $ <span class="arithmatex"><span class="MathJax_Preview">-moves, so Action[</span><script type="math/tex">-moves, so Action[</script></span> $ $] = "err".</li>
+<li>
+<p>State 4 ($ I_4 = { [S' \rightarrow S \cdot S] } $):</p>
+</li>
+<li>
+<p>No terminals to shift on, and <span class="arithmatex"><span class="MathJax_Preview">[S' \rightarrow S \cdot S]</span><script type="math/tex">[S' \rightarrow S \cdot S]</script></span> with $ $ $ completes the parse, so set Action[$ $ $] = "accept".</p>
+</li>
+<li>No valid moves for $ a $ or $ d <span class="arithmatex"><span class="MathJax_Preview">, so Action[</span><script type="math/tex">, so Action[</script></span> a <span class="arithmatex"><span class="MathJax_Preview">] = "err", Action[</span><script type="math/tex">] = "err", Action[</script></span> d $] = "err".</li>
+<li>
+<p>State 5 ($ I_5 = { [C \rightarrow aC \cdot] } $):</p>
+</li>
+<li>
+<p>$ [C \rightarrow aC \cdot] $ is a complete item, reduce by $ C \rightarrow aC $ (assume $ R_2 <span class="arithmatex"><span class="MathJax_Preview">), so set Action[</span><script type="math/tex">), so set Action[</script></span> a <span class="arithmatex"><span class="MathJax_Preview">] = "R2", Action[</span><script type="math/tex">] = "R2", Action[</script></span> d <span class="arithmatex"><span class="MathJax_Preview">] = "R2", Action[</span><script type="math/tex">] = "R2", Action[</script></span> $ $] = "R2".</p>
+</li>
+<li>
+<p>State 6 ($ I_6 = { [S \rightarrow CC \cdot] } $):</p>
+</li>
+<li>
+<p>$ [S \rightarrow CC \cdot] $ is a complete item, reduce by $ S \rightarrow CC $ (assume $ R_1 <span class="arithmatex"><span class="MathJax_Preview">), so set Action[</span><script type="math/tex">), so set Action[</script></span> a <span class="arithmatex"><span class="MathJax_Preview">] = "R1", Action[</span><script type="math/tex">] = "R1", Action[</script></span> d <span class="arithmatex"><span class="MathJax_Preview">] = "R1", Action[</span><script type="math/tex">] = "R1", Action[</script></span> $ $] = "R1".</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Analyze Each State for Gotos:</p>
+</li>
+<li>State 0:<ul>
+<li>$ \text{GOTO}(I_0, S) = I_4 <span class="arithmatex"><span class="MathJax_Preview">, so set Goto[</span><script type="math/tex">, so set Goto[</script></span> S $] = 4.</li>
+<li>$ \text{GOTO}(I_0, C) = I_3 <span class="arithmatex"><span class="MathJax_Preview">, so set Goto[</span><script type="math/tex">, so set Goto[</script></span> C $] = 3.</li>
+</ul>
+</li>
+<li>State 1: No nonterminal transitions, so Goto[$ S <span class="arithmatex"><span class="MathJax_Preview">] and Goto[</span><script type="math/tex">] and Goto[</script></span> C $] remain empty.</li>
+<li>State 2:<ul>
+<li>$ \text{GOTO}(I_2, C) = I_5 <span class="arithmatex"><span class="MathJax_Preview">, so set Goto[</span><script type="math/tex">, so set Goto[</script></span> C $] = 5.</li>
+</ul>
+</li>
+<li>State 3:<ul>
+<li>$ \text{GOTO}(I_3, C) = I_6 <span class="arithmatex"><span class="MathJax_Preview">, so set Goto[</span><script type="math/tex">, so set Goto[</script></span> C $] = 6.</li>
+</ul>
+</li>
+<li>States 4, 5, 6: No further nonterminal transitions, so Goto columns remain empty.</li>
+<li>Finalize the Table:</li>
+<li>Fill in the grid with the determined actions and gotos.</li>
+<li>Ensure all cells are populated: shifts (S), reduces (R), accept, or errors (err) for Action; state numbers for Goto; leave empty where no transition applies.</li>
+<li>The resulting table matches the image, with state 0 shifting on $ a $ to 2 (S2) and $ d $ to 1 (S1), going to 4 with $ S $ and 3 with $ C $, and so on, reflecting the parser’s behavior based on the canonical collection.</li>
+</ul>
+<p><img src="pictures/structure-of-the-LR-parsing-table1-an-example
+.png" width="600" class="center"/></p>
+<p><strong>LR(0) Parsing: Example</strong></p>
+<p>Consider the following parsing table generated from the grammar <code>E -&gt; E + T | T</code> :</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ACTION GOTO
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>State int+;()ET
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>0     s9    s8,13
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>1     Accept
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>2     Reduce E -&gt; T + E
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>3     s5,s4
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>4     Reduce E -&gt; T;
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>5     s9,s8,23
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>6     Reduce T -&gt; (E)
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>7     s6
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>8     s9,s8,73
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>9     Reduce T -&gt; int
+</span></code></pre></div>
+<p>This table shows that if the parser is in state 0 and reads an integer, it shifts the integer and moves to state 9. If it reads a plus sign, it reduces <code>E -&gt; T</code> and stays in state 1. If it reads a left parenthesis, it reduces <code>T -&gt; (E)</code> and moves to state 6. And so on.</p>
+<p><strong>LR(0) DFA Construction: Example</strong></p>
+<p>Let's consider a slightly more complex grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>S -&gt; E
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>E -&gt; T;
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>E -&gt; T + E
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>T -&gt; int
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>T -&gt; (E)
+</span></code></pre></div>
+<p>We start by adding the initial item <code>S -&gt; .E</code> to the initial state:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>State 0:
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>S -&gt; .E
+</span></code></pre></div>
+<p>We then</p>
+<p><strong>Structure of the LR Parsing Table: Example</strong></p>
+<p>Let's consider the grammar <code>G'</code> from the previous example:</p>
+<p>(0) <code>S'</code> → <code>S$</code>
+(1) <code>S → CC</code>
+(2) <code>C → aC</code>
+(3) <code>C → d</code></p>
+<p>The parsing table for this grammar would be constructed based on the item sets and the GOTO and ACTION functions. The exact contents of the table would depend on the specific implementation of the LR parser, but it might look something like this:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Input</th>
+<th>Action</th>
+<th>Next State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>S'</td>
+<td>Shift</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>C</td>
+<td>Shift</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>a</td>
+<td>Shift</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>d</td>
+<td>Reduce</td>
+<td></td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<p>The 'Action' column indicates whether the parser should shift (read the next input symbol and push it onto the stack), reduce (apply a grammar rule to the top of the stack), or go to (move to a new state without consuming any input symbols).</p>
+<h3 id="lr-parsing-algorithm">LR-parsing algorithm</h3>
+<p><img src="pictures/lr-main-parsing-algorithm
+.png" width="600" class="center"/></p>
+<p>The LR-parsing algorithm works as follows:</p>
+<ol>
+<li>Initialize the stack with the start symbol of the grammar and the special end marker <code>$</code>.</li>
+<li>Read the first input symbol.</li>
+<li>Look up the current state and input symbol in the ACTION field of the parsing table to get the action to perform.</li>
+<li>Perform the action: if it's a shift, push the input symbol onto the stack and move to the next state. If it's a reduce, replace the top of the stack with the left-hand side of the grammar rule. If it's a go to, move to the next state without changing the stack.</li>
+<li>Repeat steps 2-4 until the entire input has been read and the stack contains only the start symbol and the end marker.</li>
+</ol>
+<blockquote>
+<ul>
+<li>All LR parsers (LR(0), LR(1), LALR(1), and SLR(1)) behave in this
+fashion,</li>
+<li>The only difference between one LR parser and another is the
+information in the ACTION and GOTO
+fields of the parsing table.</li>
+</ul>
+</blockquote>
+<p><strong>example:</strong>
+Assume that we have these:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>(0) S′ → S$
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>(1) S → CC
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>(2) C → aC
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>(3) C → d
+</span></code></pre></div>
+<img src="pictures/structure-of-the-LR-parsing-table1-an-example
+.png" width="600" class="center"/>
+Now let's parse the following input:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>add$
+</span></code></pre></div>
+<img src="pictures/structure-of-the-LR-parsing-table1-an-example-trcae
+.png" width="600" class="center"/></p>
+<h3 id="lr0-parser-scope">LR(0) Parser Scope</h3>
+<p>The scope of an LR(0) parser refers to the set of languages it can recognize. An LR(0) parser can recognize a context-free language if and only if the language is unambiguous and does not contain left recursion.</p>
+<h3 id="lr0-limitations">LR(0) Limitations</h3>
+<p>One limitation of LR(0) parsing is that it cannot handle certain types of ambiguous grammars, such as those with left recursion or grammars that require more than one token of lookahead to resolve ambiguities.
+<img src="pictures/lr0-limitations
+.png" width="600" class="center"/></p>
+<h3 id="lr0-parsing-table-with-conflicts">LR(0) Parsing Table with Conflicts</h3>
+<p>Conflicts in the LR(0) parsing table occur when there are multiple possible actions for a given state and input symbol. These conflicts must be resolved before the parsing table can be used effectively. One common way to resolve conflicts is by using operator precedence and associativity rules, or by transforming the grammar to remove the ambiguity.</p>
+<p><img src="pictures/lr0-limitations-example
+.png" width="600" class="center"/></p>
+<p>The conflict in state 1 with input $ $ $ is a shift-reduce issue: the parser can either reduce $ S \rightarrow E $ (r1) or shift to state 6 (s6). This arises because LR(0) lacks lookahead, allowing both actions from items like <span class="arithmatex"><span class="MathJax_Preview">[S \rightarrow E \cdot]</span><script type="math/tex">[S \rightarrow E \cdot]</script></span> and $ [S' \rightarrow S \cdot $] $, making the parse ambiguous.</p>
+<p><strong>LR(0) Grammar: Exercises</strong></p>
+<p>To construct the LR(0) parsing table for a given grammar, you would typically follow these steps:</p>
+<ol>
+<li>Augment the grammar by adding a new start symbol and a new production that starts with the old start symbol followed by a special end marker <code>$</code>.</li>
+<li>Compute the closure of the set of items derived from the new start symbol.</li>
+<li>Repeat step 2 for each new state until no more new states can be added.</li>
+<li>For each state and input symbol, determine the action to take (shift, reduce, or go to) based on the transitions in the state machine.</li>
+<li>Write the resulting actions into the ACTION and GOTO fields of the parsing table.</li>
+</ol>
+<p>The exercise asks you to construct the LR(0) parsing table for several different grammars. You would need to follow the steps above for each grammar.</p>
+<p><strong>Which one is LR(0)?</strong></p>
+<p>To determine whether a grammar is suitable for LR(0) parsing, you would need to check whether the grammar is unambiguous and does not contain left recursion. If both conditions are met, then the grammar is suitable for LR(0) parsing.</p>
+<p>From the given grammars, the ones that are suitable for LR(0) parsing are:</p>
+<ul>
+<li><code>S → AB</code></li>
+<li><code>S → Ab</code></li>
+<li><code>A → ε</code></li>
+<li><code>B → b</code></li>
+<li><code>S → A</code></li>
+<li><code>S → aa</code></li>
+<li><code>A → a</code></li>
+</ul>
+<p>The remaining grammars either contain left recursion (<code>S → AA</code> and <code>A → aA</code>) or are ambiguous (<code>S → A</code>), making them unsuitable for LR(0) parsing.</p>
+<h2 id="simple-lr-parsing-slr-or-slr1">Simple LR Parsing (SLR or SLR(1))</h2>
+<p>Simple LR parsing, also known as SLR or SLR(1), is an extension of LR(0) parsing. It introduces a single token of lookahead to help resolve conflicts between shift and reduce operations. </p>
+<p>For each reduction item <code>A → γ·</code>, the parser looks at the lookahead symbol <code>c</code>. It applies the reduction only if <code>c</code> is in the <code>FOLLOW(A)</code> set, which contains all the terminal symbols that can appear immediately after <code>A</code> in a sentential form derived from the start symbol.</p>
+<h3 id="slr-parsing-table">SLR Parsing Table</h3>
+<p>The SLR parsing table eliminates some conflicts compared to the LR(0) table. It is essentially the same as the LR(0) table, but with reduced rows. Reductions do not fill entire rows. Instead, reductions <code>A → γ·</code> are added only in the columns of symbols in <code>FOLLOW(A)</code>.</p>
+<h3 id="slr-grammar">SLR Grammar</h3>
+<ul>
+<li>SLR grammar: A grammar for which the SLR parsing table
+does not have any conflicts. </li>
+</ul>
+<p>An SLR grammar is a context-free grammar for which the SLR parsing table does not have any conflicts. In other words, an SLR grammar is one that can be parsed by an SLR parser without encountering any shift/reduce or reduce/reduce conflicts.</p>
+<p><strong>example:</strong>  </p>
+<p>Now we compute the SLR parsing tabble for the previous conficting LR(0) table.
+<img src="pictures/slr-parsing-example1
+.png" width="600" class="center"/>
+Here instead of putting the r1 in all the rows we compute the FOLLOW(S) in production <code>S → .E</code>. In this case only $ is in the follow set so other cells in the column get empty, so the conflict gets resolved.</p>
+<p><strong>SLR Parsing: Example</strong></p>
+<p>The SLR parsing algorithm is similar to the LR(0) parsing algorithm, but with the addition of considering the lookahead symbol when deciding whether to shift or reduce. Here is a simplified version of the algorithm:</p>
+<ol>
+<li>Initialize the stack with the start symbol of the grammar and the special end marker <code>$</code>.</li>
+<li>Read the first input symbol.</li>
+<li>Look up the current state and input symbol in the ACTION field of the parsing table to get the action to perform.</li>
+<li>If the action is a shift, push the input symbol onto the stack and move to the next state. If the action is a reduce, replace the top of the stack with the left-hand side of the grammar rule. If the action is a go to, move to the next state without changing the stack.</li>
+<li>Repeat steps 2-4 until the entire input has been read and the stack contains only the start symbol and the end marker.</li>
+</ol>
+<p><strong>SLR Parsing: Example</strong></p>
+<p>Let's consider a simple grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>E -&gt; E + T | T
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>T -&gt; F | (E)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>F -&gt; id
+</span></code></pre></div>
+<p>And the example input <code>id + id</code>.</p>
+<p>We start by initializing the stack with the start symbol <code>E</code> and the end marker <code>$</code>. Then we read the first input symbol <code>id</code>. According to the parsing table, we shift <code>id</code> onto the stack and move to state 2. We continue this process until we have consumed all the input symbols.</p>
+<p>At the end of the parsing process, if the stack contains only the start symbol and the end marker, the input string is accepted. Otherwise, it is rejected.</p>
+<p><strong>example</strong><br />
+SLR collection:
+<img src="pictures/expression-grammar-slr-automaton
+.png" width="600" class="center"/>
+SLR table:
+<img src="pictures/slr-parsing-table-for-expression-grammar
+.png" width="600" class="center"/></p>
+<h3 id="slr-parsing">SLR Parsing</h3>
+<p>SLR (Simple LR) parsing is an extension of LR(0) parsing. It introduces a single token of lookahead to help resolve conflicts between shift and reduce operations. For each reduction item <code>A → γ·</code>, the parser looks at the lookahead symbol <code>c</code>. It applies the reduction only if <code>c</code> is in the <code>FOLLOW(A)</code> set, which contains all the terminal symbols that can appear immediately after <code>A</code> in a sentential form derived from the start symbol.</p>
+<h3 id="slr-parsing-scope">SLR Parsing Scope</h3>
+<p>The scope of an SLR parser refers to the set of languages it can recognize. An SLR parser can recognize a context-free language if and only if the language is unambiguous and does not contain left recursion. However, unlike LR(0) parsers, SLR parsers can handle certain types of ambiguous grammars by considering the lookahead symbol when deciding whether to shift or reduce.</p>
+<h3 id="slr-parsing-limitations">SLR Parsing Limitations</h3>
+<p>Despite its advantages, SLR parsing still has limitations. One of the main limitations is that it cannot handle certain types of ambiguous grammars, such as those with left recursion or grammars that require more than one token of lookahead to resolve ambiguities. Additionally, the SLR parsing algorithm requires additional computational resources compared to LR(0) parsing due to the need to calculate the <code>FOLLOW(A)</code> set for each non-terminal.
+<strong>example</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>(0) S′ → S$
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>(1) S → AaAb
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>(2) S → BbBa
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>(3) A → ε
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>(4) B → ε
+</span></code></pre></div></p>
+<p><img src="pictures/slr-parsing-example2-conflicts
+.png" width="600" class="center"/></p>
+<blockquote>
+<p>To verify the type of a given grammer you should construct the parsing table for each type and if in had no conflicts, the grammar is of that type.</p>
+</blockquote>
+<p><strong>Show That the Following Grammar Is Not SLR</strong></p>
+<p>Let's consider the following grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>(0) S&#39; → S$
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>(1) S → AaAb
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>(2) S → BbBa
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>(3) A → ε
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>(4) B → ε
+</span></code></pre></div>
+<p>If we try to construct the SLR parsing table for this grammar, we will encounter two reduce-reduce conflicts in the action cells for <code>state 0, a</code> and <code>state 0, b</code>. This is because both <code>A → ε</code> and <code>B → ε</code> are applicable in these cases, and neither can be decided upon solely based on the lookahead symbol. Therefore, this grammar is not SLR.</p>
+<p>In general, to show that a grammar is not SLR, we need to construct the SLR parsing table and check for any reduce-reduce conflicts. If we find any such conflicts, then the grammar is not SLR.</p>
+<p><strong>SLR Parsing: Example</strong></p>
+<p>Let's consider a simple grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>E -&gt; E + T | T
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>T -&gt; F | (E)
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>F -&gt; id
+</span></code></pre></div>
+<p>And the example input <code>id + id</code>.</p>
+<p>We start by initializing the stack with the start symbol <code>E</code> and the end marker <code>$</code>. Then we read the first input symbol <code>id</code>. According to the parsing table, we shift <code>id</code> onto the stack and move to state 2. We continue this process until we have consumed all the input symbols.</p>
+<p>At the end of the parsing process, if the stack contains only the start symbol and the end marker, the input string is accepted. Otherwise, it is rejected.</p>
+<h2 id="lr1-parsing-and-lr1-grammars">LR(1) Parsing and LR(1) Grammars</h2>
+<p>LR(1) parsing, also known as canonical LR(1) parsing, is an extension of LR(0) parsing. It uses similar concepts as SLR, but it uses one lookahead symbol instead of none. The idea is to get as much as possible out of one lookahead symbol. The LR(1) item is an LR(0) item combined with lookahead symbols possibly following the production locally within the same item set. For instance, an LR(0) item could be <code>S → ·S + E</code>, and an LR(1) item could be <code>S → ·S + E , +</code>. Similar to SLR parsing, lookahead only impacts reduce operations in LR(1). If the LR(1) parsing action function has no multiply defined entries, then the given grammar is called an LR(1) grammar.</p>
+<h3 id="lr1-closure">LR(1) Closure</h3>
+<p>Similar to LR(0) closure, but also keeps track of the lookahead symbol. If <code>I</code> is a set of items, <code>CLOSURE(I)</code> is the set of items such that:</p>
+<ol>
+<li>Initially, every item in <code>I</code> is in <code>CLOSURE(I)</code>,</li>
+<li>If <code>A → α · B</code> and <code>B → γ</code> is a production whose closures are not in <code>I</code> then add the item <code>B → γ</code> , <code>FIRST(β)</code> to <code>CLOSURE(I)</code>.</li>
+<li>In step (2) if <code>β → ε</code> then add the item <code>B → γ , δ</code> to <code>CLOSURE(I)</code>.</li>
+<li>For recursive items with form <code>A → ·Aα , δ</code> and <code>`A → ·β , δ</code> replace the items with <code>A → ·Aα , δ, FIRST(α)</code> and <code>A → ·β , δ, FIRST(α)</code>.</li>
+<li>Apply these steps (2), (3), and (4) until no more new items can be added to <code>CLOSURE(I)</code>.</li>
+</ol>
+<h3 id="lr1-goto-and-states">LR(1) GOTO and States</h3>
+<p>Initial state: start with <code>[S' → S$ , $]</code> as the kernel of <code>I0</code>, then apply the <code>CLOSURE(I)</code> operation. The GOTO function is analogous to GOTO in LR(0) parsing.</p>
+<h3 id="lr1-items">LR(1) Items</h3>
+<p>An LR(1) item is a pair <code>[α; β]</code>, where <code>α</code> is a production from the grammar with a dot at some position in the RHS and <code>β</code> is a lookahead string containing one symbol (terminal or EOF). What about LR(1) items? Several LR(1) items may have the same core. For instance, <code>[A ::= X · Y Z; a]</code> and <code>[A ::= X · Y Z; b]</code> would be represented as <code>[A ::= X · Y Z; {a, b}]</code>.</p>
+<p><strong>LR(1) Parsing Table: Example</strong></p>
+<p>Let's consider the following grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>(0) S&#39; → S$
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>(1) S → CC
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>(2) C → aC
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>(3) C → d
+</span></code></pre></div>
+<p>First, we augment the grammar by adding a new start symbol and a new production that starts with the old start symbol followed by a special end marker <code>$</code>. Then we compute the closure of the set of items derived from the new start symbol. We repeat this process for each new state until no more new states can be added. For each state and input symbol, we determine the action to take (shift, reduce, or go to) based on the transitions in the state machine. Finally, we write the resulting actions into the ACTION and GOTO fields of the parsing table.
+<img src="pictures/lalr1-parsing-example2-conflicts-part1
+.png" width="600" class="center"/>
+In an LR(1) parser, lookaheads are computed as part of constructing the LR(1) items within each state of the canonical collection. For the given grammar $ (0) S' \rightarrow S$ $, $ (1) S \rightarrow CC $, $ (2) C \rightarrow aC $, $ (3) C \rightarrow d $, the lookaheads are determined during the closure and GOTO operations. Here's how they are computed step by step:</p>
+<ol>
+<li>
+<p>Initialize with the Augmented Production:</p>
+</li>
+<li>
+<p>Start with the initial item $ [S' \rightarrow \cdot S, $] $, where the lookahead $ $ $ is taken from the right side of the augmented production $ S' \rightarrow S$ $, as $ $ $ is the end marker.</p>
+</li>
+<li>
+<p>Compute Closure:</p>
+</li>
+<li>
+<p>For each item $ [A \rightarrow \alpha \cdot B \beta, a] $ in a state (where $ B $ is a nonterminal), add $ [B \rightarrow \cdot \gamma, b] $ for every production $ B \rightarrow \gamma $, where $ b $ is any terminal that can follow $ A \rightarrow \alpha B \beta $.</p>
+</li>
+<li>Example: In state 0 with $ [S' \rightarrow \cdot S, $] $, add $ [S \rightarrow \cdot CC, $] $ because $ $ $ follows $ S $ in $ S' \rightarrow S$ $.</li>
+<li>
+<p>For $ [S \rightarrow \cdot CC, $] $, add $ [C \rightarrow \cdot aC, $] $ and $ [C \rightarrow \cdot d, $] $, as $ $ $ can follow $ C $ in the context of $ S \rightarrow CC $ followed by $ S' \rightarrow S$ $.</p>
+</li>
+<li>
+<p>Compute GOTO and Propagate Lookaheads:</p>
+</li>
+<li>
+<p>When moving the dot past a symbol $ X $ to form $ \text{GOTO}(I, X) $, the lookahead $ a $ from $ [A \rightarrow \alpha \cdot X \beta, a] $ is carried over to the new item $ [A \rightarrow \alpha X \cdot \beta, a] $.</p>
+</li>
+<li>Example: From $ [S' \rightarrow \cdot S, $] $ in state 0, $ \text{GOTO}(I_0, S) = I_{14} $ with $ [S' \rightarrow S \cdot, $] $, keeping $ $ $ as the lookahead.</li>
+<li>
+<p>For $ [S \rightarrow C \cdot C, $] $ in state 3, $ \text{GOTO}(I_3, C) = I_6 $ with $ [S \rightarrow CC \cdot, $] $, retaining $ $ $.</p>
+</li>
+<li>
+<p>Handle Epsilon and Follow Sets:</p>
+</li>
+<li>
+<p>If $ \beta $ is empty (e.g., a reduction item), the lookahead $ a $ is determined by the FOLLOW set of $ A $, computed from the context where $ A $ appears. Since $ S' \rightarrow S$ $ is the only context, $ FOLLOW(S) = { $ } $, and this propagates to all reductions.</p>
+</li>
+<li>
+<p>Example: $ [C \rightarrow d \cdot, $] $ in state 10 gets $ $ $ from $ FOLLOW(C) $ via $ S \rightarrow CC $.</p>
+</li>
+<li>
+<p>Iterate Until Complete:</p>
+</li>
+<li>
+<p>Repeat closure and GOTO for new states, ensuring all lookaheads are propagated or computed based on the grammar’s structure and the initial $ $ $ from $ S' \rightarrow S$ $.</p>
+</li>
+</ol>
+<p><img src="pictures/structure-of-the-LR1-parsing-table2-an-example
+.png" width="600" class="center"/></p>
+<p><strong>LR(1) Parsing Table: Exercise</strong></p>
+<p>Let's consider the following grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>S → E + S | E
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>E → num
+</span></code></pre></div>
+<p>We would follow the same steps as in the example to construct the LR(1) parsing table for this grammar. However, since the grammar is quite simple, the resulting table should also be relatively straightforward.</p>
+<p>Remember, the goal is to identify any conflicts in the parsing table. A conflict occurs when there are multiple possible actions for a given state and input symbol. If there are no conflicts, then the grammar is suitable for LR(1) parsing.</p>
+<h2 id="lalr1">LALR(1)</h2>
+<ul>
+<li>LALR (Look-Ahead LR) parser: Simple technique to
+eliminate and minimize LR(1) states.</li>
+<li>Technique: If two LR(1) states are identical except for the
+look ahead symbol of their items, merge them.</li>
+<li>It is more memory efficient, typically merges several LR(1)
+states.</li>
+<li>May also have more reduce/reduce conflicts.</li>
+<li>Power of LALR parsing is enough for many mainstream
+computer languages</li>
+<li>Several automatic parser generators such as YACC or GNU
+Bison.
+<img src="pictures/lalr1-states
+.png" width="600" class="center"/></li>
+</ul>
+<h3 id="lr1-construction">LR(1) Construction</h3>
+<p>The LR(1) construction extends the LR(0) automaton construction to an LR(1) automaton. Just as in the LR(0) automaton, the states are a set of items that is closed under prediction. However, the items now contain a set of lookahead tokens. Thus, an LR(1) item has the form <code>X→α.,β~~~~λ</code>, where the symbols <code>α</code> represent the top of the automaton stack, the dot represents the current input position, the symbols <code>β</code> derive possible future input, and the set of tokens <code>λ</code> describes tokens that could appear in the input stream after the derivation of <code>β</code> .</p>
+<h3 id="lalr-grammars">LALR Grammars</h3>
+<p>The number of LR(1) states is often unnecessarily large, because the LR(1) automaton ends up with many states that are identical other than lookahead tokens. This insight leads to LALR automata. An LALR automaton is exactly the same as an LR(1) automaton except that it merges together all states that are identical other than lookaheads. In the merge, the lookahead sets are combined for each item. Many parser generators are based on LALR, including commonly used software like yacc, bison, CUP, mlyacc, ocamlyacc, and Menhir.</p>
+<p>While LALR is in practice just about as good as full LR, it does occasionally lose some expressive power. To see why, consider what happens when the two LR(1) states in the following diagram are merged to form the state marked M: The two states on the top are unambiguous LR(1) states in which the lookahead character indicates which of the two productions to reduce. But when merged, the resulting state has reduce–reduce conflicts on both <code>+</code> and <code>$</code>. When merging LR(1) states creates a new conflict, the grammar must be LR(1) but not LALR(1) .</p>
+<h3 id="lalr1-parser-behavior">LALR(1) Parser Behavior</h3>
+<p>The LALR(1) parser behaves similarly to the LR(1) parser for correct inputs, producing the same sequence of reduce and shift actions. On an incorrect input, the LALR parser produces the same sequence of actions up to the last shift action, although it might then do a few more reduce actions before reporting the error. So although the LALR parser has fewer states, its behavior is identical for correct inputs, and extremely similar for incorrect inputs .</p>
+<p>Let's illustrate LALR(1) parsing with an example. Consider the following context-free grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>A -&gt; CxA | ε
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>B -&gt; xC y | xC
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>C -&gt; xB x | z
+</span></code></pre></div>
+<p>And suppose we want to parse the input string <code>xxzxx</code>.</p>
+<p>First, we need to construct the LALR(1) parsing table. This table guides the parsing process by mapping pairs of the form (state, input symbol) to actions (shift, reduce, accept, or error). The construction of the LALR(1) parsing table involves several steps, including the calculation of the FIRST and FOLLOW sets, the creation of the canonical collection of LR(1) items, and the merging of states to eliminate reduce-reduce conflicts.</p>
+<p>Once the LALR(1) parsing table is constructed, we can start parsing the input string. At each step, we examine the top symbol of the stack and the next input symbol, and follow the corresponding entry in the parsing table to decide whether to shift, reduce, or accept.</p>
+<p>Here's a simplified version of the parsing process for the input string <code>xxzxx</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>State Stack Input Action
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>0    A    xxzxx Shift
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>1    Ax   zxx  Reduce A -&gt; CxA
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>2    CxA  zxx  Shift
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>3    zxA  xx   Shift
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>4    xxzxA xx   Reduce B -&gt; xC y
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>5    xy   xx   Reduce C -&gt; xB x
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>6    xx   zx   Reduce C -&gt; z
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>7    z    xx   Reduce A -&gt; ε
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>8    xx   xx   Accept
+</span></code></pre></div>
+<p>In this example, the LALR(1) parser successfully parses the input string <code>xxzxx</code> according to the given grammar. Note that the actual parsing process would involve more steps and more complex entries in the parsing table.</p>
+<p>Keep in mind that this is a simplified example. In practice, the construction of the LALR(1) parsing table can be complex and time-consuming, especially for larger grammars. Also, the LALR(1) parser may produce different results for incorrect inputs, depending on how the parsing table is constructed and how conflicts are resolved.</p>
+<p>Let's illustrate LALR(1) parsing with an example. Consider the following context-free grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>S -&gt; xAy | xBy | xAz
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>A -&gt; aS | q
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>B -&gt; q
+</span></code></pre></div>
+<p>We want to parse the input string <code>xqy</code>.</p>
+<p>First, let's construct the LALR(1) parsing table. The construction of the LALR(1) parsing table involves several steps, including the calculation of the FIRST and FOLLOW sets, the creation of the canonical collection of LR(1) items, and the merging of states to eliminate reduce-reduce conflicts.</p>
+<p>Once the LALR(1) parsing table is constructed, we can start parsing the input string. At each step, we examine the top symbol of the stack and the next input symbol, and follow the corresponding entry in the parsing table to decide whether to shift, reduce, or accept.</p>
+<p>Here's a simplified version of the parsing process for the input string <code>xqy</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>State Stack Input Action
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>0   S   xqy Shift
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>1   Sx  qy  Reduce A -&gt; q
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>2   Sxq y   Shift
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>3   Sxy q   Reduce S -&gt; xBy
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>4   By  q   Reduce B -&gt; q
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>5   S   q   Accept
+</span></code></pre></div>
+<p>In this example, the LALR(1) parser successfully parses the input string <code>xqy</code> according to the given grammar. Note that the actual parsing process would involve more steps and more complex entries in the parsing table.</p>
+<p>Keep in mind that this is a simplified example. In practice, the construction of the LALR(1) parsing table can be complex and time-consuming, especially for larger grammars. Also, the LALR(1) parser may produce different results for incorrect inputs, depending on how the parsing table is constructed and how conflicts are resolved.
+<strong>example</strong>
+Assume that we have these:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>(0) S&#39; → S$
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>(1) S → CC
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>(2) C → aC
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>(3) C → d
+</span></code></pre></div>
+<img src="pictures/collection-of-sets-of-LR1-items-example
+.png" width="600" class="center"/>
+Now let's convert it to LALR:
+Here I1 and I6 share the same productions but with different lookaheads so they can be merged. it is the same  i2 and I7, and I5 and I9.
+<img src="pictures/collection-of-sets-of-LALR1-items-example-not-merged
+.png" width="600" class="center"/>
+After merging, combine the itmes' names (I1 and I6 -&gt; I1-6). For GOTO actions replace them with the new names. 
+<img src="pictures/collection-of-sets-of-LALR1-items-example-merged
+.png" width="600" class="center"/>
+After that constuct the parsing table.
+<img src="pictures/structure-of-the-LALR1-parsing-table2-an-example
+.png" width="600" class="center"/></p>
+<h3 id="lalr1-parsing-scope">LALR(1) Parsing scope</h3>
+<p>As mentioned before merging can result in conflicts. you can se an example below:</p>
+<p>Merging I1 and I7 results in reduce-reduce conflicts (R3/ R4) in action[1-7,a] and action[1-7, b].
+<img src="pictures/lalr1-parsing-example2-conflicts-part2
+.png" width="600" class="center"/></p>
+<h2 id="embrace-the-power-of-ambiguous-grammars">Embrace the Power of Ambiguous Grammars</h2>
+<p>Every ambiguous grammar fails to be LR and thus is not part of any of the classes of the LR grammars discussed. Yet, certain types of ambiguous grammars prove to be quite useful in the specification and implementation of languages. For language constructs like expressions, an ambiguous grammar provides a shorter, more natural specification than any equivalent unambiguous grammar. Furthermore, ambiguous grammars result in fewer productions, leading to parsing tables with a smaller size. Disambiguating rules that allow only one parse tree for each sentence add to the appeal of ambiguous grammars.</p>
+<h3 id="the-impact-of-unambiguous-vs-ambiguous-grammars">The Impact of Unambiguous vs. Ambiguous Grammars</h3>
+<p>Consider the parsing tables for an unambiguous expression grammar. The SLR parsing table contains 12 rows, while the LR(1) parsing table contains 22 rows. This difference in size underscores the benefits of ambiguous grammars. They simplify the specification of language constructs and reduce the size of the parsing tables, making them more manageable and efficient.</p>
+<h3 id="resolving-conflicts-with-precedence-and-associativity">Resolving Conflicts with Precedence and Associativity</h3>
+<p>When dealing with ambiguous grammars, conflicts can arise due to operator precedence and associativity. For instance, in an augmented expression grammar, the sets of LR(0) items can reveal potential conflicts. However, by carefully applying precedence and associativity rules, these conflicts can be effectively resolved.</p>
+<h2 id="error-recovery-in-lr-parsing">Error recovery in LR parsing</h2>
+<p>LR parsing is a powerful technique used in computer programming language compilers and other associated tools. One of the challenges it faces is handling errors. An LR parser will detect an error when it consults the parsing action table and finds an error entry. Errors are never detected by consulting the goto table. </p>
+<h3 id="panic-mode-error-recovery">Panic-Mode Error Recovery</h3>
+<ul>
+<li>An LR parser will detect an error when it consults the parsing
+action table and finds an error entry.</li>
+<li>Errors are never detected by consulting the goto table.</li>
+<li>
+<p>In LR parsing, we can implement panic-mode error recovery as follows:</p>
+</li>
+<li>
+<p>Scan down the stack until a state <code>s</code> with a goto on a particular nonterminal <code>A</code> is found.</p>
+</li>
+<li>Zero or more input symbols are then discarded until a symbol <code>a</code> is found that can legitimately follow <code>A</code>.</li>
+<li>The parser then stacks the state <code>GOTO(s, A)</code> and resumes normal parsing.</li>
+</ul>
+<p>This approach allows the parser to recover from errors by discarding erroneous input and resuming normal parsing.</p>
+<h3 id="phrase-level-error-recovery">Phrase-Level Error Recovery</h3>
+<ul>
+<li>Phrase-level recovery is another strategy for handling errors in LR parsing. This approach involves examining each error entry in the LR parsing table and deciding, based on language usage, the most likely programmer error that would give rise to that error. </li>
+<li>
+<p>An appropriate recovery procedure can then be constructed, presumably modifying the top of the stack and/or first input symbols in a way deemed appropriate for each error entry.</p>
+</li>
+<li>
+<p>In designing specific error-handling routines for an LR parser, we can fill in each blank entry in the action field with a pointer to an error routine that will take the appropriate action selected by the compiler designer. </p>
+</li>
+<li>The actions may include insertion or deletion of symbols from the stack or the input or both, or alteration and transposition of input symbols. </li>
+<li>We must make our choices so that the LR parser will not get into an infinite loop.</li>
+</ul>
+<p><strong>example:</strong><br />
+LR parsing table with error routines for the expression grammar:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>E → E + E 
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>E → E * E 
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>E → ( E ) 
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>E → id
+</span></code></pre></div>
+<img src="pictures/LR-parsing-table-with-error-routines
+.png" width="600" class="center"/></p>
+<ul>
+<li>e1:</li>
+<li>push state 3 (the goto of states 0, 2, 4 and 5 on id);</li>
+<li>issue diagnostic "missing operand."</li>
+<li>e2:</li>
+<li>remove the right parenthesis from the input;</li>
+<li>issue diagnostic "unbalanced right parenthesis."</li>
+<li>e3:</li>
+<li>push state 4 (corresponding to symbol +) onto the stack;</li>
+<li>issue diagnostic "missing operator.</li>
+<li>e4:</li>
+<li>push state 9 (for a right parenthesis) onto the stack;</li>
+<li>issue diagnostic "missing right parenthesis."</li>
+</ul>
+<p><strong>Example of Error Recovery Using LR Parser</strong></p>
+<p>Consider the following grammar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>E → E + E 
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>E → E * E 
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>E → ( E ) 
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>E → id
+</span></code></pre></div>
+<p>Suppose we want to parse the input string <code>id+)$</code>. Here's how the LR parser would work:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>STACK INPUT
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>0    id+)$
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>0id3 +)$
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>0E1  +)$
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>0E1 + 4)$
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>0E1 + 4id3
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>0E1 + 4E7
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>0E1
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>$
+</span></code></pre></div>
+<p>In this example, the LR parser successfully parses the input string <code>id+)$</code> according to the given grammar. Note that the actual parsing process would involve more steps and more complex entries in the parsing table.</p>
+<p>Understanding and mastering these error recovery strategies can significantly improve the robustness and reliability of LR parsers.</p>
+<h2 id="the-yacc-parser-generator">The YACC parser generator</h2>
+<p>YACC (Yet Another Compiler-Compiler) is a powerful tool used in the field of computer science to generate parsers for compilers. It was designed to produce a parser from a given grammar specification, which is a set of rules defining the syntax of a particular language. The parser generated by YACC is an LALR (Look-Ahead, Left-to-Right, Rightmost derivation with 1 lookahead token) parser, operating from left to right and trying to derive the rightmost element of a sentence in a sentence structure according to the grammar.</p>
+<p>YACC works in three main parts: declarations, translation rules, and supporting C routines. Each part plays a crucial role in the process of generating a parser for a given language.</p>
+<h3 id="declarations">Declarations</h3>
+<p>The declarations section of a YACC specification includes information about the tokens used in the syntax definition. Tokens are the smallest units of meaningful data in a programming language, and they could be keywords, identifiers, operators, literals, etc. YACC automatically assigns numbers for tokens, but this can be overridden by specifying a number after the token name. For example, <code>%token NUMBER 621</code>. YACC also recognizes single characters as tokens, so the assigned token numbers should not overlap with ASCII codes.</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="o">%</span><span class="n">token</span><span class="w"> </span><span class="n">NUMBER</span><span class="w"> </span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="o">%</span><span class="n">token</span><span class="w"> </span><span class="n">ID</span>
+</span></code></pre></div>
+<h3 id="translation-rules">Translation Rules</h3>
+<p>The translation rules section contains grammar definitions in a modified BNF (Backus-Naur Form) form. These rules define how the parser should interpret sequences of tokens. Each rule in YACC has a string specification that resembles a production of a grammar. It has a nonterminal on the left-hand side (LHS) and a few alternatives on the right-hand side (RHS). YACC generates an LALR(1) parser for the language from the productions, which is a bottom-up parser.</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="o">%%</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="cm">/* rules */</span><span class="w"> </span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="p">....</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="o">%%</span><span class="w"> </span>
+</span></code></pre></div>
+<h3 id="supporting-c-routines">Supporting C Routines</h3>
+<p>The supporting C routines section includes C code external to the definition of the parser and variable declarations. It can also include the specification of the starting symbol in the grammar: <code>%start nonterminal</code>. If the <code>yylex()</code> function is not defined in the auxiliary routines sections, then it should be included with <code>#include "lex.yy.c"</code>. If the YACC file contains the <code>main()</code> definition, it must be compiled to be executable.</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="cm">/* auxiliary routines */</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="p">....</span>
+</span></code></pre></div>
+<h3 id="building-a-c-compiler-using-lex-and-yacc">Building a C Compiler using Lex and Yacc</h3>
+<p>Building a C compiler involves several steps, including writing the lexical analyzer (Lex), writing the syntax analyzer (Yacc), and integrating the two. The Lex program reads the source code and breaks it down into tokens, while the Yacc program takes these tokens and checks if they conform to the grammar of the language.</p>
+<p>To build a C compiler, you start by writing the Lex file, which defines the tokens for the C language. After that, you write the Yacc file, which defines the grammar of the C language and specifies how the tokens should be parsed. Once you have both Lex and Yacc files ready, you can integrate them by adding the <code>#include "lex.yy.c"</code> statement in the Yacc file. Then, you can compile the Yacc file using the <code>yacc -v -d parser1.y</code> command and link it with the Lex library using the <code>gcc -ll y.tab.c</code> command.</p>
+<p><strong>example</strong></p>
+<p><img src="pictures/Yacc-specification-of-an-advanced-desk-calculator
+.png" width="600" class="center"/></p>
+<h3 id="using-yacc-with-ambiguous-grammars">Using YACC with ambiguous grammars</h3>
+<ul>
+<li>By default YACC will resolve all parsing action conflict using
+the following two rules:</li>
+<li>A reduce/reduce conflict is resolved by choosing the
+   conflicting production listed first in the YACC specification.</li>
+<li>A shift/reduce conflict is resolved in favor of shift.</li>
+<li>Since these default rules may not always be what the compiler
+writer wants, YACC provides a general mechanism for
+resolving shift/reduce conflicts.</li>
+<li>That is precedences and associativities to terminals:</li>
+<li>%left ’+’ ’-’,</li>
+<li>%right ’=’,</li>
+<li>%nonassoc ’&lt;’</li>
+</ul>
+<h3 id="yacc-exercises">YACC Exercises</h3>
+<ol>
+<li>Implement both versions of simple and advanced calculator compilers with YACC or GNU BISON.</li>
+<li>Add the exponent operator, ∧, to your calculator.</li>
+<li>Add error recovery methods discussed in the previous section to your calculator compiler.</li>
+<li>Discuss other bottom-up parser generators (e.g., GNU BISON) within your groups.</li>
+</ol>
+<h2 id="cyk-parsing-algorithm">CYK Parsing Algorithm</h2>
+<h3 id="designing-more-powerful-parsers">Designing More Powerful Parsers</h3>
+<p>Designing more powerful parsers often involves considering different parsing methods. Two of the most prevalent types of parsers are LL and LR parsers. These parsers are deterministic, directional, and operate in linear time, making them capable of recognizing restricted forms of context-free grammars.</p>
+<p>However, parsing more grammars non-directionally poses a challenge, especially when we consider allowing more time-consuming algorithms. To address this, we can employ various strategies:</p>
+<ul>
+<li><strong>Brute Forcing:</strong> This approach involves enumerating everything possible. While straightforward, it can be computationally expensive due to its exhaustive nature.   </li>
+<li><strong>Backtracking:</strong> This strategy involves trying different subtrees and discarding partial solutions if they prove unsuccessful. This allows the parser to explore different branches of the parse tree until a valid parse is found.</li>
+<li><strong>Dynamic Programming:</strong> This method involves saving partial solutions in a table for later use. This technique is efficient as it avoids recomputation by storing the result of a subproblem and reusing it when needed. However, dynamic programming requires a non-directional parsing method, which is not inherent in LL and LR parsers.</li>
+</ul>
+<h3 id="directionality-of-parsing-methods">Directionality of Parsing Methods</h3>
+<p>Parsing methods can be categorized into two types: directional and non-directional methods.</p>
+<p>Directional methods process the input symbol by symbol from left to right. LL and LR parsers fall under this category. The advantage of directional methods is that parsing starts and makes progress before the last symbol of the input is seen.</p>
+<p>Non-directional methods, on the other hand, allow access to input in an arbitrary order. They require the entire input to be in memory before parsing can start. This flexibility allows non-directional parsers to handle more flexible grammars than directional parsers. An example of a non-directional parser is the CYK parser.</p>
+<h3 id="cyk-cocke-younger-kasami">CYK (Cocke-Younger-Kasami)</h3>
+<p>The CYK algorithm is one of the earliest recognition and parsing algorithms, developed independently by three Russian scientists: J. Cocke, D.H. Younger, and T. Kasami. This algorithm uses a bottom-up parsing approach, reducing already recognized right-hand sides of a production rule to its left-hand side non-terminal. As it is non-directional, it accesses input in an arbitrary order, necessitating the entire input to be in memory before parsing can begin.
+- Bottom-up parsing (starts with terminals): reduces already
+recognized right-hand side of a production rule to its left-hand
+side non-terminal
+- Non-directional: accesses input in arbitrary order so requires
+the entire input to be in memory before parsing can start</p>
+<h3 id="cyk-parsing">CYK Parsing</h3>
+<p>The CYK algorithm operates on a dynamic programming or table-filling approach. It constructs solutions compositionally from sub-solutions. Notably, the CYK algorithm recognizes any context-free grammar in Chomsky Normal Form. It operates on a binary parse tree.</p>
+<h4 id="chomsky-normal-form">Chomsky Normal Form</h4>
+<p>A Context-Free Grammar (CFG) is said to be in Chomsky Normal Form (CNF) if each rule is of the form <code>A → BC</code> or <code>A → a</code>, where <code>a</code> is any terminal, and <code>A</code>, <code>B</code>, <code>C</code> are non-terminals. <code>B</code> and <code>C</code> cannot be the start variable. We allow the rule <code>S → ε</code> if <code>ε</code> is in <code>L</code>.</p>
+<h3 id="cyk-algorithm-basic-idea">CYK Algorithm: Basic Idea</h3>
+<p>The CYK algorithm works as follows:</p>
+<ol>
+<li>For a grammar <code>G</code> (in CNF) and a word (or string) <code>w</code>:</li>
+<li>For every substring <code>v1</code> of length 1, find all non-terminals <code>A</code> such that <code>Av1 ⇒ *</code>.</li>
+<li>For every substring <code>v2</code> of length 2, find all non-terminals <code>A</code> such that <code>Av2 ⇒ *</code>.</li>
+<li>...</li>
+<li>For the unique substring <code>w</code> of length <code>|w|</code>, find all non-terminals <code>A</code> such that <code>Aw ⇒ *</code>.</li>
+<li>Check whether the start symbol <code>S</code> belongs to the last set.</li>
+</ol>
+<p>For more details about converting a CFG grammar to the CNF form, please refer to the appendix slides.</p>
+<h3 id="solution-representation-for-substring-recognition">Solution Representation for Substring Recognition</h3>
+<p>In the context of the CYK (Cocke-Younger-Kasami) algorithm, solution representation for substring recognition is essential. The CYK algorithm is a dynamic programming algorithm that is used for parsing context-free grammars. It constructs parse trees by recognizing and combining smaller parse trees. Therefore, the ability to recognize specific subsequences within a larger string is crucial.
+<img src="pictures/CYK-substring-recognition
+.png" width="600" class="center"/></p>
+<h3 id="substring-recognition">Substring Recognition</h3>
+<p>Substring recognition is a key component of the CYK algorithm. It involves identifying and recognizing specific subsequences within a larger string. This process is fundamental to the operation of the CYK algorithm, which constructs parse trees by recognizing and combining smaller parse trees. The recognition of these smaller parse trees is done through the recognition table.
+<img src="pictures/CYK-substring-recognition1
+.png" width="600" class="center"/></p>
+<h3 id="recognition-table">Recognition Table</h3>
+<p>The recognition table is a two-dimensional array that is used to store the potential non-terminal symbols that can generate a particular substring of the input string. Each cell in the table represents a substring of the input string. The value of a cell indicates the set of non-terminal symbols that can generate the corresponding substring. This table is filled iteratively, with each cell being updated based on the values of its neighboring cells.
+<img src="pictures/CYK-recognition-table1
+.png" width="600" class="center"/></p>
+<h3 id="cyk-algorithm-example-trace">CYK Algorithm: Example Trace</h3>
+<p><img src="pictures/CYK-example-trace0
+.png" width="600" class="center"/></p>
+<ol>
+<li>Initialization (Diagonal - Length 1 substrings):</li>
+<li>For each character in "babab":<ul>
+<li>Position 0: 'b' → B (from B → b)</li>
+<li>Position 1: 'a' → A or C (from A → a, C → a)</li>
+<li>Position 2: 'b' → B</li>
+<li>Position 3: 'a' → A or C</li>
+<li>Position 4: 'b' → B</li>
+</ul>
+</li>
+<li>Table (first row):<ul>
+<li>(0,0): {B}</li>
+<li>(1,1): {A, C}</li>
+<li>(2,2): {B}</li>
+<li>(3,3): {A, C}</li>
+<li>(4,4): {B}</li>
+</ul>
+</li>
+<li>Length 2 Substrings:</li>
+<li>(0,1): 'ba' → Check A → BA: B (from 0) and A (from 1) → {A}</li>
+<li>(1,2): 'ab' → No direct match, but check B → BC: B (from 1) and C (from 2) → {B} if C is possible later</li>
+<li>(2,3): 'ba' → {A}</li>
+<li>(3,4): 'ab' → No direct match</li>
+<li>Table update:<ul>
+<li>(0,1): {A}</li>
+<li>(1,2): {}</li>
+<li>(2,3): {A}</li>
+<li>(3,4): {}</li>
+</ul>
+</li>
+<li>Length 3 Substrings:</li>
+<li>(0,2): 'bab' → Check S → AB: A (from 0,1) and B (from 2) → {S}</li>
+<li>(1,3): 'aba' → Check S → CB: C (from 1) and B (from 3) → {S} if C is confirmed</li>
+<li>(2,4): 'bab' → {S}</li>
+<li>Table update:<ul>
+<li>(0,2): {S}</li>
+<li>(1,3): {S}</li>
+<li>(2,4): {S}</li>
+</ul>
+</li>
+<li>Length 4 Substrings:</li>
+<li>(0,3): 'baba' → Check S → AB: A (from 0,2) and B (from 3) → {S}</li>
+<li>(1,4): 'abab' → Check S → CB: C (from 1,3) and B (from 4) → {S}</li>
+<li>Table update:<ul>
+<li>(0,3): {S}</li>
+<li>(1,4): {S}</li>
+</ul>
+</li>
+<li>Length 5 Substring (Whole String):</li>
+<li>(0,4): 'babab' → Check S → AB: A (from 0,3) and B (from 4) → {S}, or S → CB: C (from 0,3) and B (from 4) → {S}</li>
+<li>Table update:<ul>
+<li>(0,4): {S}</li>
+</ul>
+</li>
+</ol>
+<p><img src="pictures/CYK-example-trace11
+.png" width="600" class="center"/></p>
+<p>The top cell (0,4) contains {S}, indicating that the string "babab" can be derived from the start symbol S, confirming it is accepted by the grammar.</p>
+<h3 id="cyk-pseudocode">CYK Pseudocode</h3>
+<p><img src="pictures/CYK-pseudocode1
+.png" width="600" class="center"/></p>
+<h3 id="cyk-complexity-analysis">CYK Complexity Analysis</h3>
+<p>The time and space complexity of the CYK algorithm can be analyzed as follows:</p>
+<p>The space complexity of the CYK algorithm is O(n²), where n is the size of the input word. This is because the algorithm uses a n x n table to store the recognition table.</p>
+<p>The time complexity of the CYK algorithm is O(|G|n³), where |G| is the size of the grammar and n is the size of the input word. This is because the algorithm needs to iterate over the input string and the grammar rules, which results in a cubic time complexity.</p>
+<p>The complexity of the grammar |G| is defined as the sum of the lengths of the right-hand sides of all production rules in the grammar, denoted as:</p>
+<p>|G| = ∑_{(A→v)∈P} (1 + |v|)</p>
+<h3 id="cyk-parsing-problems">CYK Parsing: Problems</h3>
+<p>While the CYK algorithm is powerful, it does come with certain challenges. The high time and space complexity can make it less suitable for large inputs or complex grammars. Additionally, converting the grammar to Chomsky Normal Form (CNF) can sometimes make it difficult to retain the intended structure of the grammar.</p>
+<h3 id="cyk-parsing-exercises">CYK Parsing: Exercises</h3>
+<p>There are several exercises associated with the CYK algorithm. These exercises provide practical applications of the algorithm and help to deepen understanding of its workings.</p>
+<p>For instance, one exercise asks to show the CYK algorithm with a given grammar and input word. Another exercise asks to use the CYK method to determine if a specific string is in the language generated by a given grammar. There are also exercises on modifying the CYK algorithm to count the number of parse trees for a given input string and discussing the probabilistic version of the CYK method.</p>
+<h4 id="cyk-parsing-exercise-solutions">CYK Parsing: Exercise Solutions</h4>
+<ol>
+<li>For the given grammar and input word, the CYK algorithm can be shown by manually applying the algorithm's steps to the given input and grammar.</li>
+<li>To determine if the string <code>w = aaabbbb</code> is in the language generated by the grammar <code>S → aSb | b</code>, we can apply the CYK algorithm to this string and grammar.</li>
+<li>To modify the CYK algorithm to count the number of parse trees of a given input string, we can add a counter to the algorithm that increments whenever a new parse tree is formed.</li>
+<li>For the probabilistic version of the CYK method (P-CYK), weights (probabilities) are stored in the table instead of booleans, so P[i,j,A] will contain the minimum weight (maximum probability) that the substring from i to j can be derived from A. Further extensions of the algorithm allow all parses of a string to be enumerated from lowest to highest weight (highest to lowest probability).</li>
+</ol>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2020-2025 &copy; all rights reserved. Morteza Zakeri, Intelligent Software Engineering Laboratory at Tehran Polytechnic.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mortazazakeri" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/mztel" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m115 168.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7.2-.7.3-3.1-1.2-4.4s-3.6-.8-5.1-.5c-2.2.5-37.1 23.5-104.6 69.1-9.9 6.8-18.9 10.1-26.9 9.9-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3.6-4.5 6.7-9 18.4-13.7 72.3-31.5 120.5-52.3 144.6-62.3 68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6.5 9.6 2.9 2 1.7 3.2 4.1 3.5 6.7.5 3.2.6 6.5.4 9.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "announce.dismiss", "content.footnote.tooltips", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

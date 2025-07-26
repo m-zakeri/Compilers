@@ -1,0 +1,3048 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Compiler design (Dragon) course materials and codes">
+      
+      
+        <meta name="author" content="Morteza Zakeri">
+      
+      
+        <link rel="canonical" href="https://m-zakeri.github.io/Compilers/lectures/01_Compiler-Basic/">
+      
+      
+        <link rel="prev" href="../00_Introduction/">
+      
+      
+        <link rel="next" href="../../antlr_tutorials/antlr_basics/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Unit 1 Compiler basics - Compiler Design Course</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylex.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Unit 1 Compiler basics - Compiler Design Course" >
+      
+        <meta  property="og:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  property="og:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/01_Compiler-Basic.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://m-zakeri.github.io/Compilers/lectures/01_Compiler-Basic/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Unit 1 Compiler basics - Compiler Design Course" >
+      
+        <meta  name="twitter:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  name="twitter:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/01_Compiler-Basic.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#compiler-basic" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Compiler Design Course" class="md-header__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Compiler Design Course
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unit 1 Compiler basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../announcements/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Announcements
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../antlr_tutorials/antlr_basics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ANTLR tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../language_applications/main/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Language applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../assignments/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Assignments
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projects
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../calendar/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Calendar
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Tracker
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Compiler Design Course" class="md-nav__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Compiler Design Course
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Announcements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Lectures
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lectures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 0 Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Unit 1 Compiler basics
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 1 Compiler basics
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler big picture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiler big picture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      goals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      formalization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#describing-programming-language-syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      Describing Programming Language Syntax
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Describing Programming Language Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      Syntax
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example (C++):
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compilation-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compilation Steps
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compilation Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-compilation-steps-in-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example Compilation Steps in C++:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler Architecture:
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiler Architecture:">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compiler-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler Phases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps-in-system-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Steps in System Context:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unresolved-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unresolved references:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-of-the-linker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output of the linker:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-layout-of-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory layout of programs:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-passes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compile Passes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler Errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-errors-in-compilers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Errors in Compilers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Recovery
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiler-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiler alternatives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiler alternatives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interpreter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpreter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreter-vs-compiler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpreter vs compiler
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ahead-of-time-aot-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ahead-of-time (AOT) Compilation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#just-in-time-jit-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just-In-Time (JIT) Compilation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Just-In-Time (JIT) Compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages-of-jit-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages of JIT Compilation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_Bootstrapping.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 2 Bootstrapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regular-Expressions-and-Lexical-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 3 Lexical analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_Manual_Construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 4 Manual constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_Automatic_construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 5 Automatic constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Syntax-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 6 Syntax analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_Types-of-Grammar.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 7 Type of grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_Ambiguity-Problems-and-Eliminating-the-Ambiguity.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 8 Eliminating ambiguity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 9 Top-down parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_Bottom-up_I.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 10 Bottom-up parsing (I)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_Bottom-up_II.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 11 Bottom-up parsing (II)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_LR0_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 12 LR(0) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_SLR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 13 SLR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_LR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 14 LR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_LALR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 15 LALR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_ambiguous_SLRs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 16 Ambiguous SLR grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_error_recovery_in_LR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 17 Error recovery in LR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_Bottom-up-Parser-Generators.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 18 Bottom-up parser generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_CYK_parsing_algorithm.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 19 Parsing with CYK algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture06.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 6 (Translation Methods)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture07.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 7 (Semantic Analysis)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture08.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 8 (Intermediate-Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture09.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 9 (Machine-independent Optimizations)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture10.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 10 (Run-time Environment and Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    ANTLR tutorials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            ANTLR tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_slides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Slides
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Language applications
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Language applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement1main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement2main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement3main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement4main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assignments/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Assignments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/writing_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/programming_assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Programming assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Projects
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Projects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_symbol_table_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Symbol table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_software_metrics_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Software metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_code_smell_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code smell detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactoring_to_design_patterns_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Refactoring to patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactorings_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code refactoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_clean_code_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Clean code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_source_code_instrumentation_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code instrumentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/mini_java_compiler_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MiniJava compiler development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calendar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calendar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/capstone-projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Capstone Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Solutions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Issue Tracker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="compiler-basic"><center> Compiler Basic</h1>
+<p align="center">
+<img src="../pictures/compiler.jpg" width="300" class="center"/>
+</p>
+
+<h2 id="compiler-big-picture">Compiler big picture</h2>
+<h3 id="goals">goals</h3>
+<p><strong>1- Correctness:</strong> generate correct machine codes<br />
+<strong>2- Effectiveness:</strong> optimized machine codes<br />
+<strong>3- Efficiency:</strong> reasonable translation time (&lt; 𝑂(<span class="arithmatex"><span class="MathJax_Preview">n^3</span><script type="math/tex">n^3</script></span>))</p>
+<p>Correctness is crucial. It gets hard to debug a code with a broken compiler.</p>
+<p><strong>Verified compilers:</strong><br />
+∙ Some compilers have been proven to generate correct code! (X.
+Leroy, Formal Certification of a Compiler Back End, POPL ’06)<br />
+∙ Requires formal methods.</p>
+<h2 id="formalization">formalization</h2>
+<p>In compiler design, it's essential to precisely describe the input (source code) and output (machine code) of a compiler.</p>
+<p><strong>Input:</strong> Source code (programming language)<br />
+<strong>Output:</strong> Assembly (machine) code<br />
+Let's see how a programming language is described:<br />
+∙ Tow essential ingredients of a language:<br />
+<strong>1- Syntax:</strong> which strings of symbols are valid expressions in the
+language?<br />
+∙ Example (Java syntax): Uses a semicolon (";") to separate two
+statements<br />
+<strong>2- Semantics:</strong> what do valid expressions actually mean, or how do
+they behave?   <br />
+∙ Example (Java semantics): What should be printed? <br />
+<div class="language-java highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;z+1=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">z</span><span class="o">++</span><span class="p">);</span>
+</span></code></pre></div></p>
+<h2 id="describing-programming-language-syntax">Describing Programming Language Syntax</h2>
+<p>Programming languages have two crucial components: syntax and semantics.</p>
+<h3 id="syntax">Syntax</h3>
+<p>Syntax defines which strings of symbols are valid expressions in the language. </p>
+<h4 id="example-c">Example (C++):</h4>
+<p><div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kt">int</span><span class="w"> </span><span class="err">@</span><span class="p">;</span><span class="w"> </span><span class="c1">// Invalid statement</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kt">int</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">  </span><span class="c1">// Valid statement</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;z+1=&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">z</span><span class="o">++</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="w">  </span><span class="c1">// Valid statement</span>
+</span></code></pre></div>
+There are multiple ways to define a syntax such as listing all valid programs but this way leads to so many long valid programs and is not practical, natrual languages are easy to underestand but they are nformal, imprecise, vague, tedious, and repetitive. The best chois right now is using formal languages (and automata):<br />
+<strong><em>∙ Branch of CS that formalizes the properties of “languages”
+over strings and their syntax.</em></strong> <br />
+<strong>∙ Pros:</strong> Well-documenting what programs a compiler should
+accept or reject. <br />
+<strong>∙ Pros:</strong> Developing compiler phases (lexer, parser, code
+generation) formally and automatically.</p>
+<p>You can see an example below using a BNF grammar:
+<div class="language-ebnf highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="err">&lt;</span><span class="k">Statement</span><span class="err">&gt;</span>       <span class="err">::</span><span class="o">=</span> <span class="err">&lt;</span><span class="k">AssignmentSt</span><span class="err">&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                   <span class="p">|</span> <span class="err">&lt;</span><span class="k">ForST</span><span class="err">&gt;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                   <span class="p">|</span> <span class="s1">&#39;{&#39;</span> <span class="err">&lt;</span><span class="k">StatementList</span><span class="err">&gt;</span> <span class="s1">&#39;}&#39;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                   <span class="p">|</span> <span class="err">ε</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="err">&lt;</span><span class="k">AssignmentSt</span><span class="err">&gt;</span>    <span class="err">::=</span> <span class="err">&lt;</span><span class="k">Id</span><span class="err">&gt;</span> <span class="s1">&#39;=&#39;</span> <span class="err">&lt;</span><span class="k">Expr</span><span class="err">&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="err">&lt;</span><span class="k">ForST</span><span class="err">&gt;</span>           <span class="err">::=</span> <span class="s1">&#39;for&#39;</span> <span class="err">&lt;</span><span class="k">Id</span><span class="err">&gt;</span> <span class="s1">&#39;=&#39;</span> <span class="err">&lt;</span><span class="k">Expr</span><span class="err">&gt;</span> <span class="s1">&#39;to&#39;</span> <span class="err">&lt;</span><span class="k">Expr</span><span class="err">&gt;</span> <span class="err">&lt;</span><span class="k">DoPart</span><span class="err">&gt;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="err">&lt;</span><span class="k">DoPart</span><span class="err">&gt;</span>          <span class="err">::=</span> <span class="s1">&#39;do&#39;</span> <span class="err">&lt;</span><span class="k">Statement</span><span class="err">&gt;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="err">&lt;</span><span class="k">StatementList</span><span class="err">&gt;</span>   <span class="err">::=</span> <span class="err">&lt;</span><span class="k">Statement</span><span class="err">&gt;</span> <span class="s1">&#39;;&#39;</span> <span class="err">&lt;</span><span class="k">StatementList</span><span class="err">&gt;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>                   <span class="p">|</span> <span class="err">&lt;</span><span class="k">Statement</span><span class="err">&gt;</span>
+</span></code></pre></div></p>
+<h3 id="semantics">Semantics</h3>
+<p>Semantics defines the meaning or behavior of valid expressions. We will discuss this aspect in the next chapters.</p>
+<h2 id="compilation-steps">Compilation Steps</h2>
+<p>Compiling a program involves several steps, and it's crucial to understand the process.</p>
+<p><strong>Intermediate Representations (IRs):</strong>
+   - Compiler uses different program Intermediate Representations.
+   - These IRs facilitate necessary program manipulations (analysis, optimization, code generation).</p>
+<h4 id="example-compilation-steps-in-c">Example Compilation Steps in C++:</h4>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="n">b</span><span class="p">;</span>
+</span></code></pre></div>
+<p><img src="pictures/compilation-steps-test.jpg" width="800" class="center"/></p>
+<h2 id="compiler-architecture">Compiler Architecture:</h2>
+<h3 id="compiler-phases">Compiler Phases</h3>
+<p><img src="../pictures/compiler-phses.JPG" width="800" class="center"/></p>
+<p><img src="pictures/compiler-architecture.png" width="800" class="center"/></p>
+<ul>
+<li>
+<p><strong>Parser:</strong> Responsible for analyzing the syntactic structure of the source code and generating a parse tree or abstract syntax tree (AST).</p>
+</li>
+<li>
+<p><strong>Scanner:</strong> Tokenizes the source code, breaking it down into a sequence of tokens for the parser to analyze. </p>
+</li>
+<li>
+<p><strong>Type Checker:</strong> Ensures that the types of expressions and statements are consistent and adherent to the language's rules.</p>
+</li>
+<li>
+<p><strong>Code Generators:</strong> Translate the intermediate representation (IR) or AST into machine code or another target language.</p>
+</li>
+<li>
+<p><strong>Error Manager:</strong> Handles and reports errors that occur during the compilation process.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The order of these components may vary depending on the specific compiler design</p>
+<p><strong>Note:</strong> The parser acts as a "driver" in the compiler design, meaning it plays a central role in coordinating the compilation process.</p>
+<p><strong>Note:</strong> It analyzes the syntax of the source code, constructs a hierarchical representation (such as a parse tree), and passes this structure to subsequent stages of the compiler.</p>
+</blockquote>
+<h3 id="steps-in-system-context">Steps in System Context:</h3>
+<p><img src="pictures/compiler-in-context.png" width="800" class="center"/></p>
+<ul>
+<li><strong>Preprocessing:</strong> Expanding macros and collecting program sources.</li>
+<li><strong>Compilation:</strong> Parsing the preprocessed source code and generating an intermediate representation.</li>
+<li><strong>Linking:</strong> Joining together object files and resolving external references.</li>
+<li><strong>Loading:</strong> Mapping virtual addresses to physical address space.</li>
+</ul>
+<h3 id="unresolved-references">Unresolved references:</h3>
+<p><img src="pictures/unresolved-references-example.png" width="800" class="center"/>
+This image illustrates how unresolved references (like function calls to external symbols) are handled during compilation and linking in a typical system:                  </p>
+<p><strong>source code</strong><br />
+The function abs(int) is declared, not defined — it’s assumed to be defined elsewhere, perhaps in another file or library.</p>
+<p>This introduces an unresolved reference during compilation.</p>
+<p><strong>assembly code</strong> <br />
+The compiler translates abs(x) into a call _abs instruction.</p>
+<p>Since _abs is not defined in this file, the call is marked as an external symbol.</p>
+<p>The call instruction uses a relative address, which can't be resolved yet — it depends on where _abs will be located.</p>
+<p><strong>object code</strong> <br />
+The E8 opcode is the CALL instruction in x86-64, which takes a 4-byte relative offset.</p>
+<p>The offset (00 00 00 00) is a placeholder — the actual address is unknown during object code generation.</p>
+<p>The linker will fill in the correct offset when _abs is resolved.</p>
+<blockquote>
+<p><strong>Note:</strong> The compiler emits a relocation entry for _abs in the object file. The linker later:</p>
+<ol>
+<li>
+<p>Finds the address of _abs in the linked modules or libraries.</p>
+</li>
+<li>
+<p>Calculates the relative offset.</p>
+</li>
+<li>
+<p>Fills in the 4-byte placeholder in the call instruction.</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="output-of-the-linker">Output of the linker:</h3>
+<p><img src="pictures/linker-output.png" width="800" class="center"/>
+ The linker at the end merges all the object codes form all the source codes into one unit as the final program to be loaded into memory.</p>
+<h3 id="memory-layout-of-programs">Memory layout of programs:</h3>
+<p><img src="pictures/program-memory-layout.png" width="800" class="center"/></p>
+<p>The memory layout of a program is typically divided into distinct segments:</p>
+<p>Text/Code Segment: Contains compiled machine code (instructions).</p>
+<p>Initialized Data Segment: Stores global and static variables with defined initial values.</p>
+<p>BSS (Uninitialized Data Segment): Holds global and static variables without initial values.</p>
+<p>Heap: Used for dynamically allocated memory (malloc, new). Grows upward.</p>
+<p>Stack: Stores function call frames, local variables, and return addresses. Grows downward.</p>
+<p>Command Line Arguments: Placed at the top of memory.</p>
+<p>The Static Memory Layout (code, data, BSS) is fixed at compile/link time, while the Dynamic Memory Layout (heap and stack) changes at runtime.</p>
+<h2 id="compile-passes">Compile Passes</h2>
+<p><strong>Definition:</strong>
+A compile pass is a stage in the compilation process where the source program undergoes transformations specified by its phases, producing intermediate output.</p>
+<ul>
+<li><strong>Single-pass Compiler:</strong> Scans the complete source code only once. Example: Pascal compiler.</li>
+<li><strong>Multi-pass Compiler:</strong> Processes the source code multiple times, improving the code pass by pass until the final pass emits the final code.</li>
+</ul>
+<h2 id="compiler-errors">Compiler Errors</h2>
+<p>A good compiler assists the programmer in locating and tracking down errors:</p>
+<ul>
+<li><strong>Compile-time Errors:</strong> Occur during program compilation.</li>
+<li>Lexical errors</li>
+<li>Syntactic errors</li>
+<li>
+<p>Semantic errors</p>
+</li>
+<li>
+<p><strong>Run-time Errors:</strong> Occur while the program is running after being successfully compiled.</p>
+</li>
+<li>Crashes</li>
+<li>Logical errors</li>
+</ul>
+<h2 id="types-of-errors-in-compilers">Types of Errors in Compilers</h2>
+<p>Common programming errors can occur at various levels:</p>
+<ol>
+<li><strong>Lexical Errors:</strong> Misspellings of identifiers, keywords, or operators.</li>
+<li><strong>Syntactic Errors:</strong> Misplaced semicolons, extra or missing braces.</li>
+<li><strong>Semantic Errors:</strong> Type mismatches between operators and operands.</li>
+<li><strong>Logical Errors:</strong> Incorrect reasoning by the programmer.</li>
+</ol>
+<h2 id="error-recovery">Error Recovery</h2>
+<p><strong>Definition:</strong>
+Error recovery is a process that takes action against errors to reduce negative effects as much as possible.</p>
+<p>Common error-recovery strategies for parser error handling:</p>
+<ol>
+<li><strong>Panic-mode</strong></li>
+<li><strong>Phrase-level</strong></li>
+<li><strong>Error-productions</strong></li>
+<li><strong>Global-correction</strong></li>
+</ol>
+<h2 id="compiler-types">Compiler Types</h2>
+<ul>
+<li><strong>Decompiler:</strong> Translates from a low-level language to a higher-level one.</li>
+<li><strong>Cross-compiler:</strong> Produces code for a different <code>CPU</code> or operating system.</li>
+<li><strong>Transpiler (Source-to-Source Compiler):</strong> Translates between <code>high-level</code> languages.</li>
+<li><strong>Bootstrap Compiler:</strong> Temporary compiler used for compiling a more permanent or better-optimized compiler.</li>
+<li><strong>Compiler-compiler:</strong> Produces a compiler (or part of one) in a generic and reusable way (e.g., <code>ANTLR</code>, <code>FLEX</code>, <code>YACC</code>, <code>BISON</code>).</li>
+</ul>
+<h2 id="compiler-alternatives">Compiler alternatives</h2>
+<h3 id="interpreter"><strong>Interpreter</strong></h3>
+<p>An interpreter is another computer program like compiler that executes instructions written in a programming language immediately statement by statement.</p>
+<h3 id="interpreter-vs-compiler"><strong>Interpreter vs compiler</strong></h3>
+<p><strong>Interpreter:</strong><br />
+1. Program execution is a part of
+interpretation process.
+2. No compile time but more runtime.
+3. Optimizations are not as robust as
+compilers.
+4. Python, Ruby    </p>
+<p><strong>Compiler:</strong> 
+1. Program execution is separate
+from the compilation.
+2. Compiler time but faster execution
+3. Robust optimization (sees the
+entire code upfront).
+4. C, C++</p>
+<blockquote>
+<p><strong>Note:</strong> Some language implementations provide both: Java, C#.</p>
+</blockquote>
+<h2 id="ahead-of-time-aot-compilation">Ahead-of-time (AOT) Compilation</h2>
+<p>A traditional compiler where
+translation occurs in a separate step from execution.</p>
+<h2 id="just-in-time-jit-compilation">Just-In-Time (JIT) Compilation</h2>
+<h3 id="definition">Definition</h3>
+<p>The JIT compiler, or dynamic translator, reads bytecodes (in a bytecode-compiled system) in many sections (or in full, rarely) and compiles them dynamically into machine code.</p>
+<ul>
+<li>This can be done per-file, per-function, or even on any arbitrary code fragment.</li>
+<li>As a result, the program can run faster.</li>
+<li>Provides lazy/late compiling.</li>
+<li>The code can be compiled when it is about to be executed and then cached and reused later without needing to be recompiled.</li>
+</ul>
+<h3 id="advantages-of-jit-compilation">Advantages of JIT Compilation</h3>
+<ol>
+<li><strong>Improved Performance:</strong></li>
+<li>
+<p>JIT compilation can result in faster execution of the program since machine code is generated dynamically.</p>
+</li>
+<li>
+<p><strong>Lazy Compilation:</strong></p>
+</li>
+<li>
+<p>Compilation is deferred until the code is about to be executed. This allows for better optimization decisions based on runtime information.</p>
+</li>
+<li>
+<p><strong>Caching and Reuse:</strong></p>
+</li>
+<li>
+<p>Once code is compiled, it can be cached and reused in subsequent executions, reducing the need for repeated compilation.</p>
+</li>
+<li>
+<p><strong>Adaptability:</strong></p>
+</li>
+<li>JIT compilation allows for adaptability to the runtime environment, optimizing the code based on the specific characteristics of the executing system.</li>
+</ol>
+<p><img src="../pictures/JIT.JPG" width="800" class="center"/></p>
+<p>Just-In-Time (JIT) compilation is a technique employed in the field of compiler design to enhance the runtime performance of programs. Unlike traditional ahead-of-time (AOT) compilation, where source code is translated into machine code before execution, JIT compilation occurs dynamically during program execution. This approach combines elements of interpretation and compilation, seeking to leverage the advantages of both.</p>
+<p>In JIT compilation, the source code is initially translated into an intermediate representation, often referred to as bytecode or an intermediate language. This intermediate code is not directly executed by the hardware but is designed to be more portable and platform-independent than the original source code.</p>
+<p>During runtime, as the program is executed, the JIT compiler analyzes the intermediate code and translates it into machine code that is specific to the underlying hardware architecture. This process occurs on-the-fly, just before the corresponding code is executed, hence the term "just-in-time." The generated machine code is then executed directly by the hardware, resulting in potentially improved performance compared to interpreting the original source or intermediate code.</p>
+<h3 id="use-cases">Use Cases</h3>
+<ul>
+<li><strong>Bytecode-Compiled Systems:</strong></li>
+<li>
+<p>Commonly used in virtual machines that execute bytecode, such as Java Virtual Machine (JVM) or Common Language Runtime (CLR) in .NET.</p>
+</li>
+<li>
+<p><strong>Execution Speed Optimization:</strong></p>
+</li>
+<li>
+<p>JIT compilation is employed to improve the execution speed of programs, especially in environments where interpretation of high-level code would be too slow.</p>
+</li>
+<li>
+<p><strong>Memory Efficiency:</strong></p>
+</li>
+<li>By compiling only the necessary portions of code during runtime, JIT compilation can contribute to more efficient memory usage.</li>
+</ul>
+<h1 id="bootstrapping"><center> Bootstrapping</h1>
+<p><strong>Definition:</strong>
+Bootstrapping is a technique where a simple program initiates a more complex system of programs. In the context of compilers, it often involves the process of writing a compiler for a programming language using another compiler written in the same language. This self-compiling process allows for the creation of more sophisticated compilers.</p>
+<p><strong>Example:</strong>
+Consider the BIOS (Basic Input/Output System), which initializes and tests hardware, peripherals, and external memory devices when a computer boots. In compiler design, bootstrapping might involve writing a compiler for a language <code>A</code> using a compiler written in the same language <code>A</code>.</p>
+<h3 id="t-diagrams">T-Diagrams:</h3>
+<p><strong>Definition:</strong>
+T-diagrams are a graphical notation used to represent the relationships between different programming languages in the context of compiler design. The notation takes the form of <code>A ---(C)---&gt; B</code>, where a compiler written in language <code>C</code> processes source code in language <code>A</code> and produces executable code in language <code>B</code>.</p>
+<h3 id="full-bootstrapping">Full Bootstrapping:</h3>
+<p><strong>Goal:</strong>
+The goal of full bootstrapping is to implement a compiler for language <code>X</code> on a machine <code>M</code>, given the presence of a language <code>C</code> compiler/assembler on the same machine.</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Write Compiler for Subset <code>X</code> in <code>C</code>:</strong></li>
+<li>Begin by writing a compiler for a small part (subset) of language <code>X</code> using the language <code>C</code>. Compile this on machine <code>M</code>, where the <code>C</code> compiler already exists.</li>
+</ol>
+<p><img src="../pictures/step-1.JPG" width="500" class="center"/></p>
+<ol>
+<li><strong>Compile Compiler for Sub <code>X</code>:</strong></li>
+<li>Use the existing language <code>C</code> compiler to compile the compiler written in <strong>Step 1</strong>. This creates a compiler that can process the subset language <code>Sub X</code>.</li>
+</ol>
+<p><img src="../pictures/step-2.JPG" width="500" class="center"/></p>
+<ol>
+<li><strong>Translate Subset Compiler (Sub X):</strong></li>
+<li>Translate the subset compiler (Sub X) written in <strong>Step 1</strong> into the subset language (Sub X). This is a necessary step in the process.</li>
+</ol>
+<p><img src="../pictures/step-3.JPG" width="500" class="center"/></p>
+<ol>
+<li><strong>Compile Subset Compiler (Sub X):</strong></li>
+<li>Compile the subset compiler (Sub X) from <strong>Step 3</strong> using the compiler built in <strong>Step 2</strong>. This further refines the compiler for <code>Sub X</code>.</li>
+</ol>
+<p><img src="../pictures/step-4.JPG" width="500" class="center"/></p>
+<ol>
+<li><strong>Extend Subset Language (Sub X):</strong></li>
+<li>Extend the subset language (Sub X) compiler from <strong>Step 3</strong> into a compiler for the full language <code>X</code>. Importantly, this step is still performed using only the subset language <code>Sub X</code>.</li>
+</ol>
+<p><img src="../pictures/step-5.JPG" width="500" class="center"/></p>
+<ol>
+<li><strong>Compile Full Language Compiler:</strong></li>
+<li>Finally, compile the full language <code>X</code> compiler using the compiler built in <strong>Step 4</strong>. At this point, you have a compiler for the full language <code>X</code> implemented on machine <code>M</code>.</li>
+</ol>
+<p><img src="../pictures/step-6.JPG" width="500" class="center"/></p>
+<p>This comprehensive process demonstrates the self-sustaining nature of bootstrapping, where each step builds upon the capabilities of the previous one, ultimately leading to the creation of a compiler for a more complex language.</p>
+<h3 id="half-bootstrapping">Half Bootstrapping:</h3>
+<p>Half bootstrapping in compiler design refers to a process where a new compiler for a language is created by leveraging an existing compiler for the same language on a different machine. This differs from full bootstrapping, which involves building a compiler from scratch without any prior compiler for that language. Half bootstrapping is also known as cross-compilation.<br />
+∙ It is easier than the full bootstrapping.<br />
+∙ To build the bootstrapped compiler, we need a cross compiler
+which could be run on the machine N to produce the compiler
+for the machine M.</p>
+<h4 id="example"><strong>example</strong>:</h4>
+<p>. We have a compiler for language A in machine M but we want to develope one compiler for machine N. We have:</p>
+<p><img src="pictures/hbp-s1.jpg" width="500" class="center"/></p>
+<p><strong>step 1:</strong> implement A -&gt; N compiler in A.
+<img src="pictures/hbp-s2.jpg" width="500" class="center"/></p>
+<p><strong>step 2:</strong> compiler on M.
+<img src="pictures/hbp-s3.jpg" width="500" class="center"/></p>
+<h3 id="simple-bootstrapping">Simple Bootstrapping:</h3>
+<p><strong>Process:</strong>
+If a compiler or interpreter already exists for the language <code>A</code> on the target machine <code>M</code>, the process of bootstrapping is simplified.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../00_Introduction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Unit 0 Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Unit 0 Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../antlr_tutorials/antlr_basics/" class="md-footer__link md-footer__link--next" aria-label="Next: Basic">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Basic
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2020-2025 &copy; all rights reserved. Morteza Zakeri, Intelligent Software Engineering Laboratory at Tehran Polytechnic.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mortazazakeri" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/mztel" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m115 168.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7.2-.7.3-3.1-1.2-4.4s-3.6-.8-5.1-.5c-2.2.5-37.1 23.5-104.6 69.1-9.9 6.8-18.9 10.1-26.9 9.9-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3.6-4.5 6.7-9 18.4-13.7 72.3-31.5 120.5-52.3 144.6-62.3 68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6.5 9.6 2.9 2 1.7 3.2 4.1 3.5 6.7.5 3.2.6 6.5.4 9.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "announce.dismiss", "content.footnote.tooltips", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

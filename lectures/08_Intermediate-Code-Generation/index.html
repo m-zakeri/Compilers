@@ -1,0 +1,2847 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Compiler design (Dragon) course materials and codes">
+      
+      
+        <meta name="author" content="Morteza Zakeri">
+      
+      
+        <link rel="canonical" href="https://m-zakeri.github.io/Compilers/lectures/08_Intermediate-Code-Generation/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Lecture 8: Intermediate-Code Generation - Compiler Design Course</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylex.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Lecture 8: Intermediate-Code Generation - Compiler Design Course" >
+      
+        <meta  property="og:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  property="og:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/08_Intermediate-Code-Generation.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://m-zakeri.github.io/Compilers/lectures/08_Intermediate-Code-Generation/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Lecture 8: Intermediate-Code Generation - Compiler Design Course" >
+      
+        <meta  name="twitter:description"  content="Compiler design (Dragon) course materials and codes" >
+      
+        <meta  name="twitter:image"  content="https://m-zakeri.github.io/Compilers/assets/images/social/lectures/08_Intermediate-Code-Generation.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lecture-8-intermediate-code-generation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Compiler Design Course" class="md-header__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Compiler Design Course
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lecture 8: Intermediate-Code Generation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="red"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../announcements/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Announcements
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Lectures
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../antlr_tutorials/antlr_basics/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  ANTLR tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../language_applications/main/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Language applications
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../assignments/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Assignments
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../projects/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Projects
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../calendar/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Calendar
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Tracker
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Compiler Design Course" class="md-nav__button md-logo" aria-label="Compiler Design Course" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Compiler Design Course
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/m-zakeri/Compilers" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Announcements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Lectures
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Lectures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00_Introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 0 Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_Compiler-Basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 1 Compiler basics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_Bootstrapping.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 2 Bootstrapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_Regular-Expressions-and-Lexical-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 3 Lexical analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_Manual_Construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 4 Manual constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_Automatic_construction_of_Lexers.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 5 Automatic constructions of lexers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_Syntax-Analysis.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 6 Syntax analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_Types-of-Grammar.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 7 Type of grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_Ambiguity-Problems-and-Eliminating-the-Ambiguity.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 8 Eliminating ambiguity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_Top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 9 Top-down parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_Bottom-up_I.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 10 Bottom-up parsing (I)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_Bottom-up_II.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 11 Bottom-up parsing (II)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_LR0_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 12 LR(0) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13_SLR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 13 SLR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14_LR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 14 LR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15_LALR1_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 15 LALR(1) parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16_ambiguous_SLRs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 16 Ambiguous SLR grammars
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17_error_recovery_in_LR_parsing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 17 Error recovery in LR parsing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18_Bottom-up-Parser-Generators.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 18 Bottom-up parser generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19_CYK_parsing_algorithm.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unit 19 Parsing with CYK algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture06.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 6 (Translation Methods)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture07.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 7 (Semantic Analysis)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture08.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 8 (Intermediate-Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture09.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 9 (Machine-independent Optimizations)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lecture10.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Lecture 10 (Run-time Environment and Code Generation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    ANTLR tutorials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            ANTLR tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../antlr_tutorials/antlr_slides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Slides
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Language applications
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Language applications
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Main
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement1main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement2main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 2
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement3main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language_applications/assignment_statement4main/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Assignment statement 4
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assignments/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Assignments
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Assignments
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/writing_assignments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assignments/programming_assignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Programming assignments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../projects/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Projects
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Projects
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_symbol_table_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Symbol table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_software_metrics_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Software metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_code_smell_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code smell detection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactoring_to_design_patterns_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Refactoring to patterns
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_refactorings_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code refactoring
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_clean_code_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Clean code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/core_source_code_instrumentation_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Source code instrumentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../projects/mini_java_compiler_development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MiniJava compiler development
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../calendar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calendar
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../blog/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_2" id="__nav_9_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_2">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_3" id="__nav_9_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_3">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/capstone-projects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Capstone Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/category/solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Solutions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/m-zakeri/Compilers/issues" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Issue Tracker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="lecture-8-intermediate-code-generation">Lecture 8: Intermediate-Code Generation</h1>
+<hr />
+<h2 id="outline">Outline</h2>
+<ol>
+<li><strong>Intermediate representations in compilers</strong></li>
+<li><strong>Abstract Syntax Trees</strong><ul>
+<li>Variants of abstract syntax trees</li>
+</ul>
+</li>
+<li><strong>Three-Address Codes</strong><ul>
+<li>Three address code implementation</li>
+<li>SDT's for three address code generation</li>
+</ul>
+</li>
+<li><strong>Static Single-Assignment Form</strong></li>
+<li><strong>Basic blocks and control flow graphs</strong></li>
+<li><strong>Summary of Lecture 8</strong></li>
+</ol>
+<hr />
+<h3 id="intermediate-code-generation-in-compilers">Intermediate-code generation in compilers</h3>
+<p><img src="../pictures/lecture08_1.jpg" width="600"/></p>
+<p><strong>Diagram Description: Compiler Pipeline</strong></p>
+<p>The diagram illustrates the flow from source code to assembly code within a compiler, divided into a front-end and a back-end.</p>
+<ol>
+<li><strong>Source Code</strong> (e.g., <code>if (b==0)a=b;</code>) is processed by <strong>Lexical Analysis</strong> into a <strong>Token Stream</strong>.</li>
+<li>The <strong>Token Stream</strong> is processed by <strong>Syntax Analysis</strong> to build a <strong>Parse tree and syntax tree</strong>. This stage interacts with the <strong>Symbol table</strong> by inserting information.</li>
+<li>
+<p><strong>Semantic Analysis</strong> takes the syntax tree and produces a <strong>Decorated AST</strong>. This stage uses the symbol table. An example symbol table is shown:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">b</td>
+<td style="text-align: left;">int</td>
+<td style="text-align: left;">4 byte</td>
+</tr>
+<tr>
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">float</td>
+<td style="text-align: left;">8 byte</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Intermediate code generation</strong> transforms the decorated AST into an intermediate representation.
+    <em>The components from Lexical Analysis to Intermediate Code Generation constitute the </em><em>Front-end</em><em> (machine independent).</em></p>
+</li>
+<li><strong>Code optimization</strong> refines the intermediate code.</li>
+<li><strong>Code generation</strong> produces the final target code (e.g., <strong>Assembly code</strong> like <code>cmp rcx, 0</code> and <code>cmovz [rbp-8],rcx</code>).
+    <em>The components from Code Optimization to the final target code constitute the </em><em>Back-end</em><em> (machine dependent).</em></li>
+</ol>
+<hr />
+<h2 id="1-intermediate-representations-in-compilers">1. Intermediate representations in compilers</h2>
+<h3 id="overview">Overview</h3>
+<ul>
+<li>This lecture covers different types of intermediate representations (IRs):<ol>
+<li>Abstract syntax trees</li>
+<li>Three-address codes</li>
+<li>Static single-assignment (SSA) form </li>
+</ol>
+</li>
+<li>We will use the syntax-directed formalisms from Lecture 6 to specify the translation from high-level to low-level code.</li>
+</ul>
+<h3 id="front-end-vs-back-end-in-compilers">Front-end vs. back-end in compilers</h3>
+<ul>
+<li>In the analysis-synthesis model of a compiler, the front-end analyzes a source program and creates an intermediate representation, from which the back-end generates target code.</li>
+<li>Details of the source language are confined to the front-end, and details of the target machine to the back-end.</li>
+<li>With a suitably defined IR, a compiler for language <code>i</code> and machine <code>j</code> can be built by combining the front-end for language <code>i</code> with the back-end for machine <code>j</code>.</li>
+<li>This approach can save considerable effort: <code>m x n</code> compilers can be built by writing just <code>m</code> front-ends and <code>n</code> back-ends (i.e., <code>m+n</code>).</li>
+</ul>
+<h3 id="high-level-vs-low-level-ir">High-level vs. low-level IR</h3>
+<ul>
+<li>In the process of translating a program in a given source
+ language into code for a given target machine, a compiler may
+ construct <strong>a sequence of intermediate representations.</strong></li>
+<li><strong>High-level representations</strong> are close to the source language.    <ul>
+<li>Syntax-trees are high level.</li>
+</ul>
+</li>
+<li><strong>Low-level representations</strong> are close to the target machine.<ul>
+<li><strong>Three-address code</strong> can range from high- to low-level, depending on the choice of operators.</li>
+</ul>
+</li>
+<li>For looping statements, a syntax tree represents the components of a statement, whereas three-address code contains labels and jump instructions, similar to machine language.</li>
+</ul>
+<p><img src="../pictures/lecture08_2.jpg" width="600"/></p>
+<p><strong>Diagram Description: IR Flow</strong></p>
+<p>The diagram shows a flow from multiple source languages (C, Fortran, Pascal) to a High-Level IR (HIR), which is then translated to a Low-Level IR (LIR). The LIR is then used to generate code for multiple target machines (Pentium, Java bytecode, PowerPC).</p>
+<h3 id="c-programming-language-as-an-intermediate-code">C programming language as an intermediate code</h3>
+<ul>
+<li>The choice of an IR varies from compiler to compiler.</li>
+<li>An IR may be an actual language or internal data structures shared by the compiler phases.</li>
+<li>C is often used as an intermediate form because:<ol>
+<li>it is flexible,</li>
+<li>it compiles into efficient machine code,</li>
+<li>and its compilers are widely available.</li>
+</ol>
+</li>
+<li>The original C++ compiler used a front-end that generated C code, treating a C compiler as its back-end.</li>
+</ul>
+<hr />
+<h2 id="2-abstract-syntax-trees">2. Abstract Syntax Trees</h2>
+<h3 id="recap-asts-for-expressions">Recap: ASTs for expressions</h3>
+<p>An Abstract Syntax Tree (AST) for the expression <code>a1 := (2 + 12 * 3) / (6 - 19)</code> visually represents the operations and their operands in a hierarchical structure. The root is the assignment <code>:=</code>, with <code>a1</code> as the left child and the division <code>/</code> as the right child. The structure continues downwards, representing each sub-expression.</p>
+<h3 id="code-generation-based-on-ast">Code generation based on AST</h3>
+<p>A post-order traversal of the AST can generate stack-based machine code. For the expression <code>a1 := (2 + 12 * 3) / (6 - 19)</code>, the steps would be:</p>
+<ol>
+<li><code>push 2</code></li>
+<li><code>push 12</code></li>
+<li><code>push 3</code></li>
+<li><code>mul</code></li>
+<li><code>add</code></li>
+<li><code>push 6</code></li>
+<li><code>push 19</code></li>
+<li><code>sub</code></li>
+<li><code>div</code></li>
+<li><code>pop a1</code></li>
+</ol>
+<p><img src="../pictures/lecture08_3.jpg" width="600"/></p>
+<h3 id="ast-for-if-statement">AST for if statement</h3>
+<ul>
+<li>
+<p>An AST can be an n-ary tree instead of a binary tree. For example, an <code>if</code> statement can have three children: the condition, the <code>then</code> block, and the <code>else</code> block.
+    <img src="../pictures/lecture08_4.jpg" width="600"/></p>
+</li>
+<li>
+<p>We are interested in binary ASTs.</p>
+</li>
+</ul>
+<h3 id="left-child-right-sibling-representation-lcrs-of-asts">Left-child, right-sibling representation (LCRS) of ASTs</h3>
+<ul>
+<li>LCRS is a method for encoding a multi-way tree (where nodes can have any number of children) as a binary tree.</li>
+<li>Instead of each node pointing to all its children, it holds only two pointers: one to its first child and one to its immediate next sibling.</li>
+<li><strong>Advantages of this binary tree representation:</strong><ol>
+<li>It removes the need to know the number of children a node has in advance.</li>
+<li>It restricts the number of pointers per node to a maximum of two, simplifying the code.</li>
+</ol>
+</li>
+</ul>
+<h3 id="sdt-for-ast-construction">SDT for AST construction</h3>
+<p>A syntax-directed definition can be used to produce syntax trees for arithmetic expressions. Each production has a semantic rule that creates a new node (either <code>Node</code> for operators or <code>Leaf</code> for operands).</p>
+<p><img src="../pictures/lecture08_5.jpg" width="600"/></p>
+<h3 id="ast-in-eclipse-jdt">AST in Eclipse JDT</h3>
+<p>The Eclipse Java Development Tools (JDT) generate detailed ASTs for Java code.</p>
+<ul>
+<li><strong>If Statement</strong>: An <code>IfStmt</code> node has children for the condition (e.g., <code>BinaryExpr:greater</code>), the <code>then</code> block, and the <code>else</code> block. Each block contains further statements.</li>
+<li><strong>While Statement</strong>: A <code>WhileStmt</code> node has children for the loop condition (e.g., <code>UnaryExpr:not</code>) and the loop body, which is a <code>BlockStmt</code>.</li>
+</ul>
+<hr />
+<h3 id="variants-of-abstract-syntax-trees">Variants of abstract syntax trees</h3>
+<h4 id="directed-acyclic-graphs-for-expressions">Directed acyclic graphs for expressions</h4>
+<ul>
+<li>In an AST, the tree for the common subexpression subtree
+ would be replicated as many times as the subexpression
+ appears in the original expression.</li>
+<li>Adirected acyclic graph (hereafter called a DAG ) for an
+ expression identifies the common subexpressions
+ (subexpressions that occur more than once) of the expression.</li>
+<li>Like the syntax tree for an expression, a DAG has leaves
+ corresponding to atomic operands and interior nodes
+ corresponding to operators.</li>
+<li>The difference is that a node N in a DAG has more than one
+ parent if N represents a common subexpression.</li>
+<li>
+<p>DAG’s can be constructed by using the same techniques that
+ construct syntax trees.</p>
+</li>
+<li>
+<p>DAG representation for the expression
+ a +a<em>(b−c)+(b−c)</em>d.</p>
+</li>
+<li>Node ’−’ has two parents, representing its two uses in the
+ subexpressions, <code>a * (b − c) and a + a *(b −c)</code>.</li>
+</ul>
+<p><img src="../pictures/lecture08_6.jpg" width="600"/></p>
+<h4 id="the-value-number-method-for-constructing-dags">The Value-Number method for constructing DAGs</h4>
+<ul>
+<li>This method stores nodes of a DAG in an array of records.</li>
+<li>Each record contains an operation code, and pointers to its children (or a lexical value for leaves). The index of the record in the array is its "value-number".</li>
+<li><strong>Algorithm</strong>: When creating a new node, the algorithm first searches the array to see if an identical node (same operator and children) already exists. If so, it returns the value-number of the existing node; otherwise, it creates a new node and returns its new value-number.</li>
+</ul>
+<hr />
+<h2 id="3-three-address-codes">3. Three-Address Codes</h2>
+<h3 id="three-address-codes-general-style">Three-address codes: General style</h3>
+<ul>
+<li>In three-address code (TAC), there is at most one operator on the right side of an instruction; that is, no built-up arithmetic expressions are permitted.</li>
+<li>A source-language expression like <code>x+y*z</code> might be translated into the sequence of three-address instructions:
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>(1) T1 = x * y 
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>(2) T2 = x + T1
+</span></code></pre></div></li>
+<li>where T1 and T2 are compiler-generated temporary names. </li>
+<li>unraveling of multi-operator arithmetic expressions and of nested ow-of-control statements makes three-address code desirable for target-code generation and optimization.</li>
+</ul>
+<h3 id="three-address-codes-vs-asts">Three-address codes vs. ASTs</h3>
+<ul>
+<li>Three-address code is a linearized representation of a syntax tree or a DAG in which explicit names correspond to the interior nodes of the graph. </li>
+</ul>
+<p><img src="../pictures/lecture08_7.jpg" width="600"/></p>
+<h3 id="addresses-and-instructions">Addresses and Instructions</h3>
+<p>An address in three-address code can be one of the following: </p>
+<ol>
+<li><strong>A name</strong>: Source-program names can be used as addresses in three-address code.</li>
+<li><strong>A constant</strong>: A compiler must handle many different types of constants and variables.</li>
+<li><strong>A compiler-generated temporary</strong>: It is useful, especially in optimizing compilers, to create a distinct name each time a temporary is needed.</li>
+</ol>
+<p>A <strong>symbolic label</strong> represents the index of a three-address instruction in the sequence of instructions.</p>
+<h3 id="common-forms-of-the-three-address-instructions">Common forms of the three-address instructions</h3>
+<ol>
+<li>
+<p><strong>Assignment instructions</strong>:</p>
+<ul>
+<li><code>x = y op z</code>, where op is a binary arithmetic or logical operation.</li>
+</ul>
+</li>
+<li>
+<ul>
+<li><code>x = op y</code>, where op is a unary operation like unary minus, logical negation, or type conversion operators.</li>
+</ul>
+</li>
+<li><strong>Copy instructions</strong>: <code>x = y</code>, where x is assigned the value of y.</li>
+<li><strong>Unconditional jump</strong>: <code>goto L</code>. The instruction with label L is executed next.</li>
+<li><strong>Conditional jumps</strong>: <code>if x goto L</code> and <code>ifFalse x goto L</code>. These instructions execute the instruction with label L next if x is true or false, respectively.</li>
+<li><strong>Relational jumps</strong>: <code>if x relop y goto L</code>, which applies a relational operator to x and y and jumps to L if the relation is true.</li>
+<li><strong>Procedure and function calls</strong>:<ul>
+<li><code>param x</code> for parameters.</li>
+<li><code>call p, n</code> for a procedure call.</li>
+<li><code>y = call p, n</code> for function calls.</li>
+<li><code>return y</code> where y is an optional returned value.</li>
+</ul>
+</li>
+<li><strong>Indexed copy instructions</strong>:<ul>
+<li><code>x = y[i]</code> sets x to the value in the location i memory units beyond location y.</li>
+<li><code>x[i] = y</code> sets the contents of the location i units beyond x to the value of y.</li>
+</ul>
+</li>
+<li><strong>Address and pointer assignments</strong>: <code>x = &amp;y</code>, <code>x = *y</code>, and <code>*x = y</code>.</li>
+</ol>
+<h3 id="three-address-instructions-example">Three-address instructions: Example</h3>
+<p>For the statement <code>do i = i + 1; while (a[i] &lt; v);</code>, the TAC can use symbolic labels or position numbers.</p>
+<p><img src="../pictures/lecture08_8.jpg" width="600"/></p>
+<h3 id="addressing-array-elements">Addressing array elements</h3>
+<ul>
+<li>To access an element in a one-dimensional array <code>A[low..high]</code> with element type <code>t</code> of size <code>T</code>, the address is calculated as <code>base + (i - low) * T</code>.</li>
+<li>This expression can be rewritten as <code>i * T + (base - low * T)</code>.</li>
+<li>The subexpression <code>C = base - low * T</code> can be pre-calculated at compile time.</li>
+<li>Accessing an element then requires two TAC instructions:
+    <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>T1 = i * T
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>T2 = T1 + C 
+</span></code></pre></div></li>
+<li>For a two-dimensional array <code>A[low1..high1][low2..high2]</code> stored in <strong>row-major</strong> order (used in C-family languages), the address of <code>A[i1, i2]</code> is: <code>base + ((i1 - low1) * n2 + i2 - low2) * T</code> where <code>n2</code> is the number of columns.</li>
+<li>This can be optimized to <code>((i1 * n2) + i2) * T + C</code>, where the constant <code>C</code> is pre-calculated at compile time. This requires four TAC instructions.</li>
+</ul>
+<h3 id="three-address-code-implementation">Three-address code implementation</h3>
+<ul>
+<li>The description of three-address instructions specifies the
+ components of each type of instruction, but it does not specify
+ the representation of these instructions in a data structure.</li>
+<li>In a compiler, these instructions can be implemented as objects
+ or as records with fields for the operator and the operands.</li>
+<li>
+<p>Three such representations are called "quadruples,"
+ "triples,"and "indirect triples."</p>
+</li>
+<li>
+<p><strong>Quadruples</strong>: A quadruple has four fields: <code>op</code>, <code>arg1</code>, <code>arg2</code>, and <code>result</code>. For the code <code>a = (b * (-c)) + (b * (-c))</code>:</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">op</th>
+<th style="text-align: left;">arg1</th>
+<th style="text-align: left;">arg2</th>
+<th style="text-align: left;">result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">minus</td>
+<td style="text-align: left;">c</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">t1</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">b</td>
+<td style="text-align: left;">t1</td>
+<td style="text-align: left;">t2</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">minus</td>
+<td style="text-align: left;">c</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">t3</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">b</td>
+<td style="text-align: left;">t3</td>
+<td style="text-align: left;">t4</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;">+</td>
+<td style="text-align: left;">t2</td>
+<td style="text-align: left;">t4</td>
+<td style="text-align: left;">t5</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;">=</td>
+<td style="text-align: left;">t5</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">a</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Triples</strong>: A triple has only three fields: <code>op</code>, <code>arg1</code>, and <code>arg2</code>. The result of an operation is referred to by its position, rather than by an explicit temporary name.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">op</th>
+<th style="text-align: left;">arg1</th>
+<th style="text-align: left;">arg2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">minus</td>
+<td style="text-align: left;">c</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">b</td>
+<td style="text-align: left;">(0)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">minus</td>
+<td style="text-align: left;">c</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">*</td>
+<td style="text-align: left;">b</td>
+<td style="text-align: left;">(2)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4</strong></td>
+<td style="text-align: left;">+</td>
+<td style="text-align: left;">(1)</td>
+<td style="text-align: left;">(3)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>5</strong></td>
+<td style="text-align: left;">=</td>
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">(4)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Indirect Triples</strong>: This representation consists of a list of pointers to triples. This allows an optimizing compiler to move an instruction by reordering the pointer list, without affecting the triples themselves.</li>
+</ul>
+<h3 id="sdts-for-three-address-code-generation">SDT's for three address code generation</h3>
+<p>Syntax-Directed Translation (SDT) can be used to generate three-address code during parsing by attaching semantic rules to grammar productions.</p>
+<ul>
+<li><strong>Expressions</strong>: For an expression like <code>E1 + E2</code>, the semantic rule generates code for <code>E1</code> and <code>E2</code>, creates a new temporary variable <code>temp</code>, and then generates the instruction <code>temp := E1.place + E2.place</code>.</li>
+<li><strong>Array References</strong>: For an array reference like <code>id[E]</code>, the rules compute the offset. For a multi-dimensional array like <code>L1[E]</code>, the rules recursively calculate the address.</li>
+<li><strong>Control Flow</strong>:<ul>
+<li>For an <code>if-then</code> statement, the SDT generates a new label <code>end</code> and creates a conditional jump: <code>if E.place = 0 then goto end</code>.</li>
+<li>For <code>if-then-else</code>, it uses two new labels (<code>else</code> and <code>end</code>) to manage the control flow.</li>
+<li>For a <code>while</code> loop, it uses two new labels (<code>begin</code> and <code>after</code>) to create the loop structure with a conditional jump to exit.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="4-static-single-assignment-form">4. Static Single-Assignment Form</h2>
+<ul>
+<li>Static single-assignment form (SSA) is an intermediate representation that facilitates certain code optimizations.</li>
+<li><strong>Key Property</strong>: In SSA, all assignments are to variables with distinct names. To achieve this, original variables are split into multiple versions, typically with a subscript (e.g., <code>p</code> becomes <code>p1</code>, <code>p2</code>, <code>p3</code>, etc.), so that each new variable name corresponds to only one definition.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Three-Address Code</th>
+<th style="text-align: left;">Static Single-Assignment Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>p = a + b</code></td>
+<td style="text-align: left;"><code>p1 = a + b</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>q = p - c</code></td>
+<td style="text-align: left;"><code>q1 = p1 - c</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>p = q * d</code></td>
+<td style="text-align: left;"><code>p2 = q1 * d</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>p = e - p</code></td>
+<td style="text-align: left;"><code>p3 = e - p2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>q = p + q</code></td>
+<td style="text-align: left;"><code>q2 = p3 + q1</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-φ-function">The φ-function</h3>
+<ul>
+<li>The same variable may be defined in two different control-flow paths in a program.</li>
+<li>SSA uses a special <strong>φ (phi) function</strong> to merge the different versions of a variable that come from different control-flow paths. <code>y3 = φ(y1, y2)</code> means that the value of <code>y3</code> will be <code>y1</code> if control came from the path where <code>y1</code> was defined, and <code>y2</code> if it came from the path where <code>y2</code> was defined.</li>
+<li>φ-functions are not implemented as machine operations. A compiler implements a φ-function by inserting "move" operations at the end of every predecessor block.</li>
+<li>SSA makes data-flow analyses like determining use-define (UD) chains easier to perform. When looking at a use of a variable, there is only one place where that variable may have received its value.</li>
+</ul>
+<hr />
+<h2 id="5-basic-blocks-and-control-flow-graphs">5. Basic blocks and control flow graphs</h2>
+<h3 id="control-flow-graph-cfg">Control Flow Graph (CFG)</h3>
+<ul>
+<li>A Control Flow Graph (CFG) is a graph representation of computation and control flow in a program.</li>
+<li><strong>Nodes</strong>: The nodes of the graph are <strong>Basic Blocks</strong>.</li>
+<li><strong>Edges</strong>: An edge represents a branch between basic blocks.</li>
+<li><strong>Basic Block</strong>: A sequence of assignment and expression evaluations that ends with a branch. It is a sequence of operations that are executed as a unit. Once the first operation in a basic block is performed, the remaining operations will also be performed without any other intervening operations.</li>
+</ul>
+<h3 id="control-flow-graph-for-three-addresses-codes">Control flow graph for three addresses codes</h3>
+<ul>
+<li>Control-Flow graph (CFG), similar to AST, is kind of a
+ intermediate representation generated by the compilers.</li>
+<li>It is typically created from the three addresses codes.</li>
+<li>Example: Programs that turns a 10 × 10 matrix a into an
+ identity matrix.<ul>
+<li>Real-valued array elements take 8 bytes each, and that the
+ matrix a is stored in row-major form.</li>
+</ul>
+</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>for i from 1 to 10 do
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    for j from 1 to 10 do
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        a[i, j] = 0.0;
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>for i from 1 to 10 do
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    a[i, i] = 1.0;
+</span></code></pre></div>
+<p><img src="../pictures/lecture08_9.jpg" width="600"/></p>
+<h3 id="generating-control-flow-graphs">Generating Control-Flow Graphs</h3>
+<p>The process involves two steps:</p>
+<ol>
+<li>
+<p><strong>Partitioning into Basic Blocks</strong>: This is done by identifying the <strong>leaders</strong> in the three-address code. A leader is the first instruction of a basic block. The rules for finding leaders are:</p>
+<ol>
+<li>The first three-address instruction is a leader.</li>
+<li>Any instruction that is the target of a conditional or unconditional jump is a leader.</li>
+<li>Any instruction that immediately follows a conditional or unconditional jump is a leader.
+A basic block consists of a leader and all instructions up to but not including the next leader.</li>
+</ol>
+</li>
+<li>
+<p><strong>Constructing the Flow Graph</strong>:</p>
+<ul>
+<li>The basic blocks are the nodes of the flow graph.</li>
+<li>There is an edge from block <code>B</code> to block <code>C</code> if and only if it is possible for the first instruction in block C to immediately follow the last instruction in block B. This can happen in two ways:<ul>
+<li>There is a jump from the end of <code>B</code> to the beginning of <code>C</code>.</li>
+<li><code>C</code> immediately follows <code>B</code> in the original order, and <code>B</code> does not end in an unconditional jump.</li>
+</ul>
+</li>
+<li>Special <code>entry</code> and <code>exit</code> nodes that do not correspond to executable instructions are often added.</li>
+</ul>
+</li>
+</ol>
+<p>CFGs are essential for many code optimizations because they make the transfer of control explicit and are helpful for tasks like register allocation.</p>
+<hr />
+<h2 id="6-summary-of-lecture-8">6. Summary of Lecture 8</h2>
+<ul>
+<li><strong>Intermediate Representation (IR)</strong>: A compiler's front-end analyzes a source program and creates an IR, from which the back-end generates target code. An IR is typically a combination of a graphical notation and three-address code. </li>
+<li><strong>Abstract Syntax Tree (AST)</strong>: A node in an AST represents a construct, and the children of the node represent its subconstructs.</li>
+<li><strong>Three-Address Code (TAC)</strong>: Takes its name from instructions of the form "x = y op z", with at most one operator per instruction. It also includes additional instructions for control flow. </li>
+<li><strong>Control Flow Graph (CFG)</strong>: A graph representation of all paths that might be traversed through a program during its execution. The CFG is an essential tool for many compiler optimizations and static analysis.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li>Aho,Alfred V., Monica S. Lam, Ravi Sethi and Jeffrey D. Ullman
+ (2006). Compilers: Principles, Techniques, and Tools (2nd
+ Edition). USA: Addison-Wesley Longman Publishing Co., Inc. ISBN:</li>
+<li>
+<p>URL: http://infolab.stanford.edu/
+ %5C~ullman/dragon/errata.html.</p>
+</li>
+<li>
+<p>Ammann,P. and J. Offutt (2016). Introduction to software
+ testing. Cambridge University Press. ISBN: 9781316773123. URL:
+ https://cs.gmu.edu/%5C~offutt/softwaretest.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      2020-2025 &copy; all rights reserved. Morteza Zakeri, Intelligent Software Engineering Laboratory at Tehran Polytechnic.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/mortazazakeri" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/mztel" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m115 168.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7.2-.7.3-3.1-1.2-4.4s-3.6-.8-5.1-.5c-2.2.5-37.1 23.5-104.6 69.1-9.9 6.8-18.9 10.1-26.9 9.9-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3.6-4.5 6.7-9 18.4-13.7 72.3-31.5 120.5-52.3 144.6-62.3 68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6.5 9.6 2.9 2 1.7 3.2 4.1 3.5 6.7.5 3.2.6 6.5.4 9.8z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.tooltips", "navigation.indexes", "navigation.instant", "navigation.instant.progress", "navigation.instant.preview", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.path", "toc.follow", "toc.integrate", "search.suggest", "search.highlight", "search.share", "header.autohide", "announce.dismiss", "content.footnote.tooltips", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
